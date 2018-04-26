@@ -51,4 +51,7 @@ dependencies {
     /*Leaks detection*/
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+    /*ContentProvider*/
+    annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.6.3'
+    implementation 'net.simonvt.schematic:schematic:0.6.3'
 }
