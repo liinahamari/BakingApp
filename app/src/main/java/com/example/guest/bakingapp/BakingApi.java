@@ -12,6 +12,6 @@ import retrofit2.http.GET;
  */
 
 public interface BakingApi {
-    @GET()
+    @GET("baking.json")
     Observable<List<Reciep>> getRecieps();
 }
