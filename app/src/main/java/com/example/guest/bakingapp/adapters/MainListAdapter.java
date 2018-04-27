@@ -35,9 +35,6 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     private Context context;
     private FloatingActionButton fab;
     private int position = -1;
-    private int resize = 0;
-    private float dpHeight;
-    private float dpWidth;
 
     public MainListAdapter(Context context) {
         this.context = context;
@@ -98,11 +95,6 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
             }
         });*/
 
-        Picasso.with(context)
-                .load("http://image.tmdb.org/t/p/w185/" + reciep.getImage())
-                .error(R.drawable.empty)
-                .into(holder.poster);
-
         /*Single.fromCallable(() -> {
             holder.bookmarkButton.setClickable(false);
             return FavoritesChecker.isFavorite(context, reciep);
@@ -127,12 +119,10 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.poster)
-        protected ImageView poster;
-        @BindView(R.id.movie_title)
+        @BindView(R.id.title)
         protected TextView title;
-        @BindView(R.id.favorite_icon)
-        protected ImageButton bookmarkButton;
+        @BindView(R.id.fav)
+        protected ImageView favIcon;
         private final View view;
 
         ViewHolder(View itemView) {
