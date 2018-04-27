@@ -18,10 +18,7 @@ public abstract class BaseFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         resolveDaggerDependencies();
-        init();
     }
-
-    protected abstract void init();
 
     protected abstract void resolveDaggerDependencies();
 
