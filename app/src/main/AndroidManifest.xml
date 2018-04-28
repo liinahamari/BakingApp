@@ -22,6 +22,6 @@
             android:name="com.example.guest.bakingapp.db.generated.BakingProvider"
             android:authorities="com.example.guest.bakingapp.db.provider"
             android:exported="false" />
+        <activity android:name=".ui.DetailActivity"/>
     </application>
-
 </manifest>

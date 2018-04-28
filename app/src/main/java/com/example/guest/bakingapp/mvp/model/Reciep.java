@@ -7,6 +7,7 @@ package com.example.guest.bakingapp.mvp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -35,8 +36,10 @@ public class Reciep implements Parcelable {
     protected Reciep(Parcel in) {
         id = in.readInt();
         name = in.readString();
-        ingredients = in.readArrayList(Reciep.class.getClassLoader());
-        steps = in.readArrayList(Reciep.class.getClassLoader());
+        ingredients = new ArrayList<>();
+        in.readTypedList(ingredients, Ingredient.CREATOR);
+        steps = new ArrayList<>();
+        in.readTypedList(steps, Step.CREATOR);
         servings = in.readInt();
         image = in.readString();
     }
@@ -90,6 +93,7 @@ public class Reciep implements Parcelable {
     public void setImage(String image) {
         this.image = image;
     }
+
     @Override
     public int describeContents() {
         return 0;
@@ -99,8 +103,8 @@ public class Reciep implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(name);
-        dest.writeList(ingredients);
-        dest.writeList(steps);
+        dest.writeTypedList(ingredients);
+        dest.writeTypedList(steps);
         dest.writeInt(servings);
         dest.writeString(image);
     }
