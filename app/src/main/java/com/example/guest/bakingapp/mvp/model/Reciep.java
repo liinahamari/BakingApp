@@ -4,11 +4,14 @@ package com.example.guest.bakingapp.mvp.model;
  * Created by l1maginaire on 4/14/18.
  */
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Reciep {
+public class Reciep implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -28,6 +31,17 @@ public class Reciep {
     @SerializedName("image")
     @Expose
     private String image;
+
+    protected Reciep(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        ingredients = in.readArrayList(Reciep.class.getClassLoader());
+        steps = in.readArrayList(Reciep.class.getClassLoader());
+        servings = in.readInt();
+        image = in.readString();
+    }
+
+    public Reciep() {}
 
     public Integer getId() {
         return id;
@@ -76,4 +90,30 @@ public class Reciep {
     public void setImage(String image) {
         this.image = image;
     }
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeList(ingredients);
+        dest.writeList(steps);
+        dest.writeInt(servings);
+        dest.writeString(image);
+    }
+
+    public static final Creator<Reciep> CREATOR = new Creator<Reciep>() {
+        @Override
+        public Reciep createFromParcel(Parcel in) {
+            return new Reciep(in);
+        }
+
+        @Override
+        public Reciep[] newArray(int size) {
+            return new Reciep[size];
+        }
+    };
+}

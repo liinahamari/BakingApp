@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.mvp.model.Reciep;
+import com.example.guest.bakingapp.ui.MainFragment;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -34,9 +35,11 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     private List<Reciep> recieps;
     private Context context;
     private FloatingActionButton fab;
+    private MainFragment.Callbacks callbacks;
     private int position = -1;
 
-    public MainListAdapter(Context context) {
+    public MainListAdapter(Context context, MainFragment.Callbacks callbacks) {
+        this.callbacks = callbacks;
         this.context = context;
         recieps = new ArrayList<>();
     }
@@ -79,6 +82,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reciep reciep = recieps.get(position);
         holder.title.setText(reciep.getName());
+        holder.view.setOnClickListener(v -> callbacks.onItemClicked(reciep, position));
         /*holder.bookmarkButton.setOnClickListener(v ->
         {
             holder.bookmarkButton.setClickable(false);
@@ -109,8 +113,6 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
                             .into(holder.bookmarkButton);
                     reciep.setInFavorites(isFavorite);
                 });
-
-        holder.view.setOnClickListener(v -> callbacks.onItemClicked(reciep, position));
 */    }
 
     @Override

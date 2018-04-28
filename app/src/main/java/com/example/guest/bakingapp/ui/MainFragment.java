@@ -1,6 +1,6 @@
 package com.example.guest.bakingapp.ui;
 
-import android.content.res.Configuration;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -39,6 +39,17 @@ public class MainFragment extends BaseFragment implements MainView {
     protected RecyclerView recyclerView;
 
     private MainListAdapter adapter;
+    private Callbacks callbacks;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callbacks = (Callbacks) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement onItemClicked()");
+        }
+    }
 
     @Nullable
     @Override
@@ -61,7 +72,7 @@ public class MainFragment extends BaseFragment implements MainView {
         }*/
 //        cursorAdapter = new FavoritesAdapter(getActivity(), emptyFavoritesFrame, getLayoutInflater(), callbacks);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 1));
-        adapter = new MainListAdapter(getActivity());
+        adapter = new MainListAdapter(getActivity(), callbacks);
         recyclerView.setAdapter(adapter);
     }
 
@@ -98,5 +109,9 @@ public class MainFragment extends BaseFragment implements MainView {
     public void onDestroyView() {
         presenter.unsibscibe();
         super.onDestroyView();
+    }
+
+    public interface Callbacks {
+        void onItemClicked(Reciep reciep, int position);
     }
 }
