@@ -1,76 +1,71 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="ContentDescription, RtlHardcoded">
 
-    <android.support.constraint.ConstraintLayout
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/player_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/guide_horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.exoplayer2.ui.PlayerControlView
+        android:id="@+id/player_control"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="ContentDescription, RtlHardcoded">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/player_view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-        <com.google.android.exoplayer2.ui.PlayerView
-            android:id="@+id/player_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@android:color/black"
-            app:layout_constraintBottom_toTopOf="@+id/guide_horizontal"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ProgressBar
+        android:id="@+id/pb_video_indicator"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/player_view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/player_view" />
 
-        <com.google.android.exoplayer2.ui.PlayerControlView
-            android:id="@+id/player_control"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@id/player_view"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+    <TextView
+        android:id="@+id/tv_video_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="22sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/player_view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/player_view"
+        tools:text="Error" />
 
-        <ProgressBar
-            android:id="@+id/pb_video_indicator"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@id/player_view"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/player_view" />
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
 
-        <TextView
-            android:id="@+id/tv_video_error"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textColor="@color/colorAccent"
-            android:textSize="22sp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@id/player_view"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/player_view"
-            tools:text="Error" />
+    <ImageView
+        android:id="@+id/iv_step_details_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/guide_horizontal" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guide_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.5" />
+    <TextView
+        android:id="@+id/lool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/repeat"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-        <ImageView
-            android:id="@+id/iv_step_details_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/guide_horizontal" />
-
-        <com.uncopt.android.widget.text.justify.JustifiedTextView
-            android:id="@+id/tv_recipe_instructions"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            app:layout_constraintLeft_toRightOf="@+id/iv_step_details_image"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/guide_horizontal" />
-    </android.support.constraint.ConstraintLayout>
-</layout>
+</android.support.constraint.ConstraintLayout>

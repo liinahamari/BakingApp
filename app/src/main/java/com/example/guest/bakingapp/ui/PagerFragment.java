@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import retrofit2.http.POST;
+import butterknife.ButterKnife;
 
 import static com.example.guest.bakingapp.ui.PagerActivity.ID;
 import static com.example.guest.bakingapp.ui.PagerActivity.POSITION;
@@ -28,7 +28,7 @@ import static com.example.guest.bakingapp.ui.PagerActivity.POSITION;
 
 public class PagerFragment extends Fragment {
     private List<Step> stepList;
-    @BindView(R.id.pager)
+    @BindView(R.id.my_pager)
     protected ViewPager viewPager;
     private int position;
 
@@ -52,17 +52,19 @@ public class PagerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_pager, container, false);
-        viewPager.setAdapter(new FragmentStatePagerAdapter(getFragmentManager()) {
+        ButterKnife.bind(this, v);
+        viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
-                return StepFragment.newInstance(stepList.get(position));
+                return StepFragment.newInstance(String.valueOf(stepList.get(i).getId()));
             }
 
             @Override
             public int getCount() {
-                return stepList.size();
+                return (stepList == null || stepList.size() < 1) ? 0 : stepList.size();
             }
         });
+        viewPager.setCurrentItem(position);
         return v;
     }
 }
