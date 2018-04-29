@@ -55,7 +55,7 @@ public class MainFragment extends BaseFragment implements MainView {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View v = inflater.inflate(R.layout.activity_main, container, false);
+        View v = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, v);
         setupAdapter();
         loadNew();

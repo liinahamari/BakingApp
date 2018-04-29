@@ -2,11 +2,21 @@ package com.example.guest.bakingapp.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.mvp.model.Reciep;
+import com.example.guest.bakingapp.utils.MakeIngredietsString;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.example.guest.bakingapp.ui.DetailActivity.ID;
 
@@ -15,6 +25,9 @@ import static com.example.guest.bakingapp.ui.DetailActivity.ID;
  */
 
 public class DetailFragment extends Fragment {
+    @BindView(R.id.ingredients_tv)
+    protected TextView ingredientsTv;
+
     private Callbacks callbacks;
     private Reciep reciep;
 
@@ -34,6 +47,20 @@ public class DetailFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement onLikeClicked()");
         }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_details, container, false);
+        ButterKnife.bind(this, v);
+        setView();
+        return v;
+    }
+
+    private void setView() {
+        String s = MakeIngredietsString.make(reciep.getIngredients());
+        ingredientsTv.setText(s);
     }
 
     @Override
