@@ -23,10 +23,16 @@ import butterknife.ButterKnife;
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> {
     private List<Step> steps;
     private Context context;
+    private Callbacks callbacks;
 
     public StepsAdapter(List<Step> steps, Context context) {
         this.steps = steps;
         this.context = context;
+        try {
+            callbacks = (Callbacks) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement onLikeClicked()");
+        }
     }
 
     @NonNull
@@ -38,9 +44,9 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull StepsAdapter.ViewHolder holder, int position) {
-        StringBuilder builder = new StringBuilder();
         holder.label.setText(steps.get(position).getShortDescription());
         holder.description.setText(steps.get(position).getDescription());
+        holder.view.setOnClickListener(v -> callbacks.onStepClicked(position));
     }
 
     @Override
@@ -60,6 +66,10 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
             view = itemView;
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface Callbacks{
+        public void onStepClicked(int position);
     }
 }
 

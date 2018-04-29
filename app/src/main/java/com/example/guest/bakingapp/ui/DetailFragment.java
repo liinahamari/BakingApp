@@ -29,7 +29,7 @@ import static com.example.guest.bakingapp.ui.DetailActivity.ID;
  * Created by l1maginaire on 4/27/18.
  */
 
-public class DetailFragment extends Fragment {
+public class DetailFragment extends Fragment{
     @BindView(R.id.ingredients_tv)
     protected TextView ingredientsTv;
     @BindView(R.id.detail_recycler)
