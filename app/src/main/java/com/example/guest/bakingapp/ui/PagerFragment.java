@@ -64,7 +64,6 @@ public class PagerFragment extends Fragment {
                 return (stepList == null || stepList.size() < 1) ? 0 : stepList.size();
             }
         });
-        viewPager.setCurrentItem(position);
         return v;
     }
 }

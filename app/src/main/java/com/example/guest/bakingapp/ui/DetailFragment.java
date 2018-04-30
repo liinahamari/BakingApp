@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
@@ -29,7 +30,7 @@ import static com.example.guest.bakingapp.ui.DetailActivity.ID;
  * Created by l1maginaire on 4/27/18.
  */
 
-public class DetailFragment extends Fragment{
+public class DetailFragment extends Fragment {
     @BindView(R.id.ingredients_tv)
     protected TextView ingredientsTv;
     @BindView(R.id.detail_recycler)
@@ -68,6 +69,8 @@ public class DetailFragment extends Fragment{
     }
 
     private void setupAdapter() {
+        ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
+        recyclerView.setLayoutParams(params);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new StepsAdapter(reciep.getSteps(), getActivity());
         recyclerView.setAdapter(adapter);
