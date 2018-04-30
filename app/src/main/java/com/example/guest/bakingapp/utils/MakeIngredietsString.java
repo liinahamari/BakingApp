@@ -8,7 +8,7 @@ import java.util.List;
  * Created by l1maginaire on 4/29/18.
  */
 
-public class MakeIngredietsString {
+public class MakeIngredietsString { //todo расшифровка аббревеатур
     public static String make(List<Ingredient> ingredientList){
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i<ingredientList.size(); i++) {

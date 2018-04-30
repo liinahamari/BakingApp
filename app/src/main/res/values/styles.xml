@@ -23,4 +23,9 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
+    <style name="Labels" parent="CustomTextView">
+        <item name="android:textSize">35sp</item>
+        <item name="android:fontFamily">@font/birds_of_paradise</item>
+    </style>
+
 </resources>

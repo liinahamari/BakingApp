@@ -11,25 +11,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.mvp.model.Reciep;
 import com.example.guest.bakingapp.ui.MainFragment;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHolder> {
     private List<Reciep> recieps;
@@ -47,7 +40,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.list_single_item, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.single_item, parent, false);
         return new ViewHolder(v);
     }
 
@@ -81,8 +74,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reciep reciep = recieps.get(position);
-        String name = " " + reciep.getName();
-        holder.title.setText(name);
+        holder.title.setText(reciep.getName());
         holder.view.setOnClickListener(v -> callbacks.onItemClicked(reciep, position));
         /*holder.bookmarkButton.setOnClickListener(v ->
         {
