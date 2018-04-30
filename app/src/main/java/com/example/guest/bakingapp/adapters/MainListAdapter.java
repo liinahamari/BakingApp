@@ -81,7 +81,8 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reciep reciep = recieps.get(position);
-        holder.title.setText(reciep.getName());
+        String name = " " + reciep.getName();
+        holder.title.setText(name);
         holder.view.setOnClickListener(v -> callbacks.onItemClicked(reciep, position));
         /*holder.bookmarkButton.setOnClickListener(v ->
         {

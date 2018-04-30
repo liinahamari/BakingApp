@@ -10,6 +10,7 @@
 
     <android.support.constraint.ConstraintLayout
         style="@style/Containers"
+        android:background="@color/lightLight"
         android:padding="10dp">
 
         <ImageView
@@ -25,7 +26,9 @@
 
         <TextView
             android:id="@+id/title"
+            android:textSize="35sp"
             android:layout_width="0dp"
+            android:fontFamily="@font/birds_of_paradise"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/guideline_third"
