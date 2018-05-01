@@ -1,6 +1,5 @@
 package com.example.guest.bakingapp.ui;
 
-import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,21 +7,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.mvp.model.Step;
 import com.google.android.exoplayer2.util.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -38,27 +34,31 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 /**
  * Created by l1maginaire on 4/29/18.
  */
 
 public class StepFragment extends Fragment implements ExoPlayer.EventListener{
-    public static final String ID = "single_step_id";
-    private String step;
+    public static final String DESCRIPTION = "single_step_description";
+    public static final String VIDEO_URL = "single_step_url";
+
+    private String description;
+    private String videoUrl;
+
     @BindView(R.id.video_view)
     SimpleExoPlayerView exoPlayerView;
-    @BindView(R.id.lool)
+    @BindView(R.id.pager_description)
     protected TextView tv;
     SimpleExoPlayer exoPlayer;
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
 
 
-    public static Fragment newInstance(String id) {
+    public static Fragment newInstance(String videoUrl, String description) {
         Bundle args = new Bundle();
-        args.putString(ID, id);
+        args.putString(DESCRIPTION, description);
+        args.putString(VIDEO_URL, videoUrl);
         StepFragment fragment = new StepFragment();
         fragment.setArguments(args);
         return fragment;
@@ -67,7 +67,8 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        step = getArguments().getString(ID);
+        description = getArguments().getString(DESCRIPTION);
+        videoUrl = getArguments().getString(VIDEO_URL);
     }
 
     @Nullable
@@ -75,7 +76,8 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pager, container, false);
         ButterKnife.bind(this, v);
-        tv.setText(step);
+        tv.setMovementMethod(new ScrollingMovementMethod());
+        tv.setText(description);
         return v;
     }
 
@@ -83,7 +85,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeMediaSession();
-        initializePlayer(Uri.parse("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"));
+        initializePlayer(Uri.parse(videoUrl));
     }
 
     private void initializePlayer(Uri mediaUri) {

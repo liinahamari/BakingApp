@@ -56,7 +56,7 @@ public class PagerFragment extends Fragment {
         viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
-                return StepFragment.newInstance(String.valueOf(stepList.get(i).getId()));
+                return StepFragment.newInstance(stepList.get(i).getVideoURL(), stepList.get(i).getDescription());
             }
 
             @Override

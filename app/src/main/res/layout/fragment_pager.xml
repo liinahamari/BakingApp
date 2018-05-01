@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/guide_horizontal" />
+        app:layout_constraintBottom_toTopOf="@+id/guide_horizontal"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guide_horizontal"
@@ -20,11 +20,31 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5" />
 
-    <TextView
-        android:id="@+id/lool"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/repeat"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:background="@color/lightLight"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintTop_toBottomOf="@id/guide_horizontal">
 
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/pager_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="200dp"
+                android:fontFamily="@font/oregon_ldo"
+                android:padding="7dp"
+                android:scrollHorizontally="true"
+                android:text="@string/lorem"
+                android:textSize="22sp" />
+        </ScrollView>
+    </android.support.v7.widget.CardView>
 </android.support.constraint.ConstraintLayout>

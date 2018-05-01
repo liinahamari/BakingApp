@@ -70,7 +70,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
     }
 
     public interface Callbacks{
-        public void onStepClicked(int position);
+        void onStepClicked(int position);
     }
 }
 
