@@ -32,6 +32,7 @@ public class Reciep implements Parcelable {
     @SerializedName("image")
     @Expose
     private String image;
+    private int isFavorite = 0;
 
     protected Reciep(Parcel in) {
         id = in.readInt();
@@ -92,6 +93,14 @@ public class Reciep implements Parcelable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public int isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(int favorite) {
+        isFavorite = favorite;
     }
 
     @Override

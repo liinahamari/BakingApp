@@ -17,12 +17,18 @@ import android.widget.TextView;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.mvp.model.Reciep;
 import com.example.guest.bakingapp.ui.MainFragment;
+import com.example.guest.bakingapp.utils.DbOperations;
+import com.example.guest.bakingapp.utils.FavoritesChecker;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHolder> {
     private List<Reciep> recieps;
@@ -58,59 +64,57 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         recieps.clear();
         notifyDataSetChanged();
     }
-
- /*   private void bookmarkCallback(SingleMovie movie, int setFavorite, ViewHolder holder, int position) {
-        movie.setInFavorites(setFavorite);
-        Picasso.with(context)
-                .load(setFavorite != 0 ? R.drawable.bookmarked : R.drawable.unbookmarked)
-                .resize(resize, resize)
-                .into(holder.bookmarkButton);
-        if (fab != null && this.position == position) {
-            LikeButtonColorChanger.change(fab, context, setFavorite);
-        }
-        holder.bookmarkButton.setClickable(true);
-    }*/
-
+    
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reciep reciep = recieps.get(position);
         holder.title.setText(reciep.getName());
-        holder.view.setOnClickListener(v -> callbacks.onItemClicked(reciep, position));
-        /*holder.bookmarkButton.setOnClickListener(v ->
+        holder.title.setOnClickListener(v -> callbacks.onItemClicked(reciep, position));
+        holder.favIcon.setOnClickListener(v ->
         {
-            holder.bookmarkButton.setClickable(false);
-            if (reciep.isInFavorites() == 0) {
+            holder.favIcon.setClickable(false);
+            if (reciep.isFavorite() == 0) {
                 Single.fromCallable(() -> DbOperations.insert(recieps.get(position), context))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe(uri -> bookmarkCallback(reciep, 1, holder, position));
             } else {
-                Single.fromCallable(() -> DbOperations.delete(recieps.get(position).getTitle(), context))
+                Single.fromCallable(() -> DbOperations.delete(recieps.get(position).getId(), context))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe(rowsDeleted -> bookmarkCallback(reciep, 0, holder, position));
             }
-        });*/
+        });
 
-        /*Single.fromCallable(() -> {
-            holder.bookmarkButton.setClickable(false);
+        Single.fromCallable(() -> {
+            holder.favIcon.setClickable(false);
             return FavoritesChecker.isFavorite(context, reciep);
         })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(isFavorite -> {
-                    holder.bookmarkButton.setClickable(true);
+                    holder.favIcon.setClickable(true);
                     Picasso.with(context)
-                            .load(isFavorite != 0 ? R.drawable.bookmarked : R.drawable.unbookmarked)
-                            .resize(resize, resize)
-                            .into(holder.bookmarkButton);
-                    reciep.setInFavorites(isFavorite);
+                            .load(isFavorite != 0 ? R.drawable.t_star: R.drawable.f_star)
+                            .into(holder.favIcon);
+                    reciep.setFavorite(isFavorite);
                 });
-*/    }
+    }
 
     @Override
     public int getItemCount() {
         return (recieps == null) ? 0 : recieps.size();
+    }
+
+    private void bookmarkCallback(Reciep reciep, int setFavorite, ViewHolder holder, int position) {
+        reciep.setFavorite(setFavorite);
+        Picasso.with(context)
+                .load(setFavorite != 0 ? R.drawable.t_star : R.drawable.f_star)
+                .into(holder.favIcon);
+        if (fab != null && this.position == position) {
+//            LikeButtonColorChanger.change(fab, context, setFavorite);
+        }
+        holder.favIcon.setClickable(true);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
