@@ -19,6 +19,7 @@ import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.MainListAdapter;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.mvp.model.Reciep;
+import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
 import com.example.guest.bakingapp.utils.MakeIngredietsString;
 
 import butterknife.BindView;
@@ -35,6 +36,8 @@ public class DetailFragment extends Fragment {
     protected TextView ingredientsTv;
     @BindView(R.id.detail_recycler)
     protected RecyclerView recyclerView;
+    @BindView(R.id.fab)
+    protected FloatingActionButton fab;
 
     private Callbacks callbacks;
     private Reciep reciep;
@@ -77,8 +80,10 @@ public class DetailFragment extends Fragment {
     }
 
     private void setView() {
+        fab.setOnClickListener(v -> callbacks.onLikeClicked(reciep, fab));
         String s = MakeIngredietsString.make(reciep.getIngredients());
         ingredientsTv.setText(s);
+        LikeButtonColorChanger.change(fab, getActivity(), reciep.isFavorite());
     }
 
     @Override
@@ -88,6 +93,6 @@ public class DetailFragment extends Fragment {
     }
 
     public interface Callbacks {
-        void onLikeClicked(Reciep reciep, FloatingActionButton floatingButton);
+        void onLikeClicked(Reciep reciep, FloatingActionButton fab);
     }
 }

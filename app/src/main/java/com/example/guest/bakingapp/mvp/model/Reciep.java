@@ -43,6 +43,7 @@ public class Reciep implements Parcelable {
         in.readTypedList(steps, Step.CREATOR);
         servings = in.readInt();
         image = in.readString();
+        isFavorite = in.readInt();
     }
 
     public Reciep() {}
@@ -116,6 +117,7 @@ public class Reciep implements Parcelable {
         dest.writeTypedList(steps);
         dest.writeInt(servings);
         dest.writeString(image);
+        dest.writeInt(isFavorite);
     }
 
     public static final Creator<Reciep> CREATOR = new Creator<Reciep>() {

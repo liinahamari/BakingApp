@@ -19,6 +19,7 @@ import com.example.guest.bakingapp.mvp.model.Reciep;
 import com.example.guest.bakingapp.ui.MainFragment;
 import com.example.guest.bakingapp.utils.DbOperations;
 import com.example.guest.bakingapp.utils.FavoritesChecker;
+import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         recieps.clear();
         notifyDataSetChanged();
     }
-    
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reciep reciep = recieps.get(position);

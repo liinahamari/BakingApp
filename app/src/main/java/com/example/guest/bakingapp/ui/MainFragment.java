@@ -49,6 +49,13 @@ public class MainFragment extends BaseFragment implements MainView {
     private Callbacks callbacks;
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter!=null)
+            adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
