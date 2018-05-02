@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.MainListAdapter;
@@ -26,6 +28,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.view.View.VISIBLE;
 import static com.example.guest.bakingapp.utils.NetworkChecker.isNetAvailable;
 
 /**
@@ -37,6 +40,10 @@ public class MainFragment extends BaseFragment implements MainView {
     protected MainPresenter presenter;
     @BindView(R.id.main_recycler)
     protected RecyclerView recyclerView;
+    @BindView(R.id.error_layout_frame)
+    protected FrameLayout errorLayout;
+    @BindView(R.id.btn_repeat)
+    protected Button repeatButton;
 
     private MainListAdapter adapter;
     private Callbacks callbacks;
@@ -63,15 +70,8 @@ public class MainFragment extends BaseFragment implements MainView {
     }
 
     private void setupAdapter() {
-        /*recyclerView.setHasFixedSize(true);
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE
-                || getResources().getBoolean(R.bool.isTab)) {
-            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-        } else {
-            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        }*/
-//        cursorAdapter = new FavoritesAdapter(getActivity(), emptyFavoritesFrame, getLayoutInflater(), callbacks);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 1));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new MainListAdapter(getActivity(), callbacks);
         recyclerView.setAdapter(adapter);
     }
@@ -79,10 +79,10 @@ public class MainFragment extends BaseFragment implements MainView {
     private void loadNew() {
         if (isNetAvailable(getActivity())) {
             presenter.getRecieps();
-//            errorLayout.setVisibility(View.INVISIBLE);
+            errorLayout.setVisibility(View.INVISIBLE);
         } else {
-//            errorLayout.setVisibility(VISIBLE);
-//            repeatButton.setOnClickListener(v -> loadNew());
+            errorLayout.setVisibility(VISIBLE);
+            repeatButton.setOnClickListener(v -> loadNew());
         }
     }
 

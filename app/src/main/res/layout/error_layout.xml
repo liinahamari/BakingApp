@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/repeat"
+        android:fontFamily="@font/birds_of_paradise"
         android:textSize="45sp"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"

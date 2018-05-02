@@ -11,6 +11,7 @@ import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.base.BaseActivity;
 import com.example.guest.bakingapp.mvp.model.Reciep;
 import com.example.guest.bakingapp.mvp.model.Step;
+import com.example.guest.bakingapp.utils.NetworkChecker;
 
 import java.util.ArrayList;
 
@@ -46,6 +47,7 @@ public class DetailActivity extends BaseActivity implements StepsAdapter.Callbac
 
     @Override
     public void onStepClicked(int position) {
-        startActivity(PagerActivity.newIntent(this, (ArrayList<Step>) reciep.getSteps(), position));
+        if (NetworkChecker.isNetAvailable(this))
+            startActivity(PagerActivity.newIntent(this, (ArrayList<Step>) reciep.getSteps(), position));
     }
 }
