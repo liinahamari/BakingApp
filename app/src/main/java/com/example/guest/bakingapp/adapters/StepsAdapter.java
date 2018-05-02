@@ -31,7 +31,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
         try {
             callbacks = (Callbacks) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement onLikeClicked()");
+            throw new ClassCastException(context.toString() + " must implement onLikeClicked()");
         }
     }
 
