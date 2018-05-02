@@ -4,6 +4,8 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.guest.bakingapp"
+        applicationId "com.sedsoftware.bakingapp"
+
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
