@@ -18,6 +18,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static com.example.guest.bakingapp.ui.PagerActivity.ID;
 import static com.example.guest.bakingapp.ui.PagerActivity.POSITION;
@@ -31,6 +32,7 @@ public class PagerFragment extends Fragment {
     @BindView(R.id.my_pager)
     protected ViewPager viewPager;
     private int position;
+    Unbinder unbinder;
 
     public static Fragment newInstance(ArrayList<Step> steps, int position) {
         Bundle args = new Bundle();
@@ -52,7 +54,7 @@ public class PagerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_pager, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
@@ -66,5 +68,11 @@ public class PagerFragment extends Fragment {
             }
         });
         return v;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

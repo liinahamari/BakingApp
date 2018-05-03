@@ -6,17 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.adapters.MainListAdapter;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.mvp.model.Reciep;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
@@ -24,6 +21,7 @@ import com.example.guest.bakingapp.utils.MakeIngredietsString;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static com.example.guest.bakingapp.ui.DetailActivity.ID;
 
@@ -42,6 +40,7 @@ public class DetailFragment extends Fragment {
     private Callbacks callbacks;
     private Reciep reciep;
     private StepsAdapter adapter;
+    Unbinder unbinder;
 
     public static DetailFragment newInstance(Reciep reciep) {
         Bundle args = new Bundle();
@@ -65,10 +64,16 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_details, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         setView();
         setupAdapter();
         return v;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     private void setupAdapter() {

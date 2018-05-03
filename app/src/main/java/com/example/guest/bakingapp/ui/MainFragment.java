@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static android.view.View.VISIBLE;
 import static com.example.guest.bakingapp.utils.NetworkChecker.isNetAvailable;
@@ -47,6 +48,7 @@ public class MainFragment extends BaseFragment implements MainView {
 
     private MainListAdapter adapter;
     private Callbacks callbacks;
+    Unbinder unbinder;
 
     @Override
     public void onResume() {
@@ -70,7 +72,7 @@ public class MainFragment extends BaseFragment implements MainView {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.fragment_main, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         setupAdapter();
         loadNew();
         return v;
@@ -114,8 +116,9 @@ public class MainFragment extends BaseFragment implements MainView {
 
     @Override
     public void onDestroyView() {
-        presenter.unsibscibe();
         super.onDestroyView();
+        presenter.unsibscibe();
+        unbinder.unbind();
     }
 
     public interface Callbacks {
