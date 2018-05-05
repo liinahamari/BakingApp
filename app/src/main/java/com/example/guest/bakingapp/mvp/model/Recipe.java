@@ -12,7 +12,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Reciep implements Parcelable {
+public class Recipe implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -34,7 +34,7 @@ public class Reciep implements Parcelable {
     private String image;
     private int isFavorite = 0;
 
-    protected Reciep(Parcel in) {
+    protected Recipe(Parcel in) {
         id = in.readInt();
         name = in.readString();
         ingredients = new ArrayList<>();
@@ -46,7 +46,7 @@ public class Reciep implements Parcelable {
         isFavorite = in.readInt();
     }
 
-    public Reciep() {}
+    public Recipe() {}
 
     public Integer getId() {
         return id;
@@ -120,15 +120,15 @@ public class Reciep implements Parcelable {
         dest.writeInt(isFavorite);
     }
 
-    public static final Creator<Reciep> CREATOR = new Creator<Reciep>() {
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
         @Override
-        public Reciep createFromParcel(Parcel in) {
-            return new Reciep(in);
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
         }
 
         @Override
-        public Reciep[] newArray(int size) {
-            return new Reciep[size];
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
         }
     };
 }

@@ -17,7 +17,7 @@ import com.example.guest.bakingapp.adapters.MainListAdapter;
 import com.example.guest.bakingapp.base.BaseFragment;
 import com.example.guest.bakingapp.di.components.DaggerBakingComponent;
 import com.example.guest.bakingapp.di.modules.BakingModule;
-import com.example.guest.bakingapp.mvp.model.Reciep;
+import com.example.guest.bakingapp.mvp.model.Recipe;
 import com.example.guest.bakingapp.mvp.presenters.MainPresenter;
 import com.example.guest.bakingapp.mvp.view.MainView;
 
@@ -96,9 +96,9 @@ public class MainFragment extends BaseFragment implements MainView {
     }
 
     @Override
-    public void onReciepsLoaded(List<Reciep> recieps) {
+    public void onReciepsLoaded(List<Recipe> recipes) {
         onClearItems();
-        adapter.addRecieps(recieps);
+        adapter.addRecieps(recipes);
     }
 
     @Override
@@ -122,6 +122,6 @@ public class MainFragment extends BaseFragment implements MainView {
     }
 
     public interface Callbacks {
-        void onItemClicked(Reciep reciep, int position);
+        void onItemClicked(Recipe recipe, int position);
     }
 }

@@ -7,7 +7,7 @@ import android.widget.Toast;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.base.BaseActivity;
-import com.example.guest.bakingapp.mvp.model.Reciep;
+import com.example.guest.bakingapp.mvp.model.Recipe;
 import com.example.guest.bakingapp.mvp.model.Step;
 import com.example.guest.bakingapp.utils.NetworkChecker;
 
@@ -17,7 +17,7 @@ import static com.example.guest.bakingapp.utils.NetworkChecker.isNetAvailable;
 
 public class MainActivity extends BaseActivity implements MainFragment.Callbacks, StepsAdapter.Callbacks {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private Reciep reciep;
+    private Recipe recipe;
 
     @Override
     protected int getContentView() {
@@ -30,14 +30,14 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
     }
 
     @Override
-    public void onItemClicked(Reciep reciep, int position) {
-        this.reciep = reciep;
-        Log.d(TAG, reciep.getName() + " chosen.");
+    public void onItemClicked(Recipe recipe, int position) {
+        this.recipe = recipe;
+        Log.d(TAG, recipe.getName() + " chosen.");
         if (isNetAvailable(this)) {
             if (findViewById(R.id.twopane_detail_container) == null) {
-                startActivity(DetailActivity.newIntent(this, reciep));
+                startActivity(DetailActivity.newIntent(this, recipe));
             } else {
-                Fragment detailFragment = DetailFragment.newInstance(reciep);
+                Fragment detailFragment = DetailFragment.newInstance(recipe);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.twopane_detail_container, detailFragment)
@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
         if (NetworkChecker.isNetAvailable(this))
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.twopane_detail_container, PagerFragment.newInstance((ArrayList<Step>) reciep.getSteps(), position))
+                    .replace(R.id.twopane_detail_container, PagerFragment.newInstance((ArrayList<Step>) recipe.getSteps(), position))
                     .commit();
     }
 }

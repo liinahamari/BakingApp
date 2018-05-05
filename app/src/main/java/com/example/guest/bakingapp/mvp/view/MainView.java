@@ -1,7 +1,7 @@
 package com.example.guest.bakingapp.mvp.view;
 
 import com.example.guest.bakingapp.base.BaseView;
-import com.example.guest.bakingapp.mvp.model.Reciep;
+import com.example.guest.bakingapp.mvp.model.Recipe;
 
 import java.util.List;
 
@@ -10,6 +10,6 @@ import java.util.List;
  */
 
 public interface MainView extends BaseView {
-    void onReciepsLoaded(List<Reciep> recieps);
+    void onReciepsLoaded(List<Recipe> recipes);
     void onClearItems();
 }

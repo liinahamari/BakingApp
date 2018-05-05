@@ -15,14 +15,20 @@ import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
-import com.example.guest.bakingapp.mvp.model.Reciep;
+import com.example.guest.bakingapp.mvp.model.Recipe;
+import com.example.guest.bakingapp.utils.DbOperations;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
 import com.example.guest.bakingapp.utils.MakeIngredietsString;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
+import static com.example.guest.bakingapp.db.Recipe.COLUMN_ID;
+import static com.example.guest.bakingapp.db.Recipe.COLUMN_NAME;
 import static com.example.guest.bakingapp.ui.DetailActivity.ID;
 
 /**
@@ -38,13 +44,13 @@ public class DetailFragment extends Fragment {
     protected FloatingActionButton fab;
 
     private Callbacks callbacks;
-    private Reciep reciep;
+    private Recipe recipe;
     private StepsAdapter adapter;
     Unbinder unbinder;
 
-    public static DetailFragment newInstance(Reciep reciep) {
+    public static DetailFragment newInstance(Recipe recipe) {
         Bundle args = new Bundle();
-        args.putParcelable(ID, reciep);
+        args.putParcelable(ID, recipe);
         DetailFragment fragment = new DetailFragment();
         fragment.setArguments(args);
         return fragment;
@@ -67,37 +73,43 @@ public class DetailFragment extends Fragment {
         unbinder = ButterKnife.bind(this, v);
         setView();
         setupAdapter();
+        Single.fromCallable(() -> DbOperations.getAll(getActivity()))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(rowsDeleted -> {
+                    int i = 0;
+                });
         return v;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
+        @Override
+        public void onDestroyView () {
+            super.onDestroyView();
+            unbinder.unbind();
+        }
 
     private void setupAdapter() {
         ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
         recyclerView.setLayoutParams(params);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new StepsAdapter(reciep.getSteps(), getActivity());
+        adapter = new StepsAdapter(recipe.getSteps(), getActivity());
         recyclerView.setAdapter(adapter);
     }
 
     private void setView() {
-        fab.setOnClickListener(v -> callbacks.onLikeClicked(reciep, fab));
-        String s = MakeIngredietsString.make(reciep.getIngredients());
+        fab.setOnClickListener(v -> callbacks.onLikeClicked(recipe, fab));
+        String s = MakeIngredietsString.make(recipe.getIngredients());
         ingredientsTv.setText(s);
-        LikeButtonColorChanger.change(fab, getActivity(), reciep.isFavorite());
+        LikeButtonColorChanger.change(fab, getActivity(), recipe.isFavorite());
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        reciep = getArguments().getParcelable(ID);
+        recipe = getArguments().getParcelable(ID);
     }
 
     public interface Callbacks {
-        void onLikeClicked(Reciep reciep, FloatingActionButton fab);
+        void onLikeClicked(Recipe recipe, FloatingActionButton fab);
     }
 }

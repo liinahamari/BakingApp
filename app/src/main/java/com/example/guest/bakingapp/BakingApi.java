@@ -1,6 +1,6 @@
 package com.example.guest.bakingapp;
 
-import com.example.guest.bakingapp.mvp.model.Reciep;
+import com.example.guest.bakingapp.mvp.model.Recipe;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ import retrofit2.http.GET;
 
 public interface BakingApi {
     @GET("baking.json")
-    Observable<List<Reciep>> getRecieps();
+    Observable<List<Recipe>> getRecieps();
 }

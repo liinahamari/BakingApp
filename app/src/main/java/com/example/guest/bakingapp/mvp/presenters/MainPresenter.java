@@ -2,21 +2,15 @@ package com.example.guest.bakingapp.mvp.presenters;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 
 import com.example.guest.bakingapp.BakingApi;
 import com.example.guest.bakingapp.base.BasePresenter;
-import com.example.guest.bakingapp.mvp.model.Reciep;
 import com.example.guest.bakingapp.mvp.view.MainView;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
