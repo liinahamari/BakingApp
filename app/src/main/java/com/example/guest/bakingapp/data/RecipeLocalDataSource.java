@@ -12,7 +12,7 @@ import android.content.Context;
 import com.example.guest.bakingapp.mvp.model.IngredientLocal;
 import com.example.guest.bakingapp.mvp.model.RecipeLocal;
 import com.example.guest.bakingapp.mvp.model.StepLocal;
-import com.example.guest.bakingapp.utils.ContentProviderOperations;
+import com.example.guest.bakingapp.utils.LocalDataSource;
 
 import io.reactivex.Observable;
 import java.util.List;
@@ -30,17 +30,17 @@ public class RecipeLocalDataSource implements RecipeDataSource {
 
     @Override
     public Observable<List<RecipeLocal>> getRecipes() {
-        return Observable.just(ContentProviderOperations.recipesFromCursor(ContentProviderOperations.getAll(context)));
+        return Observable.just(LocalDataSource.recipesFromCursor(LocalDataSource.getAll(context)));
     }
 
     @Override
     public Observable<List<IngredientLocal>> getRecipeIngredients(int recipeId) {
-        return Observable.just(ContentProviderOperations.ingredientsFromCursor(ContentProviderOperations.getAll(context)));
+        return Observable.just(LocalDataSource.ingredientsFromCursor(LocalDataSource.getAll(context)));
     }
 
     @Override
     public Observable<List<StepLocal>> getRecipeSteps(int recipeId) {
-        return Observable.just(ContentProviderOperations.recipesFromCursor(ContentProviderOperations.getAll(context)));
+        return Observable.just(LocalDataSource.recipesFromCursor(LocalDataSource.getAll(context)));
     }
 
     @Override

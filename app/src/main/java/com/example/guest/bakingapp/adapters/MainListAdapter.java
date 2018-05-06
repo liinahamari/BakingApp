@@ -15,9 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
+import com.example.guest.bakingapp.data.local.LocalDataSource;
 import com.example.guest.bakingapp.data.remote.RecipeRemote;
 import com.example.guest.bakingapp.ui.MainFragment;
-import com.example.guest.bakingapp.utils.ContentProviderOperations;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -73,12 +73,12 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         {
             holder.favIcon.setClickable(false);
             if (recipeRemote.isFavorite() == 0) {
-                Single.fromCallable(() -> ContentProviderOperations.insert(recipeRemotes.get(position), context))
+                Single.fromCallable(() -> LocalDataSource.insert(recipeRemotes.get(position), context))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe(uri -> bookmarkCallback(recipeRemote, 1, holder, position));
             } else {
-                Single.fromCallable(() -> ContentProviderOperations.delete(recipeRemotes.get(position).getId(), context))
+                Single.fromCallable(() -> LocalDataSource.delete(recipeRemotes.get(position).getId(), context))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe(rowsDeleted -> bookmarkCallback(recipeRemote, 0, holder, position));
@@ -90,7 +90,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
 
         /*Single.fromCallable(() -> {
             holder.favIcon.setClickable(false);
-            return ContentProviderOperations.isFavorite(context, recipeRemote.getId());
+            return LocalDataSource.isFavorite(context, recipeRemote.getId());
         })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

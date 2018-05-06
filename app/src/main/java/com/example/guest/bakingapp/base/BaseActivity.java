@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.data.remote.RecipeRemote;
 import com.example.guest.bakingapp.ui.DetailFragment;
-import com.example.guest.bakingapp.utils.ContentProviderOperations;
+import com.example.guest.bakingapp.data.local.LocalDataSource;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
 import com.example.guest.bakingapp.utils.RxThreadManager;
 
@@ -43,7 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DetailFr
     public void onLikeClicked(RecipeRemote recipeRemote, FloatingActionButton fab) {
         if (recipeRemote.isFavorite() == 0) {
             fab.setClickable(false);
-            compositeDisposable.add(Single.fromCallable(() -> ContentProviderOperations.insert(recipeRemote, this))
+            compositeDisposable.add(Single.fromCallable(() -> LocalDataSource.insert(recipeRemote, this))
                     .compose(RxThreadManager.manageSingle())
                     .subscribe(uri -> {
                         recipeRemote.setFavorite(1);
@@ -52,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DetailFr
                     }));
         } else {
             fab.setClickable(false);
-            compositeDisposable.add(Single.fromCallable(() -> ContentProviderOperations.delete(recipeRemote.getId(), this))
+            compositeDisposable.add(Single.fromCallable(() -> LocalDataSource.delete(recipeRemote.getId(), this))
                     .compose(RxThreadManager.manageSingle())
                     .subscribe(rowsDeleted -> {
                         if (rowsDeleted != 0) {

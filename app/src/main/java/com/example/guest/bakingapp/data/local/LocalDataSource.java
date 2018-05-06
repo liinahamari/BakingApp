@@ -1,15 +1,12 @@
-package com.example.guest.bakingapp.utils;
+package com.example.guest.bakingapp.data.local;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.guest.bakingapp.data.local.IngredientLocal;
-import com.example.guest.bakingapp.data.local.StepLocal;
 import com.example.guest.bakingapp.data.remote.IngredientRemote;
 import com.example.guest.bakingapp.data.remote.RecipeRemote;
 import com.example.guest.bakingapp.data.remote.StepRemote;
@@ -17,7 +14,6 @@ import com.example.guest.bakingapp.data.remote.StepRemote;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.guest.bakingapp.data.local.Provider.AUTHORITY;
 import static com.example.guest.bakingapp.data.local.Provider.URI_INGREDIENTS;
 import static com.example.guest.bakingapp.data.local.Provider.URI_RECIPE;
 import static com.example.guest.bakingapp.data.local.Provider.URI_STEP;
@@ -32,8 +28,8 @@ import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_SERVINGS
  * Created by l1maginaire on 5/2/18.
  */
 
-public class ContentProviderOperations {
-    private static final String TAG = ContentProviderOperations.class.getSimpleName();
+public class LocalDataSource {
+    private static final String TAG = LocalDataSource.class.getSimpleName();
 
     public static List<RecipeRemote> getAll(Context context) {
         Cursor cursor = context.getContentResolver().query(URI_INGREDIENTS, null, null,
@@ -41,11 +37,17 @@ public class ContentProviderOperations {
         return recipesFromCursor(cursor);
     }
 
+    /**
+     * @return successful insert returns 3
+     */
+
     public static int delete(int id, Context context) {
-        int i = context.getContentResolver().delete(URI_STEP, null, new String[]{String.valueOf(id)});
-        int i2 = context.getContentResolver().delete(URI_RECIPE, null, new String[]{String.valueOf(id)});
-        int i3 = context.getContentResolver().delete(URI_INGREDIENTS, null, new String[]{String.valueOf(id)});
-        return i + i2 + i3;
+        int rowsDeleted = 0;
+        rowsDeleted += (context.getContentResolver().delete(URI_STEP, null, new String[]{String.valueOf(id)})) > 0 ? 1 : 0;
+        rowsDeleted += (context.getContentResolver().delete(URI_RECIPE, null, new String[]{String.valueOf(id)})) > 0 ? 1 : 0;
+        rowsDeleted += (context.getContentResolver().delete(URI_INGREDIENTS, null, new String[]{String.valueOf(id)})) > 0 ? 1 : 0;
+        Log.i(TAG, "Rows deleted: " + rowsDeleted);
+        return rowsDeleted;
     }
 
     /**
@@ -117,10 +119,6 @@ public class ContentProviderOperations {
             }
         }
         return recipeRemoteList;
-    }
-
-    private static Uri getUriItem(String table, int id) {
-        return Uri.parse("content://" + AUTHORITY + "/" + table + "/" + id);
     }
 
     public static List<Integer> isFavorite(Context context) {

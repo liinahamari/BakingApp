@@ -77,6 +77,7 @@ public class MainFragment extends BaseFragment implements MainView {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         unbinder = ButterKnife.bind(this, v);
         setupAdapter();
+        presenter.getLocalData();
         loadNew();
         return v;
     }
@@ -93,7 +94,7 @@ public class MainFragment extends BaseFragment implements MainView {
             presenter.getRecieps();
             errorLayout.setVisibility(View.INVISIBLE);
         } else {
-            if (presenter.getFavNumbers() == 0) {
+            if (presenter.getLocalDataSize() == 0) {
                 errorLayout.setVisibility(VISIBLE);
                 repeatButton.setOnClickListener(v -> loadNew());
             }
@@ -102,13 +103,13 @@ public class MainFragment extends BaseFragment implements MainView {
 
     @Override
     public void onReciepsLoaded(List<RecipeRemote> recipeRemotes, List<RecipeLocal> favIds) {
-        onClearItems();
         for (RecipeRemote recipeRemote : recipeRemotes) {
             for (RecipeLocal dbRecipeLocal :favIds) {
                 if(recipeRemote.getId().compareTo(dbRecipeLocal.recipeId)==0)
                     recipeRemote.setFavorite(1);
             }
         }
+        onClearItems();
         adapter.addRecieps(recipeRemotes);
     }
 
