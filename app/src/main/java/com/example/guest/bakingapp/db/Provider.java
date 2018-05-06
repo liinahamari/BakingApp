@@ -16,13 +16,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.guest.bakingapp.App;
+import com.example.guest.bakingapp.db.model.Ingredient;
 import com.example.guest.bakingapp.db.model.Recipe;
+import com.example.guest.bakingapp.db.model.Step;
 
 public class Provider extends ContentProvider {
     public static final String AUTHORITY = "com.example.guest.bakingapp.db";
 
-    public static final Uri URI_RECIPE = Uri.parse(
-            "content://" + AUTHORITY + "/" + Recipe.RECIPE_TABLE_NAME);
+    public static final Uri URI_RECIPE = Uri.parse("content://" + AUTHORITY + "/" + Recipe.RECIPE_TABLE_NAME);
+    public static final Uri URI_INGREDIENTS = Uri.parse("content://" + AUTHORITY + "/" + Ingredient.INGREDIENTS_TABLE_NAME);
+    public static final Uri URI_STEPS = Uri.parse("content://" + AUTHORITY + "/" + Step.STEPS_TABLE_NAME);
 
     private static final int RECIPE_DIR = 1001;
     private static final int RECIPE_ITEM = 1002;
@@ -51,17 +54,22 @@ public class Provider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
                         @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         final int code = uriMatcher.match(uri);
-        if (code == RECIPE_DIR || code == RECIPE_ITEM) {
+        if (code == RECIPE_DIR || code == RECIPE_ITEM || code == INGREDIENT_DIR || code == INGREDIENT_ITEM
+                || code == STEP_DIR || code == STEP_ITEM) {
             final Context context = getContext();
             if (context == null) {
                 return null;
             }
-            RecipeDao reciepe = App.dbInstance.reciepe();
-            final Cursor cursor;
+            RecipeDao reciepe = App.dbInstance.reciepe();//todo ask mentor's opinion
+            Cursor cursor = null;
             if (code == RECIPE_DIR) {
                 cursor = reciepe.getRecipes();
-            } else {
+            } else if (code == RECIPE_ITEM) {
                 cursor = reciepe.getRecipe(ContentUris.parseId(uri));
+            } else if (code == INGREDIENT_DIR) {
+                cursor = reciepe.getIngredients(Long.valueOf(selectionArgs[0]));
+            } else if (code == STEP_DIR){
+                cursor = reciepe.getSteps(Integer.valueOf(selectionArgs[0]));
             }
             cursor.setNotificationUri(context.getContentResolver(), uri);
             return cursor;
@@ -93,12 +101,9 @@ public class Provider extends ContentProvider {
                 if (context == null) {
                     return null;
                 }
-                final long id = App.dbInstance.reciepe()
-                        .insertRecipe(Recipe.fromContentValues(values));
+                final long insertRecipe = App.dbInstance.reciepe().insertRecipe(Recipe.fromContentValues(values));
                 context.getContentResolver().notifyChange(uri, null);
-                return ContentUris.withAppendedId(uri, id);
-            case RECIPE_ITEM:
-                throw new IllegalArgumentException("Invalid URI, cannot insert with ID: " + uri);
+                return ContentUris.withAppendedId(uri, insertRecipe);
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
@@ -131,20 +136,22 @@ public class Provider extends ContentProvider {
 
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] valuesArray) {
+        final RecipeDb database = App.dbInstance;
         switch (uriMatcher.match(uri)) {
             case RECIPE_DIR:
                 final Context context = getContext();
                 if (context == null) {
                     return 0;
                 }
-                final RecipeDb database = App.dbInstance;
                 final Recipe[] recipes = new Recipe[valuesArray.length];
                 for (int i = 0; i < valuesArray.length; i++) {
                     recipes[i] = Recipe.fromContentValues(valuesArray[i]);
                 }
                 return database.reciepe().insertRecipes(recipes).length;
-            case RECIPE_ITEM:
-                throw new IllegalArgumentException("Invalid URI, cannot insert with ID: " + uri);
+            case INGREDIENT_DIR:
+                return database.reciepe().insertIngredients(Ingredient.fromContentValues(valuesArray)).length;
+            case STEP_DIR:
+                return database.reciepe().insertSteps(Step.fromContentValues(valuesArray)).length;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }

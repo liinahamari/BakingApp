@@ -7,13 +7,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.example.guest.bakingapp.mvp.model.Ingredient;
 import com.example.guest.bakingapp.mvp.model.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.guest.bakingapp.db.Provider.AUTHORITY;
+import static com.example.guest.bakingapp.db.Provider.URI_INGREDIENTS;
 import static com.example.guest.bakingapp.db.Provider.URI_RECIPE;
+import static com.example.guest.bakingapp.db.Provider.URI_STEPS;
 import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_FAVORITE;
 import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_ID;
 import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_IMAGE;
@@ -58,6 +61,38 @@ public class ContentProviderOperations {
             contentValues[i] = values;
         }
         int i =context.getContentResolver().bulkInsert(URI_RECIPE, contentValues);
+        return i;
+    }
+
+    public static int bulkInsert(List<Ingredient> ingredients, Context context) {
+        ContentValues[] contentValues = new ContentValues[ingredients.size()];
+        for (int i = 0; i<ingredients.size(); i++) {
+            Ingredient ingredient = ingredients.get(i);
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_ID, ingredient.get());
+            values.put(COLUMN_IMAGE, ingredient.getImage());
+            values.put(COLUMN_NAME, ingredient.getName());
+            values.put(COLUMN_SERVINGS, ingredient.getServings());
+            values.put(COLUMN_FAVORITE, ingredient.isFavorite());
+            contentValues[i] = values;
+        }
+        int i =context.getContentResolver().bulkInsert(URI_INGREDIENTS, contentValues);
+        return i;
+    }
+
+    public static int bulkInsert(List<Recipe> recipes, Context context) {
+        ContentValues[] contentValues = new ContentValues[recipes.size()];
+        for (int i = 0; i < recipes.size(); i++) {
+            Recipe recipe = recipes.get(i);
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_ID, recipe.getId());
+            values.put(COLUMN_IMAGE, recipe.getImage());
+            values.put(COLUMN_NAME, recipe.getName());
+            values.put(COLUMN_SERVINGS, recipe.getServings());
+            values.put(COLUMN_FAVORITE, recipe.isFavorite());
+            contentValues[i] = values;
+        }
+        int i = context.getContentResolver().bulkInsert(URI_STEPS, contentValues);
         return i;
     }
 
