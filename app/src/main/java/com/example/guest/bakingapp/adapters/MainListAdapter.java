@@ -52,9 +52,6 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     }
 
     public void addRecieps(List<Recipe> recipes) {
-        Single.fromCallable(() -> ContentProviderOperations.bulkInsert(recipes, context))
-                .compose(RxThreadManager.manageSingle())
-                .subscribe(rowsInserted -> Log.d("MainListAdapter", String.valueOf(rowsInserted)));
         this.recipes.addAll(recipes);
         notifyDataSetChanged();
     }

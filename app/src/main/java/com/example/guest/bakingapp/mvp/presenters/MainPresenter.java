@@ -35,7 +35,7 @@ public class MainPresenter extends BasePresenter<MainView> {
         disposable = apiService.getRecieps()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(recieps -> getView().onReciepsLoaded(recieps), throwable -> Log.e(TAG, throwable.getMessage()));
+                .subscribe(recipes -> getView().onReciepsLoaded(recipes), throwable -> Log.e(TAG, throwable.getMessage()));
     }
 
     public void unsibscibe(){
