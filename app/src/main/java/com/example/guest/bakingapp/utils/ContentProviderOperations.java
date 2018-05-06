@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.guest.bakingapp.mvp.model.Ingredient;
 import com.example.guest.bakingapp.mvp.model.Recipe;
@@ -31,6 +32,8 @@ import static com.example.guest.bakingapp.db.model.Recipe.RECIPE_TABLE_NAME;
  */
 
 public class ContentProviderOperations {
+    private static final String TAG = ContentProviderOperations.class.getSimpleName();
+
     public static List<Recipe> getAll(Context context) {
         Cursor cursor = context.getContentResolver().query(URI_INGREDIENTS, null, null,
                 new String[]{String.valueOf(1)}, null);
@@ -42,16 +45,27 @@ public class ContentProviderOperations {
         return i;
     }
 
-    public static Uri insert(Recipe recipe, Context context) {
+    /**
+     * @return successful insert returns 3
+     */
+
+    public static int insert(Recipe recipe, Context context) {
+        int i = 0;
+        i += (insertRecipes(recipe, context));
+        i += insertIngredients(recipe.getIngredients(), context, recipe.getId());
+        i += insertSteps(recipe.getSteps(), context, recipe.getId());
+        Log.d(TAG, String.valueOf(i));
+        return i;
+    }
+
+    private static int insertRecipes(Recipe recipe, Context context) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_RECIPE_ID, recipe.getId());
         values.put(COLUMN_IMAGE, recipe.getImage());
         values.put(COLUMN_NAME, recipe.getName());
         values.put(COLUMN_SERVINGS, recipe.getServings());
         values.put(COLUMN_FAVORITE, recipe.isFavorite());
-        insertIngredients(recipe.getIngredients(), context, recipe.getId());
-        insertSteps(recipe.getSteps(), context, recipe.getId());
-        return context.getContentResolver().insert(URI_RECIPE, values);
+        return (context.getContentResolver().insert(URI_RECIPE, values) != null) ? 1 : 0;
     }
 
     public static int insertIngredients(List<Ingredient> ingredients, Context context, int recipeId) {
@@ -90,19 +104,13 @@ public class ContentProviderOperations {
         if (cursor.getCount() > 0) {
             cursor.moveToPosition(-1);
             while (cursor.moveToNext()) {
-                /*Recipe recipe = new Recipe();
+                Recipe recipe = new Recipe();
                 recipe.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
                 recipe.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)));
                 recipe.setServings(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVINGS)));
                 recipe.setImage(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE)));
                 recipe.setFavorite(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_FAVORITE)));
-                recipeList.add(recipe);*/
-
-                Ingredient recipe = new Ingredient();
-                recipe.setIngredient(cursor.getString(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_QUANTITITY)));
-                recipe.setMeasure(cursor.getString(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_MEASURE)));
-                recipe.setQuantity(cursor.getDouble(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_QUANTITITY)));
-                int i = 0;
+                recipeList.add(recipe);
             }
         }
         return recipeList;

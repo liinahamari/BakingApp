@@ -8,24 +8,30 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.guest.bakingapp.App;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
+import com.example.guest.bakingapp.mvp.model.Ingredient;
 import com.example.guest.bakingapp.mvp.model.Recipe;
-import com.example.guest.bakingapp.utils.ContentProviderOperations;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
 import com.example.guest.bakingapp.utils.MakeIngredietsString;
 import com.example.guest.bakingapp.utils.RxThreadManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Single;
 
+import static com.example.guest.bakingapp.db.Provider.URI_INGREDIENTS;
 import static com.example.guest.bakingapp.ui.DetailActivity.ID;
 
 /**
@@ -33,6 +39,8 @@ import static com.example.guest.bakingapp.ui.DetailActivity.ID;
  */
 
 public class DetailFragment extends Fragment {
+    private static final String TAG = DetailFragment.class.getSimpleName();
+
     @BindView(R.id.ingredients_tv)
     protected TextView ingredientsTv;
     @BindView(R.id.detail_recycler)
@@ -70,19 +78,31 @@ public class DetailFragment extends Fragment {
         unbinder = ButterKnife.bind(this, v);
         setView();
         setupAdapter();
-        Single.fromCallable(() -> ContentProviderOperations.getAll(getActivity()))
+        Single.fromCallable(() -> getActivity().getContentResolver().query(URI_INGREDIENTS, null, null,
+                new String[]{String.valueOf(recipe.getId())}, null))
                 .compose(RxThreadManager.manageSingle())
-                .subscribe(rowsDeleted -> {
-                    int i = 0;
+                .doOnError(throwable -> Log.e(TAG, "Something is wrong with App-class"))
+                .subscribe(cursor -> {
+                    List<Ingredient> ingredientList = new ArrayList<>();
+                    if (cursor.getCount() > 0) {
+                        cursor.moveToPosition(-1);
+                        while (cursor.moveToNext()) {
+                            Ingredient ingredient = new Ingredient();
+                            ingredient.setIngredient(cursor.getString(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_QUANTITITY)));
+                            ingredient.setMeasure(cursor.getString(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_MEASURE)));
+                            ingredient.setQuantity(cursor.getDouble(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_QUANTITITY)));
+                            ingredientList.add(ingredient);
+                        }
+                    }
                 });
         return v;
     }
 
-        @Override
-        public void onDestroyView () {
-            super.onDestroyView();
-            unbinder.unbind();
-        }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
     private void setupAdapter() {
         ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
