@@ -16,19 +16,16 @@ import android.widget.TextView;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.mvp.model.Recipe;
-import com.example.guest.bakingapp.utils.DbOperations;
+import com.example.guest.bakingapp.utils.ContentProviderOperations;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
 import com.example.guest.bakingapp.utils.MakeIngredietsString;
+import com.example.guest.bakingapp.utils.RxThreadManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
-import static com.example.guest.bakingapp.db.Recipe.COLUMN_ID;
-import static com.example.guest.bakingapp.db.Recipe.COLUMN_NAME;
 import static com.example.guest.bakingapp.ui.DetailActivity.ID;
 
 /**
@@ -73,9 +70,8 @@ public class DetailFragment extends Fragment {
         unbinder = ButterKnife.bind(this, v);
         setView();
         setupAdapter();
-        Single.fromCallable(() -> DbOperations.getAll(getActivity()))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
+        Single.fromCallable(() -> ContentProviderOperations.getAll(getActivity()))
+                .compose(RxThreadManager.manageSingle())
                 .subscribe(rowsDeleted -> {
                     int i = 0;
                 });

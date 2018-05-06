@@ -8,6 +8,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,8 @@ import android.widget.TextView;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.mvp.model.Recipe;
 import com.example.guest.bakingapp.ui.MainFragment;
-import com.example.guest.bakingapp.utils.DbOperations;
+import com.example.guest.bakingapp.utils.ContentProviderOperations;
+import com.example.guest.bakingapp.utils.RxThreadManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -50,6 +52,9 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     }
 
     public void addRecieps(List<Recipe> recipes) {
+        Single.fromCallable(() -> ContentProviderOperations.bulkInsert(recipes, context))
+                .compose(RxThreadManager.manageSingle())
+                .subscribe(rowsInserted -> Log.d("MainListAdapter", String.valueOf(rowsInserted)));
         this.recipes.addAll(recipes);
         notifyDataSetChanged();
     }
@@ -73,12 +78,12 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         {
             holder.favIcon.setClickable(false);
             if (recipe.isFavorite() == 0) {
-                Single.fromCallable(() -> DbOperations.insert(recipes.get(position), context))
+                Single.fromCallable(() -> ContentProviderOperations.insert(recipes.get(position), context))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe(uri -> bookmarkCallback(recipe, 1, holder, position));
             } else {
-                Single.fromCallable(() -> DbOperations.delete(recipes.get(position).getId(), context))
+                Single.fromCallable(() -> ContentProviderOperations.delete(recipes.get(position).getId(), context))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
                         .subscribe(rowsDeleted -> bookmarkCallback(recipe, 0, holder, position));
@@ -87,14 +92,14 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
 
         Single.fromCallable(() -> {
             holder.favIcon.setClickable(false);
-            return DbOperations.isFavorite(context, recipe.getId());
+            return ContentProviderOperations.isFavorite(context, recipe.getId());
         })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(isFavorite -> {
                     holder.favIcon.setClickable(true);
                     Picasso.with(context)
-                            .load(isFavorite != 0 ? R.drawable.t_star: R.drawable.f_star)
+                            .load(isFavorite != 0 ? R.drawable.t_star : R.drawable.f_star)
                             .into(holder.favIcon);
                     recipe.setFavorite(isFavorite);
                 });

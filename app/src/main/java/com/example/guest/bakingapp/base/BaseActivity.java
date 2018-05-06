@@ -10,15 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.mvp.model.Recipe;
 import com.example.guest.bakingapp.ui.DetailFragment;
-import com.example.guest.bakingapp.utils.DbOperations;
+import com.example.guest.bakingapp.utils.ContentProviderOperations;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
+import com.example.guest.bakingapp.utils.RxThreadManager;
 
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
-
-import static com.example.guest.bakingapp.db.Recipe.COLUMN_NAME;
 
 /**
  * Created by l1maginaire on 4/14/18.
@@ -46,9 +43,8 @@ public abstract class BaseActivity extends AppCompatActivity implements DetailFr
     public void onLikeClicked(Recipe recipe, FloatingActionButton fab) {
         if (recipe.isFavorite() == 0) {
             fab.setClickable(false);
-            compositeDisposable.add(Single.fromCallable(() -> DbOperations.insert(recipe, this))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
+            compositeDisposable.add(Single.fromCallable(() -> ContentProviderOperations.insert(recipe, this))
+                    .compose(RxThreadManager.manageSingle())
                     .subscribe(uri -> {
                         recipe.setFavorite(1);
                         LikeButtonColorChanger.change(fab, this, 1);
@@ -56,9 +52,8 @@ public abstract class BaseActivity extends AppCompatActivity implements DetailFr
                     }));
         } else {
             fab.setClickable(false);
-            compositeDisposable.add(Single.fromCallable(() -> DbOperations.delete(recipe.getId(), this))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
+            compositeDisposable.add(Single.fromCallable(() -> ContentProviderOperations.delete(recipe.getId(), this))
+                    .compose(RxThreadManager.manageSingle())
                     .subscribe(rowsDeleted -> {
                         if (rowsDeleted != 0) {
                             recipe.setFavorite(0);

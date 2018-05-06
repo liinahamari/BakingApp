@@ -14,22 +14,22 @@ import java.util.List;
 
 import static com.example.guest.bakingapp.db.Provider.AUTHORITY;
 import static com.example.guest.bakingapp.db.Provider.URI_RECIPE;
-import static com.example.guest.bakingapp.db.Recipe.COLUMN_ID;
-import static com.example.guest.bakingapp.db.Recipe.COLUMN_IMAGE;
-import static com.example.guest.bakingapp.db.Recipe.COLUMN_NAME;
-import static com.example.guest.bakingapp.db.Recipe.COLUMN_SERVINGS;
+import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_ID;
+import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_IMAGE;
+import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_NAME;
+import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_SERVINGS;
 
 /**
  * Created by l1maginaire on 5/2/18.
  */
 
-public class DbOperations {
+public class ContentProviderOperations {
     public static List<Recipe> getAll(Context context) {
         Cursor cursor = context.getContentResolver().query(URI_RECIPE, null, null, null, null);
         return recipesFromCursor(cursor);
     }
 
-    public static int delete(int id, Context context) {
+    public static int delete(int id, Context context) {//todo тут bulk
         int i = context.getContentResolver().delete(getUriItem(id), null,null);
         return i;
     }
@@ -41,6 +41,21 @@ public class DbOperations {
         values.put(COLUMN_NAME, recipe.getName());
         values.put(COLUMN_SERVINGS, recipe.getServings());
         return context.getContentResolver().insert(URI_RECIPE, values);
+    }
+
+    public static int bulkInsert(List<Recipe> recipes, Context context) {
+        ContentValues[] contentValues = new ContentValues[recipes.size()];
+        for (int i = 0; i<recipes.size(); i++) {
+            Recipe recipe = recipes.get(i);
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_ID, recipe.getId());
+            values.put(COLUMN_IMAGE, recipe.getImage());
+            values.put(COLUMN_NAME, recipe.getName());
+            values.put(COLUMN_SERVINGS, recipe.getServings());
+            contentValues[i] = values;
+        }
+        int i =context.getContentResolver().bulkInsert(URI_RECIPE, contentValues);
+        return i;
     }
 
     public static List<Recipe> recipesFromCursor(@NonNull Cursor cursor) {
@@ -60,7 +75,7 @@ public class DbOperations {
     }
 
     private static Uri getUriItem(int id) {
-        return Uri.parse("content://" + AUTHORITY + "/" + com.example.guest.bakingapp.db.Recipe.TABLE_NAME + "/" + id);
+        return Uri.parse("content://" + AUTHORITY + "/" + com.example.guest.bakingapp.db.model.Recipe.RECIPE_TABLE_NAME + "/" + id);
     }
 
     public static Integer isFavorite(Context context, int id) {
