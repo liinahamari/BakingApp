@@ -24,8 +24,12 @@ public class Provider extends ContentProvider {
     public static final Uri URI_RECIPE = Uri.parse(
             "content://" + AUTHORITY + "/" + Recipe.RECIPE_TABLE_NAME);
 
-    private static final int RECIPE_DIR = 1111;
-    private static final int RECIPE_ITEM = 2222;
+    private static final int RECIPE_DIR = 1001;
+    private static final int RECIPE_ITEM = 1002;
+    private static final int INGREDIENT_DIR = 1101;
+    private static final int INGREDIENT_ITEM = 1102;
+    private static final int STEP_DIR = 1201;
+    private static final int STEP_ITEM = 1202;
 
     private static final UriMatcher uriMatcher = buildUriMatcher();
 

@@ -41,7 +41,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     public MainListAdapter(Context context, MainFragment.Callbacks callbacks) {
         this.callbacks = callbacks;
         this.context = context;
-        recipes = new ArrayList<>();
+        recipes = new ArrayList<>(0);
     }
 
     @NonNull

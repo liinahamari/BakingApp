@@ -110,6 +110,10 @@ public class MainFragment extends BaseFragment implements MainView {
         adapter.addRecieps(recipes);
     }
 
+    void sync(){
+
+    }
+
     @Override
     public void onClearItems() {
         adapter.clearItems();

@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.example.guest.bakingapp.db.Provider.AUTHORITY;
 import static com.example.guest.bakingapp.db.Provider.URI_RECIPE;
+import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_FAVORITE;
 import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_ID;
 import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_IMAGE;
 import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_NAME;
@@ -40,6 +41,7 @@ public class ContentProviderOperations {
         values.put(COLUMN_IMAGE, recipe.getImage());
         values.put(COLUMN_NAME, recipe.getName());
         values.put(COLUMN_SERVINGS, recipe.getServings());
+        values.put(COLUMN_FAVORITE, recipe.isFavorite());
         return context.getContentResolver().insert(URI_RECIPE, values);
     }
 
@@ -52,6 +54,7 @@ public class ContentProviderOperations {
             values.put(COLUMN_IMAGE, recipe.getImage());
             values.put(COLUMN_NAME, recipe.getName());
             values.put(COLUMN_SERVINGS, recipe.getServings());
+            values.put(COLUMN_FAVORITE, recipe.isFavorite());
             contentValues[i] = values;
         }
         int i =context.getContentResolver().bulkInsert(URI_RECIPE, contentValues);
@@ -68,6 +71,7 @@ public class ContentProviderOperations {
                 recipe.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)));
                 recipe.setServings(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVINGS)));
                 recipe.setImage(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE)));
+                recipe.setFavorite(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_FAVORITE)));
                 recipeList.add(recipe);
             }
         }

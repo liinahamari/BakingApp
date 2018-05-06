@@ -16,6 +16,7 @@ public class Recipe{
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_SERVINGS = "servings";
     public static final String COLUMN_IMAGE = "image";
+    public static final String COLUMN_FAVORITE = "favorite";
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_ID)
@@ -26,6 +27,8 @@ public class Recipe{
     public Integer servings;
     @ColumnInfo(name = COLUMN_IMAGE)
     public String image;
+    @ColumnInfo(name = COLUMN_FAVORITE)
+    public Integer favorite;
 
     public static Recipe fromContentValues(ContentValues values) {
         final Recipe recipe = new Recipe();
@@ -39,6 +42,9 @@ public class Recipe{
             recipe.servings = values.getAsInteger(COLUMN_SERVINGS);
         }
         if (values.containsKey(COLUMN_IMAGE)) {
+            recipe.image = values.getAsString(COLUMN_IMAGE);
+        }
+        if (values.containsKey(COLUMN_FAVORITE)) {
             recipe.image = values.getAsString(COLUMN_IMAGE);
         }
         return recipe;
