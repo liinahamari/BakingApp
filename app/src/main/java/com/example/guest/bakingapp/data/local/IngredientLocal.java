@@ -1,18 +1,18 @@
-package com.example.guest.bakingapp.db.model;
+package com.example.guest.bakingapp.data.local;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.ContentValues;
 
-import static com.example.guest.bakingapp.db.model.Ingredient.INGREDIENTS_TABLE_NAME;
+import static com.example.guest.bakingapp.data.local.IngredientLocal.INGREDIENTS_TABLE_NAME;
 
 /**
  * Created by l1maginaire on 5/6/18.
  */
 
 @Entity(tableName = INGREDIENTS_TABLE_NAME)
-public class Ingredient {
+public class IngredientLocal {
     public static final String INGREDIENTS_TABLE_NAME = "ingredients";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_RECIPE_ID = "recipe_id";
@@ -32,28 +32,28 @@ public class Ingredient {
     @ColumnInfo(name = COLUMN_INGREDIENT)
     public String ingredient;
 
-    public static Ingredient[] fromContentValues(ContentValues[] values) {
-        Ingredient[] ingredients = new Ingredient[values.length];
+    public static IngredientLocal[] fromContentValues(ContentValues[] values) {
+        IngredientLocal[] ingredientLocals = new IngredientLocal[values.length];
         for (int i = 0; i<values.length; i++) {
             ContentValues values1 = values[i];
-            Ingredient ingredient = new Ingredient();
+            IngredientLocal ingredientLocal = new IngredientLocal();
             if (values1.containsKey(COLUMN_ID)) {
-                ingredient.id = values1.getAsInteger(COLUMN_ID);
+                ingredientLocal.id = values1.getAsInteger(COLUMN_ID);
             }
             if (values1.containsKey(COLUMN_RECIPE_ID)) {
-                ingredient.recipeId = values1.getAsInteger(COLUMN_RECIPE_ID);
+                ingredientLocal.recipeId = values1.getAsInteger(COLUMN_RECIPE_ID);
             }
             if (values1.containsKey(COLUMN_QUANTITITY)) {
-                ingredient.quantity = values1.getAsDouble(COLUMN_QUANTITITY);
+                ingredientLocal.quantity = values1.getAsDouble(COLUMN_QUANTITITY);
             }
             if (values1.containsKey(COLUMN_MEASURE)) {
-                ingredient.measure = values1.getAsString(COLUMN_MEASURE);
+                ingredientLocal.measure = values1.getAsString(COLUMN_MEASURE);
             }
             if (values1.containsKey(COLUMN_INGREDIENT)) {
-                ingredient.ingredient = values1.getAsString(COLUMN_INGREDIENT);
+                ingredientLocal.ingredient = values1.getAsString(COLUMN_INGREDIENT);
             }
-            ingredients[i] = ingredient;
+            ingredientLocals[i] = ingredientLocal;
         }
-        return ingredients;
+        return ingredientLocals;
     }
 }

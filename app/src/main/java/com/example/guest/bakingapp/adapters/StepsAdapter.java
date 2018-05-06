@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.mvp.model.Step;
+import com.example.guest.bakingapp.data.remote.StepRemote;
 
 import java.util.List;
 
@@ -21,12 +21,12 @@ import butterknife.ButterKnife;
  */
 
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> {
-    private List<Step> steps;
+    private List<StepRemote> stepRemotes;
     private Context context;
     private Callbacks callbacks;
 
-    public StepsAdapter(List<Step> steps, Context context) {
-        this.steps = steps;
+    public StepsAdapter(List<StepRemote> stepRemotes, Context context) {
+        this.stepRemotes = stepRemotes;
         this.context = context;
         try {
             callbacks = (Callbacks) context;
@@ -44,15 +44,15 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull StepsAdapter.ViewHolder holder, int position) {
-        String shortDescription = " " + steps.get(position).getShortDescription();
+        String shortDescription = " " + stepRemotes.get(position).getShortDescription();
         holder.label.setText(shortDescription);
-        holder.description.setText(steps.get(position).getDescription());
+        holder.description.setText(stepRemotes.get(position).getDescription());
         holder.view.setOnClickListener(v -> callbacks.onStepClicked(position));
     }
 
     @Override
     public int getItemCount() {
-        return (steps == null) ? 0 : steps.size();
+        return (stepRemotes == null) ? 0 : stepRemotes.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,8 +1,8 @@
 package com.example.guest.bakingapp.data;
 
-import com.example.guest.bakingapp.mvp.model.Ingredient;
-import com.example.guest.bakingapp.mvp.model.Recipe;
-import com.example.guest.bakingapp.mvp.model.Step;
+import com.example.guest.bakingapp.data.remote.IngredientRemote;
+import com.example.guest.bakingapp.data.remote.RecipeRemote;
+import com.example.guest.bakingapp.data.remote.StepRemote;
 
 import java.util.List;
 
@@ -13,8 +13,8 @@ import io.reactivex.Observable;
  */
 
 public interface RecipeDataSource {
-    Observable<List<Recipe>> getRecipes();
-    Observable<List<Ingredient>> getRecipeIngredients(int recipeId);
-    Observable<List<Step>> getRecipeSteps(int recipeId);
-    void saveRecipes(List<Recipe> recipes);
+    Observable<List<RecipeRemote>> getRecipes();
+    Observable<List<IngredientRemote>> getRecipeIngredients(int recipeId);
+    Observable<List<StepRemote>> getRecipeSteps(int recipeId);
+    void saveRecipes(List<RecipeRemote> recipeRemotes);
 }

@@ -3,7 +3,7 @@ package com.example.guest.bakingapp;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 
-import com.example.guest.bakingapp.db.RecipeDb;
+import com.example.guest.bakingapp.data.local.RecipeDb;
 import com.example.guest.bakingapp.di.components.ApplicationComponent;
 import com.example.guest.bakingapp.di.components.DaggerApplicationComponent;
 import com.example.guest.bakingapp.di.modules.ApplicationModule;

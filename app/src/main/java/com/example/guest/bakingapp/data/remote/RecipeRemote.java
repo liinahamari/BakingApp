@@ -1,4 +1,4 @@
-package com.example.guest.bakingapp.mvp.model;
+package com.example.guest.bakingapp.data.remote;
 
 /**
  * Created by l1maginaire on 4/14/18.
@@ -12,7 +12,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Recipe implements Parcelable {
+public class RecipeRemote implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -22,10 +22,10 @@ public class Recipe implements Parcelable {
     private String name;
     @SerializedName("ingredients")
     @Expose
-    private List<Ingredient> ingredients = null;
+    private List<IngredientRemote> ingredientRemotes = null;
     @SerializedName("steps")
     @Expose
-    private List<Step> steps = null;
+    private List<StepRemote> stepRemotes = null;
     @SerializedName("servings")
     @Expose
     private Integer servings;
@@ -34,19 +34,19 @@ public class Recipe implements Parcelable {
     private String image;
     private int isFavorite = 0;
 
-    protected Recipe(Parcel in) {
+    protected RecipeRemote(Parcel in) {
         id = in.readInt();
         name = in.readString();
-        ingredients = new ArrayList<>();
-        in.readTypedList(ingredients, Ingredient.CREATOR);
-        steps = new ArrayList<>();
-        in.readTypedList(steps, Step.CREATOR);
+        ingredientRemotes = new ArrayList<>();
+        in.readTypedList(ingredientRemotes, IngredientRemote.CREATOR);
+        stepRemotes = new ArrayList<>();
+        in.readTypedList(stepRemotes, StepRemote.CREATOR);
         servings = in.readInt();
         image = in.readString();
         isFavorite = in.readInt();
     }
 
-    public Recipe() {}
+    public RecipeRemote() {}
 
     public Integer getId() {
         return id;
@@ -64,20 +64,20 @@ public class Recipe implements Parcelable {
         this.name = name;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
+    public List<IngredientRemote> getIngredientRemotes() {
+        return ingredientRemotes;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
+    public void setIngredientRemotes(List<IngredientRemote> ingredientRemotes) {
+        this.ingredientRemotes = ingredientRemotes;
     }
 
-    public List<Step> getSteps() {
-        return steps;
+    public List<StepRemote> getStepRemotes() {
+        return stepRemotes;
     }
 
-    public void setSteps(List<Step> steps) {
-        this.steps = steps;
+    public void setStepRemotes(List<StepRemote> stepRemotes) {
+        this.stepRemotes = stepRemotes;
     }
 
     public Integer getServings() {
@@ -113,22 +113,22 @@ public class Recipe implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(name);
-        dest.writeTypedList(ingredients);
-        dest.writeTypedList(steps);
+        dest.writeTypedList(ingredientRemotes);
+        dest.writeTypedList(stepRemotes);
         dest.writeInt(servings);
         dest.writeString(image);
         dest.writeInt(isFavorite);
     }
 
-    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+    public static final Creator<RecipeRemote> CREATOR = new Creator<RecipeRemote>() {
         @Override
-        public Recipe createFromParcel(Parcel in) {
-            return new Recipe(in);
+        public RecipeRemote createFromParcel(Parcel in) {
+            return new RecipeRemote(in);
         }
 
         @Override
-        public Recipe[] newArray(int size) {
-            return new Recipe[size];
+        public RecipeRemote[] newArray(int size) {
+            return new RecipeRemote[size];
         }
     };
 }

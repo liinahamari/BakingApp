@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.base.BaseActivity;
-import com.example.guest.bakingapp.mvp.model.Step;
+import com.example.guest.bakingapp.data.remote.StepRemote;
 
 import java.util.ArrayList;
 
@@ -24,9 +24,9 @@ public class PagerActivity extends BaseActivity {
         return PagerFragment.newInstance(getIntent().getParcelableArrayListExtra(ID), getIntent().getIntExtra(POSITION, 0));
     }
 
-    public static Intent newIntent(Context context, ArrayList<Step> steps, int position) {
+    public static Intent newIntent(Context context, ArrayList<StepRemote> stepRemotes, int position) {
         Intent intent = new Intent(context, PagerActivity.class);
-        intent.putParcelableArrayListExtra(ID, steps);
+        intent.putParcelableArrayListExtra(ID, stepRemotes);
         intent.putExtra(POSITION, position);
         return intent;
     }

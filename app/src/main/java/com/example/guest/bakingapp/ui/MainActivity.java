@@ -7,8 +7,8 @@ import android.widget.Toast;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.base.BaseActivity;
-import com.example.guest.bakingapp.mvp.model.Recipe;
-import com.example.guest.bakingapp.mvp.model.Step;
+import com.example.guest.bakingapp.data.remote.RecipeRemote;
+import com.example.guest.bakingapp.data.remote.StepRemote;
 import com.example.guest.bakingapp.utils.NetworkChecker;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import static com.example.guest.bakingapp.utils.NetworkChecker.isNetAvailable;
 
 public class MainActivity extends BaseActivity implements MainFragment.Callbacks, StepsAdapter.Callbacks {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private Recipe recipe;
+    private RecipeRemote recipeRemote;
 
     @Override
     protected int getContentView() {
@@ -30,14 +30,14 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
     }
 
     @Override
-    public void onItemClicked(Recipe recipe, int position) {
-        this.recipe = recipe;
-        Log.d(TAG, recipe.getName() + " chosen.");
+    public void onItemClicked(RecipeRemote recipeRemote, int position) {
+        this.recipeRemote = recipeRemote;
+        Log.d(TAG, recipeRemote.getName() + " chosen.");
         if (isNetAvailable(this)) {
             if (findViewById(R.id.twopane_detail_container) == null) {
-                startActivity(DetailActivity.newIntent(this, recipe));
+                startActivity(DetailActivity.newIntent(this, recipeRemote));
             } else {
-                Fragment detailFragment = DetailFragment.newInstance(recipe);
+                Fragment detailFragment = DetailFragment.newInstance(recipeRemote);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.twopane_detail_container, detailFragment)
@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
         if (NetworkChecker.isNetAvailable(this))
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.twopane_detail_container, PagerFragment.newInstance((ArrayList<Step>) recipe.getSteps(), position))
+                    .replace(R.id.twopane_detail_container, PagerFragment.newInstance((ArrayList<StepRemote>) recipeRemote.getStepRemotes(), position))
                     .commit();
     }
 }

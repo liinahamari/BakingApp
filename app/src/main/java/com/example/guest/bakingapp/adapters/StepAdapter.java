@@ -17,13 +17,13 @@ import java.util.List;
 
 
 public class StepAdapter extends FragmentStatePagerAdapter {
-    private List<Step> stepList;
+    private List<StepLocal> stepList;
 
     public StepsAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public void setData(List<Step> stepList) {
+    public void setData(List<StepLocal> stepList) {
         this.stepList = stepList;
         notifyDataSetChanged();
     }

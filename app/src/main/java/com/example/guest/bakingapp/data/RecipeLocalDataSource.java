@@ -9,9 +9,9 @@ package com.example.guest.bakingapp.data;
 
 import android.content.Context;
 
-import com.example.guest.bakingapp.mvp.model.Ingredient;
-import com.example.guest.bakingapp.mvp.model.Recipe;
-import com.example.guest.bakingapp.mvp.model.Step;
+import com.example.guest.bakingapp.mvp.model.IngredientLocal;
+import com.example.guest.bakingapp.mvp.model.RecipeLocal;
+import com.example.guest.bakingapp.mvp.model.StepLocal;
 import com.example.guest.bakingapp.utils.ContentProviderOperations;
 
 import io.reactivex.Observable;
@@ -29,31 +29,31 @@ public class RecipeLocalDataSource implements RecipeDataSource {
     public RecipeLocalDataSource() {}
 
     @Override
-    public Observable<List<Recipe>> getRecipes() {
+    public Observable<List<RecipeLocal>> getRecipes() {
         return Observable.just(ContentProviderOperations.recipesFromCursor(ContentProviderOperations.getAll(context)));
     }
 
     @Override
-    public Observable<List<Ingredient>> getRecipeIngredients(int recipeId) {
+    public Observable<List<IngredientLocal>> getRecipeIngredients(int recipeId) {
         return Observable.just(ContentProviderOperations.ingredientsFromCursor(ContentProviderOperations.getAll(context)));
     }
 
     @Override
-    public Observable<List<Step>> getRecipeSteps(int recipeId) {
+    public Observable<List<StepLocal>> getRecipeSteps(int recipeId) {
         return Observable.just(ContentProviderOperations.recipesFromCursor(ContentProviderOperations.getAll(context)));
     }
 
     @Override
-    public void saveRecipes(List<Recipe> recipes) {
+    public void saveRecipes(List<RecipeLocal> recipes) {
         try {
             deleteAllRecipes();
-            for (Recipe recipe : recipes) {
+            for (RecipeLocal recipe : recipes) {
                 int id = recipe.getId();
-                for (Ingredient ingredient : recipe.ingredients()) {
+                for (IngredientLocal ingredient : recipe.ingredients()) {
                     databaseHelper.insert(IngredientEntry.RECIPE_TABLE_NAME,
                             DbUtils.ingredientToContentValues(ingredient, id));
                 }
-                for (Step step : recipe.getSteps()) {
+                for (StepLocal step : recipe.getStepRemotes()) {
                     databaseHelper.insert(StepEntry.RECIPE_TABLE_NAME,
                             DbUtils.stepToContentValues(step, id));
                 }

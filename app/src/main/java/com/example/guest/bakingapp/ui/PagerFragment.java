@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.mvp.model.Step;
+import com.example.guest.bakingapp.data.remote.StepRemote;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +28,15 @@ import static com.example.guest.bakingapp.ui.PagerActivity.POSITION;
  */
 
 public class PagerFragment extends Fragment {
-    private List<Step> stepList;
+    private List<StepRemote> stepRemoteList;
     @BindView(R.id.my_pager)
     protected ViewPager viewPager;
     private int position;
     Unbinder unbinder;
 
-    public static Fragment newInstance(ArrayList<Step> steps, int position) {
+    public static Fragment newInstance(ArrayList<StepRemote> stepRemotes, int position) {
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ID, steps);
+        args.putParcelableArrayList(ID, stepRemotes);
         args.putInt(POSITION, position);
         PagerFragment fragment = new PagerFragment();
         fragment.setArguments(args);
@@ -46,7 +46,7 @@ public class PagerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        stepList = getArguments().getParcelableArrayList(ID);
+        stepRemoteList = getArguments().getParcelableArrayList(ID);
         position = getArguments().getInt(POSITION);
     }
 
@@ -58,13 +58,13 @@ public class PagerFragment extends Fragment {
         viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
-                String video = stepList.get(i).getVideoURL();
-                return StepFragment.newInstance(video, stepList.get(i).getDescription());
+                String video = stepRemoteList.get(i).getVideoURL();
+                return StepFragment.newInstance(video, stepRemoteList.get(i).getDescription());
             }
 
             @Override
             public int getCount() {
-                return (stepList == null || stepList.size() < 1) ? 0 : stepList.size();
+                return (stepRemoteList == null || stepRemoteList.size() < 1) ? 0 : stepRemoteList.size();
             }
         });
         return v;

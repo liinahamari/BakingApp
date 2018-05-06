@@ -1,4 +1,4 @@
-package com.example.guest.bakingapp.mvp.model;
+package com.example.guest.bakingapp.data.remote;
 
 /**
  * Created by l1maginaire on 4/14/18.
@@ -10,7 +10,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Step implements Parcelable{
+public class StepRemote implements Parcelable{
 
     @SerializedName("id")
     @Expose
@@ -28,7 +28,7 @@ public class Step implements Parcelable{
     @Expose
     private String thumbnailURL;
 
-    protected Step(Parcel in) {
+    protected StepRemote(Parcel in) {
         id = in.readInt();
         shortDescription = in.readString();
         description = in.readString();
@@ -36,7 +36,7 @@ public class Step implements Parcelable{
         thumbnailURL = in.readString();
     }
 
-    public Step() {
+    public StepRemote() {
     }
 
     public Integer getId() {
@@ -93,15 +93,15 @@ public class Step implements Parcelable{
         dest.writeString(thumbnailURL);
     }
 
-    public static final Creator<Step> CREATOR = new Creator<Step>() {
+    public static final Creator<StepRemote> CREATOR = new Creator<StepRemote>() {
         @Override
-        public Step createFromParcel(Parcel in) {
-            return new Step(in);
+        public StepRemote createFromParcel(Parcel in) {
+            return new StepRemote(in);
         }
 
         @Override
-        public Step[] newArray(int size) {
-            return new Step[size];
+        public StepRemote[] newArray(int size) {
+            return new StepRemote[size];
         }
     };
 }

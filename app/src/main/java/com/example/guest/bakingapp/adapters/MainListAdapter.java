@@ -8,7 +8,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.mvp.model.Recipe;
+import com.example.guest.bakingapp.data.remote.RecipeRemote;
 import com.example.guest.bakingapp.ui.MainFragment;
 import com.example.guest.bakingapp.utils.ContentProviderOperations;
-import com.example.guest.bakingapp.utils.RxThreadManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHolder> {
-    private List<Recipe> recipes;
+    private List<RecipeRemote> recipeRemotes;
     private Context context;
     private FloatingActionButton fab;
     private MainFragment.Callbacks callbacks;
@@ -41,7 +39,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     public MainListAdapter(Context context, MainFragment.Callbacks callbacks) {
         this.callbacks = callbacks;
         this.context = context;
-        recipes = new ArrayList<>(0);
+        recipeRemotes = new ArrayList<>(0);
     }
 
     @NonNull
@@ -51,8 +49,8 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         return new ViewHolder(v);
     }
 
-    public void addRecieps(List<Recipe> recipes) {
-        this.recipes.addAll(recipes);
+    public void addRecieps(List<RecipeRemote> recipeRemotes) {
+        this.recipeRemotes.addAll(recipeRemotes);
         notifyDataSetChanged();
     }
 
@@ -62,34 +60,37 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     }
 
     public void clearItems() {
-        recipes.clear();
+        recipeRemotes.clear();
         notifyDataSetChanged();
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Recipe recipe = recipes.get(position);
-        holder.title.setText(recipe.getName());
-        holder.title.setOnClickListener(v -> callbacks.onItemClicked(recipe, position));
+        RecipeRemote recipeRemote = recipeRemotes.get(position);
+        holder.title.setText(recipeRemote.getName());
+        holder.title.setOnClickListener(v -> callbacks.onItemClicked(recipeRemote, position));
         holder.favIcon.setOnClickListener(v ->
         {
             holder.favIcon.setClickable(false);
-            if (recipe.isFavorite() == 0) {
-                Single.fromCallable(() -> ContentProviderOperations.insert(recipes.get(position), context))
+            if (recipeRemote.isFavorite() == 0) {
+                Single.fromCallable(() -> ContentProviderOperations.insert(recipeRemotes.get(position), context))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
-                        .subscribe(uri -> bookmarkCallback(recipe, 1, holder, position));
+                        .subscribe(uri -> bookmarkCallback(recipeRemote, 1, holder, position));
             } else {
-                Single.fromCallable(() -> ContentProviderOperations.delete(recipes.get(position).getId(), context))
+                Single.fromCallable(() -> ContentProviderOperations.delete(recipeRemotes.get(position).getId(), context))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
-                        .subscribe(rowsDeleted -> bookmarkCallback(recipe, 0, holder, position));
+                        .subscribe(rowsDeleted -> bookmarkCallback(recipeRemote, 0, holder, position));
             }
         });
 
+        Picasso.with(context)
+                .load(recipeRemote.isFavorite() != 0 ? R.drawable.t_star : R.drawable.f_star).into(holder.favIcon);
+
         /*Single.fromCallable(() -> {
             holder.favIcon.setClickable(false);
-            return ContentProviderOperations.isFavorite(context, recipe.getId());
+            return ContentProviderOperations.isFavorite(context, recipeRemote.getId());
         })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -98,17 +99,17 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
                     Picasso.with(context)
                             .load(isFavorite != 0 ? R.drawable.t_star : R.drawable.f_star)
                             .into(holder.favIcon);
-                    recipe.setFavorite(isFavorite);
+                    recipeRemote.setFavorite(isFavorite);
                 });*/
     }
 
     @Override
     public int getItemCount() {
-        return (recipes == null) ? 0 : recipes.size();
+        return (recipeRemotes == null) ? 0 : recipeRemotes.size();
     }
 
-    private void bookmarkCallback(Recipe recipe, int setFavorite, ViewHolder holder, int position) {
-        recipe.setFavorite(setFavorite);
+    private void bookmarkCallback(RecipeRemote recipeRemote, int setFavorite, ViewHolder holder, int position) {
+        recipeRemote.setFavorite(setFavorite);
         Picasso.with(context)
                 .load(setFavorite != 0 ? R.drawable.t_star : R.drawable.f_star)
                 .into(holder.favIcon);

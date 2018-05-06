@@ -15,9 +15,10 @@ import android.widget.FrameLayout;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.MainListAdapter;
 import com.example.guest.bakingapp.base.BaseFragment;
+import com.example.guest.bakingapp.data.local.RecipeLocal;
 import com.example.guest.bakingapp.di.components.DaggerBakingComponent;
 import com.example.guest.bakingapp.di.modules.BakingModule;
-import com.example.guest.bakingapp.mvp.model.Recipe;
+import com.example.guest.bakingapp.data.remote.RecipeRemote;
 import com.example.guest.bakingapp.mvp.presenters.MainPresenter;
 import com.example.guest.bakingapp.mvp.view.MainView;
 
@@ -100,9 +101,15 @@ public class MainFragment extends BaseFragment implements MainView {
     }
 
     @Override
-    public void onReciepsLoaded(List<Recipe> recipes) {
+    public void onReciepsLoaded(List<RecipeRemote> recipeRemotes, List<RecipeLocal> favIds) {
         onClearItems();
-        adapter.addRecieps(recipes);
+        for (RecipeRemote recipeRemote : recipeRemotes) {
+            for (RecipeLocal dbRecipeLocal :favIds) {
+                if(recipeRemote.getId().compareTo(dbRecipeLocal.recipeId)==0)
+                    recipeRemote.setFavorite(1);
+            }
+        }
+        adapter.addRecieps(recipeRemotes);
     }
 
     @Override
@@ -126,6 +133,6 @@ public class MainFragment extends BaseFragment implements MainView {
     }
 
     public interface Callbacks {
-        void onItemClicked(Recipe recipe, int position);
+        void onItemClicked(RecipeRemote recipeRemote, int position);
     }
 }

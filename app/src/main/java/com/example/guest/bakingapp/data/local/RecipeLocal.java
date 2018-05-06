@@ -1,4 +1,4 @@
-package com.example.guest.bakingapp.db.model;
+package com.example.guest.bakingapp.data.local;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -9,8 +9,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.ContentValues;
 
-@Entity(tableName = Recipe.RECIPE_TABLE_NAME)
-public class Recipe{
+@Entity(tableName = RecipeLocal.RECIPE_TABLE_NAME)
+public class RecipeLocal {
     public static final String RECIPE_TABLE_NAME = "recipe";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_RECIPE_ID = "recipe_id";
@@ -33,26 +33,26 @@ public class Recipe{
     @ColumnInfo(name = COLUMN_FAVORITE)
     public Integer favorite;
 
-    public static Recipe fromContentValues(ContentValues values) {
-        final Recipe recipe = new Recipe();
+    public static RecipeLocal fromContentValues(ContentValues values) {
+        final RecipeLocal recipeLocal = new RecipeLocal();
         if (values.containsKey(COLUMN_ID)) {
-            recipe.id = values.getAsInteger(COLUMN_ID);
+            recipeLocal.id = values.getAsInteger(COLUMN_ID);
         }
         if (values.containsKey(COLUMN_RECIPE_ID)) {
-            recipe.recipeId = values.getAsInteger(COLUMN_RECIPE_ID);
+            recipeLocal.recipeId = values.getAsInteger(COLUMN_RECIPE_ID);
         }
         if (values.containsKey(COLUMN_NAME)) {
-            recipe.name = values.getAsString(COLUMN_NAME);
+            recipeLocal.name = values.getAsString(COLUMN_NAME);
         }
         if (values.containsKey(COLUMN_SERVINGS)) {
-            recipe.servings = values.getAsInteger(COLUMN_SERVINGS);
+            recipeLocal.servings = values.getAsInteger(COLUMN_SERVINGS);
         }
         if (values.containsKey(COLUMN_IMAGE)) {
-            recipe.image = values.getAsString(COLUMN_IMAGE);
+            recipeLocal.image = values.getAsString(COLUMN_IMAGE);
         }
         if (values.containsKey(COLUMN_FAVORITE)) {
-            recipe.image = values.getAsString(COLUMN_IMAGE);
+            recipeLocal.image = values.getAsString(COLUMN_IMAGE);
         }
-        return recipe;
+        return recipeLocal;
     }
 }

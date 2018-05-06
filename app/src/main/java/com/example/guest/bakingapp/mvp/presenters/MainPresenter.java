@@ -6,7 +6,7 @@ import android.util.Log;
 import com.example.guest.bakingapp.App;
 import com.example.guest.bakingapp.BakingApi;
 import com.example.guest.bakingapp.base.BasePresenter;
-import com.example.guest.bakingapp.db.model.Recipe;
+import com.example.guest.bakingapp.data.local.RecipeLocal;
 import com.example.guest.bakingapp.mvp.view.MainView;
 import com.example.guest.bakingapp.utils.RxThreadManager;
 
@@ -16,9 +16,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by l1maginaire on 4/26/18.
@@ -32,22 +30,23 @@ public class MainPresenter extends BasePresenter<MainView> {
     protected Context context;
     @Inject
     protected BakingApi apiService;
-    private List<Recipe> list = new ArrayList<>(0);
+    private List<RecipeLocal> favListIds = new ArrayList<>(0);
 
     @Inject
     public MainPresenter() {}
 
     public void getRecieps() {
+        getFavNumbers();
         disposable.add(apiService.getRecieps()
                 .compose(RxThreadManager.manageObservable())
-                .subscribe(recipes -> getView().onReciepsLoaded(recipes), throwable -> Log.e(TAG, throwable.getMessage())));
+                .subscribe(recipes -> getView().onReciepsLoaded(recipes, favListIds), throwable -> Log.e(TAG, throwable.getMessage())));
     }
 
     public int getFavNumbers(){
         disposable.add(Single.fromCallable(() -> App.dbInstance.reciepe().getRecipes())
                 .compose(RxThreadManager.manageSingle())
                 .subscribe(this::setFetchedFromDbList));
-        return list.size();
+        return favListIds.size();
     }
 
     public void unsibscibe(){
@@ -55,7 +54,7 @@ public class MainPresenter extends BasePresenter<MainView> {
             disposable.dispose();
     }
 
-    private void setFetchedFromDbList(List<Recipe> list) {
-        this.list = list;
+    private void setFetchedFromDbList(List<RecipeLocal> list) {
+        this.favListIds = list;
     }
 }

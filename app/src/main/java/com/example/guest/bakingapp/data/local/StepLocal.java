@@ -1,19 +1,18 @@
-package com.example.guest.bakingapp.db.model;
+package com.example.guest.bakingapp.data.local;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.ContentValues;
 
-import static com.example.guest.bakingapp.db.model.Step.STEPS_TABLE_NAME;
+import static com.example.guest.bakingapp.data.local.StepLocal.STEPS_TABLE_NAME;
 
 /**
  * Created by l1maginaire on 5/6/18.
  */
 
 @Entity(tableName = STEPS_TABLE_NAME)
-public class Step {
+public class StepLocal {
     public static final String STEPS_TABLE_NAME = "steps";
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_RECIPE_ID = "recipe_id";
@@ -36,31 +35,31 @@ public class Step {
     @ColumnInfo(name = COLUMN_THUMB_URL)
     public String thumbnailURL;
 
-    public static Step[] fromContentValues(ContentValues[] values) {
-        Step[] steps = new Step[values.length];
+    public static StepLocal[] fromContentValues(ContentValues[] values) {
+        StepLocal[] stepLocals = new StepLocal[values.length];
         for (int i = 0; i<values.length; i++) {
             ContentValues values1 = values[i];
-            Step step = new Step();
+            StepLocal stepLocal = new StepLocal();
             if (values1.containsKey(COLUMN_ID)) {
-                step.id = values1.getAsInteger(COLUMN_ID);
+                stepLocal.id = values1.getAsInteger(COLUMN_ID);
             }
             if (values1.containsKey(COLUMN_RECIPE_ID)) {
-                step.recipeId = values1.getAsInteger(COLUMN_RECIPE_ID);
+                stepLocal.recipeId = values1.getAsInteger(COLUMN_RECIPE_ID);
             }
             if (values1.containsKey(COLUMN_DESCRIPTION)) {
-                step.description = values1.getAsString(COLUMN_DESCRIPTION);
+                stepLocal.description = values1.getAsString(COLUMN_DESCRIPTION);
             }
             if (values1.containsKey(COLUMN_S_DESCRIPTION)) {
-                step.shortDescription = values1.getAsString(COLUMN_S_DESCRIPTION);
+                stepLocal.shortDescription = values1.getAsString(COLUMN_S_DESCRIPTION);
             }
             if (values1.containsKey(COLUMN_VIDEO_URL)) {
-                step.videoURL = values1.getAsString(COLUMN_VIDEO_URL);
+                stepLocal.videoURL = values1.getAsString(COLUMN_VIDEO_URL);
             }
             if (values1.containsKey(COLUMN_THUMB_URL)) {
-                step.thumbnailURL = values1.getAsString(COLUMN_THUMB_URL);
+                stepLocal.thumbnailURL = values1.getAsString(COLUMN_THUMB_URL);
             }
-            steps[i] = step;
+            stepLocals[i] = stepLocal;
         }
-        return steps;
+        return stepLocals;
     }
 }

@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.mvp.model.Recipe;
+import com.example.guest.bakingapp.data.remote.RecipeRemote;
 import com.example.guest.bakingapp.ui.DetailFragment;
 import com.example.guest.bakingapp.utils.ContentProviderOperations;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
@@ -40,23 +40,23 @@ public abstract class BaseActivity extends AppCompatActivity implements DetailFr
     }
 
     @Override
-    public void onLikeClicked(Recipe recipe, FloatingActionButton fab) {
-        if (recipe.isFavorite() == 0) {
+    public void onLikeClicked(RecipeRemote recipeRemote, FloatingActionButton fab) {
+        if (recipeRemote.isFavorite() == 0) {
             fab.setClickable(false);
-            compositeDisposable.add(Single.fromCallable(() -> ContentProviderOperations.insert(recipe, this))
+            compositeDisposable.add(Single.fromCallable(() -> ContentProviderOperations.insert(recipeRemote, this))
                     .compose(RxThreadManager.manageSingle())
                     .subscribe(uri -> {
-                        recipe.setFavorite(1);
+                        recipeRemote.setFavorite(1);
                         LikeButtonColorChanger.change(fab, this, 1);
                         fab.setClickable(true);
                     }));
         } else {
             fab.setClickable(false);
-            compositeDisposable.add(Single.fromCallable(() -> ContentProviderOperations.delete(recipe.getId(), this))
+            compositeDisposable.add(Single.fromCallable(() -> ContentProviderOperations.delete(recipeRemote.getId(), this))
                     .compose(RxThreadManager.manageSingle())
                     .subscribe(rowsDeleted -> {
                         if (rowsDeleted != 0) {
-                            recipe.setFavorite(0);
+                            recipeRemote.setFavorite(0);
                             LikeButtonColorChanger.change(fab, this, 0);
                         }
                         fab.setClickable(true);

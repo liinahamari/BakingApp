@@ -8,24 +8,25 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.guest.bakingapp.mvp.model.Ingredient;
-import com.example.guest.bakingapp.mvp.model.Recipe;
-import com.example.guest.bakingapp.mvp.model.Step;
+import com.example.guest.bakingapp.data.local.IngredientLocal;
+import com.example.guest.bakingapp.data.local.StepLocal;
+import com.example.guest.bakingapp.data.remote.IngredientRemote;
+import com.example.guest.bakingapp.data.remote.RecipeRemote;
+import com.example.guest.bakingapp.data.remote.StepRemote;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import static com.example.guest.bakingapp.db.Provider.AUTHORITY;
-import static com.example.guest.bakingapp.db.Provider.URI_INGREDIENTS;
-import static com.example.guest.bakingapp.db.Provider.URI_RECIPE;
-import static com.example.guest.bakingapp.db.Provider.URI_STEP;
-import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_FAVORITE;
-import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_ID;
-import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_IMAGE;
-import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_NAME;
-import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_RECIPE_ID;
-import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_SERVINGS;
+import static com.example.guest.bakingapp.data.local.Provider.AUTHORITY;
+import static com.example.guest.bakingapp.data.local.Provider.URI_INGREDIENTS;
+import static com.example.guest.bakingapp.data.local.Provider.URI_RECIPE;
+import static com.example.guest.bakingapp.data.local.Provider.URI_STEP;
+import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_FAVORITE;
+import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_ID;
+import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_IMAGE;
+import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_NAME;
+import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_RECIPE_ID;
+import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_SERVINGS;
 
 /**
  * Created by l1maginaire on 5/2/18.
@@ -34,7 +35,7 @@ import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_SERVINGS;
 public class ContentProviderOperations {
     private static final String TAG = ContentProviderOperations.class.getSimpleName();
 
-    public static List<Recipe> getAll(Context context) {
+    public static List<RecipeRemote> getAll(Context context) {
         Cursor cursor = context.getContentResolver().query(URI_INGREDIENTS, null, null,
                 new String[]{String.valueOf(1)}, null);
         return recipesFromCursor(cursor);
@@ -51,71 +52,71 @@ public class ContentProviderOperations {
      * @return successful insert returns 3
      */
 
-    public static int insert(Recipe recipe, Context context) {
+    public static int insert(RecipeRemote recipeRemote, Context context) {
         int i = 0;
-        i += (insertRecipes(recipe, context));
-        i += insertIngredients(recipe.getIngredients(), context, recipe.getId());
-        i += insertSteps(recipe.getSteps(), context, recipe.getId());
+        i += (insertRecipes(recipeRemote, context));
+        i += insertIngredients(recipeRemote.getIngredientRemotes(), context, recipeRemote.getId());
+        i += insertSteps(recipeRemote.getStepRemotes(), context, recipeRemote.getId());
         Log.d(TAG, String.valueOf(i));
         return i;
     }
 
-    private static int insertRecipes(Recipe recipe, Context context) {
+    private static int insertRecipes(RecipeRemote recipeRemote, Context context) {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_RECIPE_ID, recipe.getId());
-        values.put(COLUMN_IMAGE, recipe.getImage());
-        values.put(COLUMN_NAME, recipe.getName());
-        values.put(COLUMN_SERVINGS, recipe.getServings());
-        values.put(COLUMN_FAVORITE, recipe.isFavorite());
+        values.put(COLUMN_RECIPE_ID, recipeRemote.getId());
+        values.put(COLUMN_IMAGE, recipeRemote.getImage());
+        values.put(COLUMN_NAME, recipeRemote.getName());
+        values.put(COLUMN_SERVINGS, recipeRemote.getServings());
+        values.put(COLUMN_FAVORITE, recipeRemote.isFavorite());
         return (context.getContentResolver().insert(URI_RECIPE, values) != null) ? 1 : 0;
     }
 
-    public static int insertIngredients(List<Ingredient> ingredients, Context context, int recipeId) {
-        ContentValues[] contentValues = new ContentValues[ingredients.size()];
-        for (int i = 0; i < ingredients.size(); i++) {
-            Ingredient ingredient = ingredients.get(i);
+    public static int insertIngredients(List<IngredientRemote> ingredientRemotes, Context context, int recipeId) {
+        ContentValues[] contentValues = new ContentValues[ingredientRemotes.size()];
+        for (int i = 0; i < ingredientRemotes.size(); i++) {
+            IngredientRemote ingredientRemote = ingredientRemotes.get(i);
             ContentValues values = new ContentValues();
-            values.put(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_RECIPE_ID, recipeId);
-            values.put(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_QUANTITITY, ingredient.getQuantity());
-            values.put(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_MEASURE, ingredient.getMeasure());
-            values.put(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_INGREDIENT, ingredient.getIngredient());
+            values.put(IngredientLocal.COLUMN_RECIPE_ID, recipeId);
+            values.put(IngredientLocal.COLUMN_QUANTITITY, ingredientRemote.getQuantity());
+            values.put(IngredientLocal.COLUMN_MEASURE, ingredientRemote.getMeasure());
+            values.put(IngredientLocal.COLUMN_INGREDIENT, ingredientRemote.getIngredient());
             contentValues[i] = values;
         }
         int i = context.getContentResolver().bulkInsert(URI_INGREDIENTS, contentValues);
         return (i > 0) ? 1 : 0;
     }
 
-    public static int insertSteps(List<Step> steps, Context context, int recipeId) {
-        ContentValues[] contentValues = new ContentValues[steps.size()];
-        for (int i = 0; i < steps.size(); i++) {
-            Step step = steps.get(i);
+    public static int insertSteps(List<StepRemote> stepRemotes, Context context, int recipeId) {
+        ContentValues[] contentValues = new ContentValues[stepRemotes.size()];
+        for (int i = 0; i < stepRemotes.size(); i++) {
+            StepRemote stepRemote = stepRemotes.get(i);
             ContentValues values = new ContentValues();
-            values.put(com.example.guest.bakingapp.db.model.Step.COLUMN_RECIPE_ID, recipeId);
-            values.put(com.example.guest.bakingapp.db.model.Step.COLUMN_DESCRIPTION, step.getDescription());
-            values.put(com.example.guest.bakingapp.db.model.Step.COLUMN_S_DESCRIPTION, step.getShortDescription());
-            values.put(com.example.guest.bakingapp.db.model.Step.COLUMN_VIDEO_URL, step.getVideoURL());
-            values.put(com.example.guest.bakingapp.db.model.Step.COLUMN_THUMB_URL, step.getThumbnailURL());
+            values.put(StepLocal.COLUMN_RECIPE_ID, recipeId);
+            values.put(StepLocal.COLUMN_DESCRIPTION, stepRemote.getDescription());
+            values.put(StepLocal.COLUMN_S_DESCRIPTION, stepRemote.getShortDescription());
+            values.put(StepLocal.COLUMN_VIDEO_URL, stepRemote.getVideoURL());
+            values.put(StepLocal.COLUMN_THUMB_URL, stepRemote.getThumbnailURL());
             contentValues[i] = values;
         }
         int i = context.getContentResolver().bulkInsert(URI_STEP, contentValues);
         return (i > 0) ? 1 : 0;
     }
 
-    public static List<Recipe> recipesFromCursor(@NonNull Cursor cursor) {
-        List<Recipe> recipeList = new ArrayList<>();
+    public static List<RecipeRemote> recipesFromCursor(@NonNull Cursor cursor) {
+        List<RecipeRemote> recipeRemoteList = new ArrayList<>();
         if (cursor.getCount() > 0) {
             cursor.moveToPosition(-1);
             while (cursor.moveToNext()) {
-                Recipe recipe = new Recipe();
-                recipe.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
-                recipe.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)));
-                recipe.setServings(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVINGS)));
-                recipe.setImage(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE)));
-                recipe.setFavorite(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_FAVORITE)));
-                recipeList.add(recipe);
+                RecipeRemote recipeRemote = new RecipeRemote();
+                recipeRemote.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)));
+                recipeRemote.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)));
+                recipeRemote.setServings(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVINGS)));
+                recipeRemote.setImage(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE)));
+                recipeRemote.setFavorite(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_FAVORITE)));
+                recipeRemoteList.add(recipeRemote);
             }
         }
-        return recipeList;
+        return recipeRemoteList;
     }
 
     private static Uri getUriItem(String table, int id) {

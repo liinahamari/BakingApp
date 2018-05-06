@@ -9,8 +9,8 @@ import android.support.v4.app.Fragment;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.base.BaseActivity;
-import com.example.guest.bakingapp.mvp.model.Recipe;
-import com.example.guest.bakingapp.mvp.model.Step;
+import com.example.guest.bakingapp.data.remote.RecipeRemote;
+import com.example.guest.bakingapp.data.remote.StepRemote;
 import com.example.guest.bakingapp.utils.NetworkChecker;
 
 import java.util.ArrayList;
@@ -21,11 +21,11 @@ import java.util.ArrayList;
 
 public class DetailActivity extends BaseActivity implements StepsAdapter.Callbacks {
     public static final String ID = "id";
-    private Recipe recipe;
+    private RecipeRemote recipeRemote;
 
-    public static Intent newIntent(Context context, Recipe recipe) {
+    public static Intent newIntent(Context context, RecipeRemote recipeRemote) {
         Intent intent = new Intent(context, DetailActivity.class);
-        intent.putExtra(ID, recipe);
+        intent.putExtra(ID, recipeRemote);
         return intent;
     }
 
@@ -36,18 +36,18 @@ public class DetailActivity extends BaseActivity implements StepsAdapter.Callbac
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        recipe = getIntent().getParcelableExtra(ID);
+        recipeRemote = getIntent().getParcelableExtra(ID);
         super.onCreate(savedInstanceState);
     }
 
     @Override
     protected Fragment getFragment() {
-        return DetailFragment.newInstance(recipe);
+        return DetailFragment.newInstance(recipeRemote);
     }
 
     @Override
     public void onStepClicked(int position) {
         if (NetworkChecker.isNetAvailable(this))
-            startActivity(PagerActivity.newIntent(this, (ArrayList<Step>) recipe.getSteps(), position));
+            startActivity(PagerActivity.newIntent(this, (ArrayList<StepRemote>) recipeRemote.getStepRemotes(), position));
     }
 }
