@@ -3,14 +3,21 @@ package com.example.guest.bakingapp.mvp.presenters;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.guest.bakingapp.App;
 import com.example.guest.bakingapp.BakingApi;
 import com.example.guest.bakingapp.base.BasePresenter;
+import com.example.guest.bakingapp.db.model.Recipe;
 import com.example.guest.bakingapp.mvp.view.MainView;
+import com.example.guest.bakingapp.utils.RxThreadManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -19,27 +26,36 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MainPresenter extends BasePresenter<MainView> {
     private static final String TAG = MainPresenter.class.getSimpleName();
-    private Disposable disposable;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject
     protected Context context;
     @Inject
     protected BakingApi apiService;
+    private List<Recipe> list = new ArrayList<>(0);
 
     @Inject
-    public MainPresenter() {
-        int i = 0;
-    }
+    public MainPresenter() {}
 
     public void getRecieps() {
-        disposable = apiService.getRecieps()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(recipes -> getView().onReciepsLoaded(recipes), throwable -> Log.e(TAG, throwable.getMessage()));
+        disposable.add(apiService.getRecieps()
+                .compose(RxThreadManager.manageObservable())
+                .subscribe(recipes -> getView().onReciepsLoaded(recipes), throwable -> Log.e(TAG, throwable.getMessage())));
+    }
+
+    public int getFavNumbers(){
+        disposable.add(Single.fromCallable(() -> App.dbInstance.reciepe().getRecipes())
+                .compose(RxThreadManager.manageSingle())
+                .subscribe(this::setFetchedFromDbList));
+        return list.size();
     }
 
     public void unsibscibe(){
         if (disposable!=null)
             disposable.dispose();
+    }
+
+    private void setFetchedFromDbList(List<Recipe> list) {
+        this.list = list;
     }
 }

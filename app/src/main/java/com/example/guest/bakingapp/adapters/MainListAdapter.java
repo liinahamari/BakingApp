@@ -87,7 +87,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
             }
         });
 
-        Single.fromCallable(() -> {
+        /*Single.fromCallable(() -> {
             holder.favIcon.setClickable(false);
             return ContentProviderOperations.isFavorite(context, recipe.getId());
         })
@@ -99,7 +99,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
                             .load(isFavorite != 0 ? R.drawable.t_star : R.drawable.f_star)
                             .into(holder.favIcon);
                     recipe.setFavorite(isFavorite);
-                });
+                });*/
     }
 
     @Override

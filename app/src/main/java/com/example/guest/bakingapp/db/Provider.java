@@ -67,12 +67,10 @@ public class Provider extends ContentProvider {
             RecipeDao reciepe = App.dbInstance.reciepe();//todo ask mentor's opinion
             Cursor cursor = null;
             if (code == RECIPE_DIR) {
-                cursor = reciepe.getRecipes();
-            } else if (code == RECIPE_ITEM) {
-                cursor = reciepe.getRecipe(ContentUris.parseId(uri));
+//                cursor = reciepe.getRecipes();
             } else if (code == INGREDIENT_DIR) {
                 cursor = reciepe.getIngredients(Long.valueOf(selectionArgs[0]));
-            } else if (code == STEP_DIR){
+            } else if (code == STEP_DIR) {
                 cursor = reciepe.getSteps(Integer.valueOf(selectionArgs[0]));
             }
             cursor.setNotificationUri(context.getContentResolver(), uri);
@@ -116,17 +114,20 @@ public class Provider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection,
                       @Nullable String[] selectionArgs) {
+        final Context context = getContext();
+        if (context == null) {
+            return 0;
+        }
         switch (uriMatcher.match(uri)) {
             case RECIPE_DIR:
-                final Context context = getContext();
-                if (context == null) {
-                    return 0;
-                }
-                App.dbInstance.reciepe().deleteRecipes();
-                context.getContentResolver().notifyChange(uri, null);
+                App.dbInstance.reciepe().deleteRecipes(Integer.valueOf(selectionArgs[0]));
                 return 1;
-            case RECIPE_ITEM:
-                throw new IllegalArgumentException("Invalid URI, cannot update without ID " + uri);
+            case INGREDIENT_DIR:
+                App.dbInstance.reciepe().deleteIngredients(Integer.valueOf(selectionArgs[0]));
+                return 1;
+            case STEP_DIR:
+                App.dbInstance.reciepe().deleteSteps(Integer.valueOf(selectionArgs[0]));
+                return 1;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }

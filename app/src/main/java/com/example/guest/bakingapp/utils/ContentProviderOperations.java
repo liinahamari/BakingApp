@@ -13,6 +13,7 @@ import com.example.guest.bakingapp.mvp.model.Recipe;
 import com.example.guest.bakingapp.mvp.model.Step;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.example.guest.bakingapp.db.Provider.AUTHORITY;
@@ -25,7 +26,6 @@ import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_IMAGE;
 import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_NAME;
 import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_RECIPE_ID;
 import static com.example.guest.bakingapp.db.model.Recipe.COLUMN_SERVINGS;
-import static com.example.guest.bakingapp.db.model.Recipe.RECIPE_TABLE_NAME;
 
 /**
  * Created by l1maginaire on 5/2/18.
@@ -41,8 +41,10 @@ public class ContentProviderOperations {
     }
 
     public static int delete(int id, Context context) {
-        int i = context.getContentResolver().delete(getUriItem(RECIPE_TABLE_NAME, id), null, null);
-        return i;
+        int i = context.getContentResolver().delete(URI_STEP, null, new String[]{String.valueOf(id)});
+        int i2 = context.getContentResolver().delete(URI_RECIPE, null, new String[]{String.valueOf(id)});
+        int i3 = context.getContentResolver().delete(URI_INGREDIENTS, null, new String[]{String.valueOf(id)});
+        return i + i2 + i3;
     }
 
     /**
@@ -80,7 +82,7 @@ public class ContentProviderOperations {
             contentValues[i] = values;
         }
         int i = context.getContentResolver().bulkInsert(URI_INGREDIENTS, contentValues);
-        return i;
+        return (i > 0) ? 1 : 0;
     }
 
     public static int insertSteps(List<Step> steps, Context context, int recipeId) {
@@ -96,7 +98,7 @@ public class ContentProviderOperations {
             contentValues[i] = values;
         }
         int i = context.getContentResolver().bulkInsert(URI_STEP, contentValues);
-        return i;
+        return (i > 0) ? 1 : 0;
     }
 
     public static List<Recipe> recipesFromCursor(@NonNull Cursor cursor) {
@@ -120,20 +122,14 @@ public class ContentProviderOperations {
         return Uri.parse("content://" + AUTHORITY + "/" + table + "/" + id);
     }
 
-    public static Integer isFavorite(Context context, int id) {
+    public static List<Integer> isFavorite(Context context) {
+        List<Integer> list = new ArrayList<>();
         ContentResolver contentResolver = context.getContentResolver();
-        Cursor c = null;
-        if (id != 0) {
-            c = contentResolver.query(getUriItem(RECIPE_TABLE_NAME, id), null, null, null, null);
+        Cursor c = contentResolver.query(URI_RECIPE, null, null, null, null);
+        c.moveToPosition(-1);
+        while (c.moveToNext()) {
+            list.add(c.getInt(c.getColumnIndexOrThrow(COLUMN_RECIPE_ID)));
         }
-        if (c != null) {
-            c.moveToFirst();
-            if (c.getCount() > 0 && c.getInt(c.getColumnIndex(COLUMN_ID)) == id) {
-                c.close();
-                return 1;
-            }
-            c.close();
-        }
-        return 0;
+        return list;
     }
 }

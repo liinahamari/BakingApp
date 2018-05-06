@@ -92,8 +92,10 @@ public class MainFragment extends BaseFragment implements MainView {
             presenter.getRecieps();
             errorLayout.setVisibility(View.INVISIBLE);
         } else {
-            errorLayout.setVisibility(VISIBLE);
-            repeatButton.setOnClickListener(v -> loadNew());
+            if (presenter.getFavNumbers() == 0) {
+                errorLayout.setVisibility(VISIBLE);
+                repeatButton.setOnClickListener(v -> loadNew());
+            }
         }
     }
 

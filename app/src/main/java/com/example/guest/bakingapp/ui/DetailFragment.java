@@ -19,6 +19,7 @@ import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.mvp.model.Ingredient;
 import com.example.guest.bakingapp.mvp.model.Recipe;
+import com.example.guest.bakingapp.mvp.model.Step;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
 import com.example.guest.bakingapp.utils.MakeIngredietsString;
 import com.example.guest.bakingapp.utils.RxThreadManager;
@@ -32,6 +33,8 @@ import butterknife.Unbinder;
 import io.reactivex.Single;
 
 import static com.example.guest.bakingapp.db.Provider.URI_INGREDIENTS;
+import static com.example.guest.bakingapp.db.Provider.URI_RECIPE;
+import static com.example.guest.bakingapp.db.Provider.URI_STEP;
 import static com.example.guest.bakingapp.ui.DetailActivity.ID;
 
 /**
@@ -91,6 +94,25 @@ public class DetailFragment extends Fragment {
                             ingredient.setIngredient(cursor.getString(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_QUANTITITY)));
                             ingredient.setMeasure(cursor.getString(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_MEASURE)));
                             ingredient.setQuantity(cursor.getDouble(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Ingredient.COLUMN_QUANTITITY)));
+                            ingredientList.add(ingredient);
+                        }
+                    }
+                });
+        Single.fromCallable(() -> getActivity().getContentResolver().query(URI_STEP, null, null,
+                new String[]{String.valueOf(recipe.getId())}, null))
+                .compose(RxThreadManager.manageSingle())
+                .doOnError(throwable -> Log.e(TAG, "Something is wrong with App-class"))
+                .subscribe(cursor -> {
+                    List<Step> ingredientList = new ArrayList<>();
+                    if (cursor.getCount() > 0) {
+                        cursor.moveToPosition(-1);
+                        while (cursor.moveToNext()) {
+                            Step ingredient = new Step();
+                            ingredient.setId(cursor.getInt(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Step.COLUMN_ID)));
+                            ingredient.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Step.COLUMN_DESCRIPTION)));
+                            ingredient.setShortDescription(cursor.getString(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Step.COLUMN_S_DESCRIPTION)));
+                            ingredient.setThumbnailURL(cursor.getString(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Step.COLUMN_VIDEO_URL)));
+                            ingredient.setVideoURL(cursor.getString(cursor.getColumnIndexOrThrow(com.example.guest.bakingapp.db.model.Step.COLUMN_THUMB_URL)));
                             ingredientList.add(ingredient);
                         }
                     }

@@ -14,6 +14,8 @@ import com.example.guest.bakingapp.db.model.Ingredient;
 import com.example.guest.bakingapp.db.model.Recipe;
 import com.example.guest.bakingapp.db.model.Step;
 
+import java.util.List;
+
 @Dao
 public interface RecipeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -29,17 +31,23 @@ public interface RecipeDao {
     long[] insertSteps(Step[] steps);
 
     @Query("SELECT * FROM " + Recipe.RECIPE_TABLE_NAME)
-    Cursor getRecipes();
+    List<Recipe> getRecipes();
 
-    @Query("SELECT * FROM " + Recipe.RECIPE_TABLE_NAME + " WHERE id=:recipeId")
+    @Query("SELECT * FROM " + Recipe.RECIPE_TABLE_NAME + " WHERE recipe_id=:recipeId")
     Cursor getRecipe(long recipeId);
 
     @Query("SELECT * FROM " + Ingredient.INGREDIENTS_TABLE_NAME + " WHERE recipe_id=:recipeId")
     Cursor getIngredients(long recipeId);
 
     @Query("SELECT * FROM " + Step.STEPS_TABLE_NAME + " WHERE recipe_id=:recipeId")
-    Cursor getSteps(int recipeId);
+    Cursor getSteps(long recipeId);
 
-    @Query("DELETE FROM " + Recipe.RECIPE_TABLE_NAME)
-    void deleteRecipes();
+    @Query("DELETE FROM " + Recipe.RECIPE_TABLE_NAME + " WHERE recipe_id=:recipeId")
+    void deleteRecipes(long recipeId);
+
+    @Query("DELETE FROM " + Ingredient.INGREDIENTS_TABLE_NAME + " WHERE recipe_id=:recipeId")
+    void deleteIngredients(long recipeId);
+
+    @Query("DELETE FROM " + Step.STEPS_TABLE_NAME + " WHERE recipe_id=:recipeId")
+    void deleteSteps(long recipeId);
 }
