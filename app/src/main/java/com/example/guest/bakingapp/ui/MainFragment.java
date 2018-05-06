@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +20,6 @@ import com.example.guest.bakingapp.di.modules.BakingModule;
 import com.example.guest.bakingapp.mvp.model.Recipe;
 import com.example.guest.bakingapp.mvp.presenters.MainPresenter;
 import com.example.guest.bakingapp.mvp.view.MainView;
-import com.example.guest.bakingapp.utils.ContentProviderOperations;
-import com.example.guest.bakingapp.utils.RxThreadManager;
 
 import java.util.List;
 
@@ -31,7 +28,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.Single;
 
 import static android.view.View.VISIBLE;
 import static com.example.guest.bakingapp.utils.NetworkChecker.isNetAvailable;
@@ -59,7 +55,7 @@ public class MainFragment extends BaseFragment implements MainView {
     @Override
     public void onResume() {
         super.onResume();
-        if (adapter!=null)
+        if (adapter != null)
             adapter.notifyDataSetChanged();
     }
 
@@ -103,15 +99,8 @@ public class MainFragment extends BaseFragment implements MainView {
 
     @Override
     public void onReciepsLoaded(List<Recipe> recipes) {
-        Single.fromCallable(() -> ContentProviderOperations.bulkInsert(recipes, getActivity()))
-                .compose(RxThreadManager.manageSingle())
-                .subscribe(rowsInserted -> Log.d(TAG, String.valueOf(rowsInserted)));
         onClearItems();
         adapter.addRecieps(recipes);
-    }
-
-    void sync(){
-
     }
 
     @Override

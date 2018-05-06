@@ -12,16 +12,11 @@ import static com.example.guest.bakingapp.db.model.Step.STEPS_TABLE_NAME;
  * Created by l1maginaire on 5/6/18.
  */
 
-@Entity(tableName = STEPS_TABLE_NAME,
-        foreignKeys = @ForeignKey(entity = Recipe.class,
-                parentColumns = "id",
-                childColumns = "recipeId",
-                onDelete = ForeignKey.CASCADE))
-
+@Entity(tableName = STEPS_TABLE_NAME)
 public class Step {
     public static final String STEPS_TABLE_NAME = "steps";
     public static final String COLUMN_ID = "id";
-    public static final String COLUMN_RECIPE_ID = "r_id";
+    public static final String COLUMN_RECIPE_ID = "recipe_id";
     public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_S_DESCRIPTION = "short_description";
     public static final String COLUMN_VIDEO_URL = "video_url";
@@ -29,17 +24,17 @@ public class Step {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_ID)
-    private Integer id;
+    public Integer id;
     @ColumnInfo(name = COLUMN_RECIPE_ID)
-    private Integer recipeId;
+    public Integer recipeId;
     @ColumnInfo(name = COLUMN_DESCRIPTION)
-    private String description;
+    public String description;
     @ColumnInfo(name = COLUMN_S_DESCRIPTION)
-    private String shortDescription;
+    public String shortDescription;
     @ColumnInfo(name = COLUMN_VIDEO_URL)
-    private String videoURL;
+    public String videoURL;
     @ColumnInfo(name = COLUMN_THUMB_URL)
-    private String thumbnailURL;
+    public String thumbnailURL;
 
     public static Step[] fromContentValues(ContentValues[] values) {
         Step[] steps = new Step[values.length];

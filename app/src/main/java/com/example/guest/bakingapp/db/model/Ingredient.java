@@ -2,7 +2,6 @@ package com.example.guest.bakingapp.db.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.ContentValues;
 
@@ -12,30 +11,26 @@ import static com.example.guest.bakingapp.db.model.Ingredient.INGREDIENTS_TABLE_
  * Created by l1maginaire on 5/6/18.
  */
 
-@Entity(tableName = INGREDIENTS_TABLE_NAME,
-        foreignKeys = @ForeignKey(entity = Recipe.class,
-                parentColumns = "id",
-                childColumns = "recipeId",
-                onDelete = ForeignKey.CASCADE))
+@Entity(tableName = INGREDIENTS_TABLE_NAME)
 public class Ingredient {
     public static final String INGREDIENTS_TABLE_NAME = "ingredients";
     public static final String COLUMN_ID = "id";
-    public static final String COLUMN_RECIPE_ID = "r_id";
+    public static final String COLUMN_RECIPE_ID = "recipe_id";
     public static final String COLUMN_QUANTITITY = "quantity";
     public static final String COLUMN_MEASURE = "measure";
     public static final String COLUMN_INGREDIENT = "ingredient";
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = COLUMN_ID)
-    private int id;
+    public int id;
     @ColumnInfo(name = COLUMN_RECIPE_ID)
-    private int recipeId;
+    public int recipeId;
     @ColumnInfo(name = COLUMN_QUANTITITY)
-    private Double quantity;
+    public Double quantity;
     @ColumnInfo(name = COLUMN_MEASURE)
-    private String measure;
+    public String measure;
     @ColumnInfo(name = COLUMN_INGREDIENT)
-    private String ingredient;
+    public String ingredient;
 
     public static Ingredient[] fromContentValues(ContentValues[] values) {
         Ingredient[] ingredients = new Ingredient[values.length];

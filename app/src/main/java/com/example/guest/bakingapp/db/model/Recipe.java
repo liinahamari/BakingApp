@@ -13,6 +13,7 @@ import android.content.ContentValues;
 public class Recipe{
     public static final String RECIPE_TABLE_NAME = "recipe";
     public static final String COLUMN_ID = "id";
+    public static final String COLUMN_RECIPE_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_SERVINGS = "servings";
     public static final String COLUMN_IMAGE = "image";

@@ -25,7 +25,7 @@ public class Provider extends ContentProvider {
 
     public static final Uri URI_RECIPE = Uri.parse("content://" + AUTHORITY + "/" + Recipe.RECIPE_TABLE_NAME);
     public static final Uri URI_INGREDIENTS = Uri.parse("content://" + AUTHORITY + "/" + Ingredient.INGREDIENTS_TABLE_NAME);
-    public static final Uri URI_STEPS = Uri.parse("content://" + AUTHORITY + "/" + Step.STEPS_TABLE_NAME);
+    public static final Uri URI_STEP = Uri.parse("content://" + AUTHORITY + "/" + Step.STEPS_TABLE_NAME);
 
     private static final int RECIPE_DIR = 1001;
     private static final int RECIPE_ITEM = 1002;
@@ -41,6 +41,10 @@ public class Provider extends ContentProvider {
         final String authority = AUTHORITY;
         sURIMatcher.addURI(authority, Recipe.RECIPE_TABLE_NAME, RECIPE_DIR);
         sURIMatcher.addURI(authority, Recipe.RECIPE_TABLE_NAME + "/*", RECIPE_ITEM);
+        sURIMatcher.addURI(authority, Ingredient.INGREDIENTS_TABLE_NAME, INGREDIENT_DIR);
+        sURIMatcher.addURI(authority, Ingredient.INGREDIENTS_TABLE_NAME + "/*", INGREDIENT_ITEM);
+        sURIMatcher.addURI(authority, Step.STEPS_TABLE_NAME, STEP_DIR);
+        sURIMatcher.addURI(authority, Step.STEPS_TABLE_NAME + "/*", STEP_ITEM);
         return sURIMatcher;
     }
 

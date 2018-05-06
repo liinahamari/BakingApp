@@ -34,10 +34,10 @@ public interface RecipeDao {
     @Query("SELECT * FROM " + Recipe.RECIPE_TABLE_NAME + " WHERE id=:recipeId")
     Cursor getRecipe(long recipeId);
 
-    @Query("SELECT * FROM " + Ingredient.INGREDIENTS_TABLE_NAME + " WHERE recipeId=:recipeId")
+    @Query("SELECT * FROM " + Ingredient.INGREDIENTS_TABLE_NAME + " WHERE recipe_id=:recipeId")
     Cursor getIngredients(long recipeId);
 
-    @Query("SELECT * FROM " + Step.STEPS_TABLE_NAME + " WHERE recipeId=:recipeId")
+    @Query("SELECT * FROM " + Step.STEPS_TABLE_NAME + " WHERE recipe_id=:recipeId")
     Cursor getSteps(int recipeId);
 
     @Query("DELETE FROM " + Recipe.RECIPE_TABLE_NAME)
