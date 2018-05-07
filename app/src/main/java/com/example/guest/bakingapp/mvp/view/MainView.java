@@ -11,6 +11,6 @@ import java.util.List;
  */
 
 public interface MainView extends BaseView {
-    void onReciepsLoaded(List<RecipeRemote> recipeRemotes, List<RecipeLocal> favIds);
+    void onReciepsLoaded(List<RecipeRemote> recipeRemotes);
     void onClearItems();
 }

@@ -15,10 +15,9 @@ import android.widget.FrameLayout;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.MainListAdapter;
 import com.example.guest.bakingapp.base.BaseFragment;
-import com.example.guest.bakingapp.data.local.pojo.RecipeLocal;
+import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 import com.example.guest.bakingapp.di.components.DaggerBakingComponent;
 import com.example.guest.bakingapp.di.modules.BakingModule;
-import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 import com.example.guest.bakingapp.mvp.presenters.MainPresenter;
 import com.example.guest.bakingapp.mvp.view.MainView;
 
@@ -102,13 +101,7 @@ public class MainFragment extends BaseFragment implements MainView {
     }
 
     @Override
-    public void onReciepsLoaded(List<RecipeRemote> recipeRemotes, List<RecipeLocal> favIds) {
-        for (RecipeRemote recipeRemote : recipeRemotes) {
-            for (RecipeLocal dbRecipeLocal :favIds) {
-                if(recipeRemote.getId().compareTo(dbRecipeLocal.recipeId)==0)
-                    recipeRemote.setFavorite(1);
-            }
-        }
+    public void onReciepsLoaded(List<RecipeRemote> recipeRemotes) {
         onClearItems();
         adapter.addRecieps(recipeRemotes);
     }

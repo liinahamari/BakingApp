@@ -8,9 +8,9 @@ import io.reactivex.Observable;
  * Created by l1maginaire on 5/6/18.
  */
 
-public interface RecipeDataSource {
+public interface DataSource {
 
-    Observable<List<Recipe>> getRecipes();
+   /* Observable<List<Recipe>> getRecipes();
 
     Observable<List<Ingredient>> getRecipeIngredients(int recipeId);
 
@@ -18,5 +18,5 @@ public interface RecipeDataSource {
 
     Observable<List<Step>> getRecipeSteps(int recipeId);
 
-    void saveRecipes(List<Recipe> recipes);
+    void saveRecipes(List<Recipe> recipes);*/
 }
