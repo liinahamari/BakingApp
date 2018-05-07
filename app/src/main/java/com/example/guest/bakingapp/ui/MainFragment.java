@@ -15,10 +15,10 @@ import android.widget.FrameLayout;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.MainListAdapter;
 import com.example.guest.bakingapp.base.BaseFragment;
-import com.example.guest.bakingapp.data.local.RecipeLocal;
+import com.example.guest.bakingapp.data.local.pojo.RecipeLocal;
 import com.example.guest.bakingapp.di.components.DaggerBakingComponent;
 import com.example.guest.bakingapp.di.modules.BakingModule;
-import com.example.guest.bakingapp.data.remote.RecipeRemote;
+import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 import com.example.guest.bakingapp.mvp.presenters.MainPresenter;
 import com.example.guest.bakingapp.mvp.view.MainView;
 

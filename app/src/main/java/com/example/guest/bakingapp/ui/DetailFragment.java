@@ -16,11 +16,11 @@ import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
-import com.example.guest.bakingapp.data.local.IngredientLocal;
-import com.example.guest.bakingapp.data.local.StepLocal;
-import com.example.guest.bakingapp.data.remote.IngredientRemote;
-import com.example.guest.bakingapp.data.remote.RecipeRemote;
-import com.example.guest.bakingapp.data.remote.StepRemote;
+import com.example.guest.bakingapp.data.local.pojo.IngredientLocal;
+import com.example.guest.bakingapp.data.local.pojo.StepLocal;
+import com.example.guest.bakingapp.data.remote.pojo.IngredientRemote;
+import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
+import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
 import com.example.guest.bakingapp.utils.MakeIngredietsString;
 import com.example.guest.bakingapp.utils.RxThreadManager;

@@ -9,8 +9,8 @@ import android.support.v4.app.Fragment;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.base.BaseActivity;
-import com.example.guest.bakingapp.data.remote.RecipeRemote;
-import com.example.guest.bakingapp.data.remote.StepRemote;
+import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
+import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 import com.example.guest.bakingapp.utils.NetworkChecker;
 
 import java.util.ArrayList;

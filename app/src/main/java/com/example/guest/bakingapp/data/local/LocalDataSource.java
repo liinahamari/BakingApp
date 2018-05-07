@@ -7,9 +7,11 @@ import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.guest.bakingapp.data.remote.IngredientRemote;
-import com.example.guest.bakingapp.data.remote.RecipeRemote;
-import com.example.guest.bakingapp.data.remote.StepRemote;
+import com.example.guest.bakingapp.data.local.pojo.IngredientLocal;
+import com.example.guest.bakingapp.data.local.pojo.StepLocal;
+import com.example.guest.bakingapp.data.remote.pojo.IngredientRemote;
+import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
+import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +19,12 @@ import java.util.List;
 import static com.example.guest.bakingapp.data.local.Provider.URI_INGREDIENTS;
 import static com.example.guest.bakingapp.data.local.Provider.URI_RECIPE;
 import static com.example.guest.bakingapp.data.local.Provider.URI_STEP;
-import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_FAVORITE;
-import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_ID;
-import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_IMAGE;
-import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_NAME;
-import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_RECIPE_ID;
-import static com.example.guest.bakingapp.data.local.RecipeLocal.COLUMN_SERVINGS;
+import static com.example.guest.bakingapp.data.local.pojo.RecipeLocal.COLUMN_FAVORITE;
+import static com.example.guest.bakingapp.data.local.pojo.RecipeLocal.COLUMN_ID;
+import static com.example.guest.bakingapp.data.local.pojo.RecipeLocal.COLUMN_IMAGE;
+import static com.example.guest.bakingapp.data.local.pojo.RecipeLocal.COLUMN_NAME;
+import static com.example.guest.bakingapp.data.local.pojo.RecipeLocal.COLUMN_RECIPE_ID;
+import static com.example.guest.bakingapp.data.local.pojo.RecipeLocal.COLUMN_SERVINGS;
 
 /**
  * Created by l1maginaire on 5/2/18.
@@ -59,7 +61,7 @@ public class LocalDataSource {
         i += (insertRecipes(recipeRemote, context));
         i += insertIngredients(recipeRemote.getIngredientRemotes(), context, recipeRemote.getId());
         i += insertSteps(recipeRemote.getStepRemotes(), context, recipeRemote.getId());
-        Log.d(TAG, String.valueOf(i));
+        Log.d(TAG, "Inserted "+String.valueOf(i) + " of (3)");
         return i;
     }
 

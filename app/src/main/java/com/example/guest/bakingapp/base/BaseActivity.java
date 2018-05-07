@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.data.remote.RecipeRemote;
+import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 import com.example.guest.bakingapp.ui.DetailFragment;
 import com.example.guest.bakingapp.data.local.LocalDataSource;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;

@@ -10,9 +10,9 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.database.Cursor;
 
-import com.example.guest.bakingapp.data.local.IngredientLocal;
-import com.example.guest.bakingapp.data.local.RecipeLocal;
-import com.example.guest.bakingapp.data.local.StepLocal;
+import com.example.guest.bakingapp.data.local.pojo.IngredientLocal;
+import com.example.guest.bakingapp.data.local.pojo.RecipeLocal;
+import com.example.guest.bakingapp.data.local.pojo.StepLocal;
 
 import java.util.List;
 

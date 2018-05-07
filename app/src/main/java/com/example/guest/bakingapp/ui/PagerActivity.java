@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.base.BaseActivity;
-import com.example.guest.bakingapp.data.remote.StepRemote;
+import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 
 import java.util.ArrayList;
 

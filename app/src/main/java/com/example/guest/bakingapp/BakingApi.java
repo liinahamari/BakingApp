@@ -1,6 +1,6 @@
 package com.example.guest.bakingapp;
 
-import com.example.guest.bakingapp.data.remote.RecipeRemote;
+import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 
 import java.util.List;
 

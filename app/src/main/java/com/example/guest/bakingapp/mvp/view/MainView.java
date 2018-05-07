@@ -1,8 +1,8 @@
 package com.example.guest.bakingapp.mvp.view;
 
 import com.example.guest.bakingapp.base.BaseView;
-import com.example.guest.bakingapp.data.local.RecipeLocal;
-import com.example.guest.bakingapp.data.remote.RecipeRemote;
+import com.example.guest.bakingapp.data.local.pojo.RecipeLocal;
+import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 
 import java.util.List;
 

@@ -1,11 +1,11 @@
-package com.example.guest.bakingapp.data.local;
+package com.example.guest.bakingapp.data.local.pojo;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.ContentValues;
 
-import static com.example.guest.bakingapp.data.local.IngredientLocal.INGREDIENTS_TABLE_NAME;
+import static com.example.guest.bakingapp.data.local.pojo.IngredientLocal.INGREDIENTS_TABLE_NAME;
 
 /**
  * Created by l1maginaire on 5/6/18.

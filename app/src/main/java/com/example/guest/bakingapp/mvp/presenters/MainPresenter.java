@@ -6,7 +6,7 @@ import android.util.Log;
 import com.example.guest.bakingapp.App;
 import com.example.guest.bakingapp.BakingApi;
 import com.example.guest.bakingapp.base.BasePresenter;
-import com.example.guest.bakingapp.data.local.RecipeLocal;
+import com.example.guest.bakingapp.data.local.pojo.RecipeLocal;
 import com.example.guest.bakingapp.mvp.view.MainView;
 import com.example.guest.bakingapp.utils.RxThreadManager;
 

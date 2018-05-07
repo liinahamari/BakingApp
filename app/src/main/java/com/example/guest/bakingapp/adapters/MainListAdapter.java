@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.data.local.LocalDataSource;
-import com.example.guest.bakingapp.data.remote.RecipeRemote;
+import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 import com.example.guest.bakingapp.ui.MainFragment;
 import com.squareup.picasso.Picasso;
 
@@ -87,20 +87,6 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
 
         Picasso.with(context)
                 .load(recipeRemote.isFavorite() != 0 ? R.drawable.t_star : R.drawable.f_star).into(holder.favIcon);
-
-        /*Single.fromCallable(() -> {
-            holder.favIcon.setClickable(false);
-            return LocalDataSource.isFavorite(context, recipeRemote.getId());
-        })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(isFavorite -> {
-                    holder.favIcon.setClickable(true);
-                    Picasso.with(context)
-                            .load(isFavorite != 0 ? R.drawable.t_star : R.drawable.f_star)
-                            .into(holder.favIcon);
-                    recipeRemote.setFavorite(isFavorite);
-                });*/
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.guest.bakingapp.data.local;
+package com.example.guest.bakingapp.data.local.pojo;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;

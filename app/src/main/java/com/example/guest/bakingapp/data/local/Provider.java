@@ -16,6 +16,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.guest.bakingapp.App;
+import com.example.guest.bakingapp.data.local.pojo.IngredientLocal;
+import com.example.guest.bakingapp.data.local.pojo.RecipeLocal;
+import com.example.guest.bakingapp.data.local.pojo.StepLocal;
 
 public class Provider extends ContentProvider {
     public static final String AUTHORITY = "com.example.guest.bakingapp.db";

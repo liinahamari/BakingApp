@@ -1,4 +1,4 @@
-package com.example.guest.bakingapp.data.remote;
+package com.example.guest.bakingapp.data.remote.pojo;
 
 /**
  * Created by l1maginaire on 4/14/18.

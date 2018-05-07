@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.data.remote.StepRemote;
+import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 
 import java.util.ArrayList;
 import java.util.List;
