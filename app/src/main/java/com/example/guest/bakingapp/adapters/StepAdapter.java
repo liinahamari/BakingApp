@@ -1,12 +1,11 @@
 package com.example.guest.bakingapp.adapters;
 
-import android.os.Bundle;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
-
+import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 import com.example.guest.bakingapp.ui.StepFragment;
 
@@ -14,16 +13,17 @@ import java.util.List;
 import java.util.Locale;
 
 /**
-Created by l1maginaire on 4/29/18.
-*/
+ * Created by l1maginaire on 4/29/18.
+ */
 
 public class StepAdapter extends FragmentPagerAdapter {
     private List<StepRemote> stepList;
     private String title;
 
-    public StepAdapter(FragmentManager fm, List<StepRemote> stepList) {
+    public StepAdapter(FragmentManager fm, List<StepRemote> stepList, Context context) {
         super(fm);
         this.stepList = stepList;
+        title = context.getResources().getString(R.string.step_tab_id);
         notifyDataSetChanged();
     }
 

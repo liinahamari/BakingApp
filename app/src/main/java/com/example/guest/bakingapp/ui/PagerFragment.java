@@ -3,6 +3,7 @@ package com.example.guest.bakingapp.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.guest.bakingapp.R;
+import com.example.guest.bakingapp.adapters.StepAdapter;
 import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 
 import java.util.ArrayList;
@@ -28,11 +30,15 @@ import static com.example.guest.bakingapp.ui.PagerActivity.POSITION;
  */
 
 public class PagerFragment extends Fragment {
-    private List<StepRemote> stepRemoteList;
-    @BindView(R.id.my_pager)
+    @BindView(R.id.recipe_step_viewpager)
     protected ViewPager viewPager;
+    @BindView(R.id.recipe_step_tablayout)
+    TabLayout tabLayout;
+
     private int position;
+    private List<StepRemote> stepRemoteList;
     Unbinder unbinder;
+    private StepAdapter stepAdapter;
 
     public static Fragment newInstance(ArrayList<StepRemote> stepRemotes, int position) {
         Bundle args = new Bundle();
@@ -55,19 +61,26 @@ public class PagerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.activity_pager, container, false);
         unbinder = ButterKnife.bind(this, v);
-        viewPager.setAdapter(new FragmentPagerAdapter(getFragmentManager()) {
+        stepAdapter = new StepAdapter(getFragmentManager(), stepRemoteList, getActivity());
+        viewPager.setAdapter(stepAdapter);
+        setUpViewPagerListener();
+        tabLayout.setupWithViewPager(viewPager);
+        return v;
+    }
+
+    private void setUpViewPagerListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public Fragment getItem(int i) {
-                String video = stepRemoteList.get(i).getVideoURL();
-                return StepFragment.newInstance(video, stepRemoteList.get(i).getDescription());
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            @Override
+            public void onPageSelected(int i) {
+                position = i;
             }
 
             @Override
-            public int getCount() {
-                return (stepRemoteList == null || stepRemoteList.size() < 1) ? 0 : stepRemoteList.size();
-            }
+            public void onPageScrollStateChanged(int state) {}
         });
-        return v;
     }
 
     @Override

@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Containers">
+    <android.support.design.widget.TabLayout
+        android:id="@+id/recipe_step_tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:tabGravity="fill"
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/colorAccent"/>
+
     <android.support.v4.view.ViewPager
-        android:id="@+id/my_pager"
-        style="@style/Containers"
-        android:theme="@style/Theme.AppCompat.Light" />
+        android:id="@+id/recipe_step_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/recipe_step_tablayout"/>
 </android.support.constraint.ConstraintLayout>
