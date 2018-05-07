@@ -77,7 +77,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener{
         View v = inflater.inflate(R.layout.fragment_pager, container, false);
         ButterKnife.bind(this, v);
         tv.setMovementMethod(new ScrollingMovementMethod());
-        tv.setText(description);
+//        tv.setText(description);
         return v;
     }
 
