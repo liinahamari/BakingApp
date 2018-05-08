@@ -14,11 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
-import com.google.android.exoplayer2.util.Util;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -34,12 +29,16 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by l1maginaire on 4/29/18.
  */
 
-public class StepFragment extends Fragment implements ExoPlayer.EventListener{
+public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     public static final String DESCRIPTION = "single_step_description";
     public static final String VIDEO_URL = "single_step_url";
 
@@ -54,6 +53,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener{
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
 
+    public StepFragment() {}
 
     public static Fragment newInstance(String videoUrl, String description) {
         Bundle args = new Bundle();
@@ -88,33 +88,6 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener{
         initializePlayer(Uri.parse(videoUrl));
     }
 
-    private void initializePlayer(Uri mediaUri) {
-        if (exoPlayer == null) {
-
-            TrackSelector trackSelector = new DefaultTrackSelector();
-            exoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
-            exoPlayerView.setPlayer(exoPlayer);
-            exoPlayer.addListener(this);
-
-            String userAgent = Util.getUserAgent(getContext(), "StepVideo");
-            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
-                    getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
-            exoPlayer.prepare(mediaSource);
-            exoPlayer.setPlayWhenReady(false);
-        }
-    }
-
-    private void releasePlayer() {
-        if (exoPlayer != null) {
-            exoPlayer.stop();
-            exoPlayer.release();
-            exoPlayer = null;
-        }
-
-        if (mediaSession != null) {
-            mediaSession.setActive(false);
-        }
-    }
 
     @Override
     public void onPause() {
@@ -145,10 +118,11 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener{
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
+    // EXO PLAYER METHODS
 
     private void initializeMediaSession() {
 
-        mediaSession = new MediaSessionCompat(getContext(), "StepFragment");
+        mediaSession = new MediaSessionCompat(getContext(), "RecipeStepSinglePageFragment");
 
         mediaSession.setFlags(
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
@@ -180,6 +154,34 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener{
             }
         });
         mediaSession.setActive(true);
+    }
+
+    private void initializePlayer(Uri mediaUri) {
+        if (exoPlayer == null) {
+
+            TrackSelector trackSelector = new DefaultTrackSelector();
+            exoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
+            exoPlayerView.setPlayer(exoPlayer);
+            exoPlayer.addListener(this);
+
+            String userAgent = Util.getUserAgent(getContext(), "StepVideo");
+            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
+                    getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
+            exoPlayer.prepare(mediaSource);
+            exoPlayer.setPlayWhenReady(false);
+        }
+    }
+
+    private void releasePlayer() {
+        if (exoPlayer != null) {
+            exoPlayer.stop();
+            exoPlayer.release();
+            exoPlayer = null;
+        }
+
+        if (mediaSession != null) {
+            mediaSession.setActive(false);
+        }
     }
 
     @Override
@@ -227,9 +229,9 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener{
 
     }
 
+
     @Override
     public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
     }
 
     @Override

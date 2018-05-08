@@ -2,6 +2,8 @@ package com.example.guest.bakingapp.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.example.guest.bakingapp.R;
@@ -13,6 +15,12 @@ import java.util.ArrayList;
 public class PagerActivity extends BaseActivity {
     public static final String ID = "steps_id";
     public static final String POSITION = "steps_pos";
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        getSupportActionBar().hide();
+    }
 
     @Override
     protected int getContentView() {

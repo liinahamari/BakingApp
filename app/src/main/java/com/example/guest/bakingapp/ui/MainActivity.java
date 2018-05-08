@@ -1,5 +1,7 @@
 package com.example.guest.bakingapp.ui;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,6 +20,12 @@ import static com.example.guest.bakingapp.utils.NetworkChecker.isNetAvailable;
 public class MainActivity extends BaseActivity implements MainFragment.Callbacks, StepsAdapter.Callbacks {
     private static final String TAG = MainActivity.class.getSimpleName();
     private RecipeRemote recipeRemote;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
+    }
 
     @Override
     protected int getContentView() {

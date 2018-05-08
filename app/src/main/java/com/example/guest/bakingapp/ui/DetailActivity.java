@@ -38,6 +38,7 @@ public class DetailActivity extends BaseActivity implements StepsAdapter.Callbac
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         recipeRemote = getIntent().getParcelableExtra(ID);
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(recipeRemote.getName());
     }
 
     @Override
