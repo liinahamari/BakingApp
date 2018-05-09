@@ -132,7 +132,7 @@ public class DetailFragment extends Fragment {
         ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
         recyclerView.setLayoutParams(params);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new StepsAdapter(recipeRemote.getStepRemotes(), getActivity());
+        adapter = new StepsAdapter(recipeRemote, getActivity());
         recyclerView.setAdapter(adapter);
     }
 

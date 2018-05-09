@@ -6,10 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
+import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -21,12 +23,12 @@ import butterknife.ButterKnife;
  */
 
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> {
-    private List<StepRemote> stepRemotes;
+    private RecipeRemote recipe;
     private Context context;
     private Callbacks callbacks;
 
-    public StepsAdapter(List<StepRemote> stepRemotes, Context context) {
-        this.stepRemotes = stepRemotes;
+    public StepsAdapter(RecipeRemote recipe, Context context) {
+        this.recipe = recipe;
         this.context = context;
         try {
             callbacks = (Callbacks) context;
@@ -44,22 +46,24 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull StepsAdapter.ViewHolder holder, int position) {
-        String shortDescription = " " + stepRemotes.get(position).getShortDescription();
+        String shortDescription = " " + recipe.getStepRemotes().get(position).getShortDescription();
         holder.label.setText(shortDescription);
-        holder.description.setText(stepRemotes.get(position).getDescription());
         holder.view.setOnClickListener(v -> callbacks.onStepClicked(position));
+        if (recipe.getStepRemotes().get(position).getVideoURL().equals("")
+                || recipe.getStepRemotes().get(position).getVideoURL().isEmpty())
+            holder.playButton.setVisibility(View.GONE);
     }
 
     @Override
     public int getItemCount() {
-        return (stepRemotes == null) ? 0 : stepRemotes.size();
+        return (recipe.getStepRemotes() == null) ? 0 : recipe.getStepRemotes().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.step_label)
         protected TextView label;
-        @BindView(R.id.step_description)
-        protected TextView description;
+        @BindView(R.id.play_button)
+        protected ImageView playButton;
         private final View view;
 
         ViewHolder(View itemView) {
@@ -69,7 +73,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
         }
     }
 
-    public interface Callbacks{
+    public interface Callbacks {
         void onStepClicked(int position);
     }
 }
