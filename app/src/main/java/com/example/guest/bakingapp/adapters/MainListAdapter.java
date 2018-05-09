@@ -68,6 +68,8 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeRemote recipeRemote = recipeRemotes.get(position);
         holder.title.setText(recipeRemote.getName());
+        holder.steps.append(String.valueOf(recipeRemote.getStepRemotes().size()));
+        holder.servings.append(String.valueOf(recipeRemote.getServings()));
         holder.title.setOnClickListener(v -> callbacks.onItemClicked(recipeRemote, position));
         holder.favIcon.setOnClickListener(v ->
         {
@@ -108,6 +110,10 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.title)
         protected TextView title;
+        @BindView(R.id.steps_label_in_list)
+        protected TextView steps;
+        @BindView(R.id.servings_label_in_list)
+        protected TextView servings;
         @BindView(R.id.fav)
         protected ImageView favIcon;
         private final View view;

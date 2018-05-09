@@ -14,7 +14,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:background="@color/black"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,7 +26,7 @@
         android:id="@+id/fragment_pager_nested_scrollview"
         app:layout_constraintTop_toBottomOf="@id/video_view"
         >
-<!--To show properly long text array in TV, set padding for NestedScrollView equal to Actionbar height+Exoplayer height (about 210dp)-->
+<!--To show properly long text array in TV, set paddingBottom in NestedScrollView equal to Actionbar height+Exoplayer height (about 210dp)-->
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
