@@ -36,7 +36,6 @@
             style="@style/CustomTextView"
             android:textSize="18sp"
             android:fontFamily="@font/oregon_ldo"
-            android:text="@string/steps_label_in_list"
             app:layout_constraintLeft_toLeftOf="@+id/guideline_third"
             app:layout_constraintTop_toBottomOf="@id/title" />
 
@@ -45,7 +44,6 @@
             style="@style/CustomTextView"
             android:fontFamily="@font/oregon_ldo"
             android:textSize="18sp"
-            android:text="@string/servings_label_in_list"
             app:layout_constraintLeft_toRightOf="@+id/steps_label_in_list"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
