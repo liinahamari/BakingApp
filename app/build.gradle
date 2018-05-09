@@ -58,7 +58,8 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     /*Video*/
-    implementation 'com.google.android.exoplayer:exoplayer:2.7.1'
+    implementation 'com.google.android.exoplayer:exoplayer:2.6.0'
+    implementation 'com.google.android.exoplayer:extension-okhttp:2.6.0'
     /*Database*/
     implementation 'android.arch.lifecycle:common-java8:1.0.0'
     implementation 'android.arch.persistence.room:runtime:1.0.0'

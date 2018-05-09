@@ -18,6 +18,7 @@ import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -33,6 +34,7 @@ import com.google.android.exoplayer2.util.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by l1maginaire on 4/29/18.
@@ -44,6 +46,9 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
 
     private String description;
     private String videoUrl;
+    boolean mPlayReady;
+    long mPlayPosition;
+
 
     @BindView(R.id.video_view)
     SimpleExoPlayerView exoPlayerView;
@@ -52,6 +57,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     SimpleExoPlayer exoPlayer;
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
+    private Unbinder unbinder;
 
     public StepFragment() {}
 
@@ -75,7 +81,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pager, container, false);
-        ButterKnife.bind(this, v);
+        unbinder = ButterKnife.bind(this, v);
         tv.setMovementMethod(new ScrollingMovementMethod());
 //        tv.setText(description);
         return v;
@@ -85,23 +91,59 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeMediaSession();
-        initializePlayer(Uri.parse(videoUrl));
+        initializePlayer(Uri.parse(getArguments().getString(VIDEO_URL)));
+    }
+
+    private void initializeMediaSession() {
+        mediaSession = new MediaSessionCompat(getContext(), "StepFragment");
+        mediaSession.setFlags(
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mediaSession.setMediaButtonReceiver(null);
+        stateBuilder = new PlaybackStateCompat.Builder()
+                .setActions(
+                        PlaybackStateCompat.ACTION_PLAY |
+                                PlaybackStateCompat.ACTION_PAUSE |
+                                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
+        mediaSession.setPlaybackState(stateBuilder.build());
+        mediaSession.setCallback(new MediaSessionCompat.Callback() {
+            @Override
+            public void onPlay() {
+                super.onPlay();
+                exoPlayer.setPlayWhenReady(true);
+            }
+
+            @Override
+            public void onPause() {
+                super.onPause();
+                exoPlayer.setPlayWhenReady(false);
+            }
+
+            @Override
+            public void onSkipToPrevious() {
+                super.onSkipToPrevious();
+                exoPlayer.seekTo(0);
+            }
+        });
+        mediaSession.setActive(true);
+    }
+
+    private void initializePlayer(Uri mediaUri) {
+        if (exoPlayer == null) {
+            TrackSelector trackSelector = new DefaultTrackSelector();
+            exoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
+            exoPlayerView.setPlayer(exoPlayer);
+            exoPlayer.addListener(this);
+            String userAgent = Util.getUserAgent(getContext(), "StepVideo");
+            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
+                    getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
+            exoPlayer.prepare(mediaSource);
+            exoPlayer.setPlayWhenReady(true);
+        }
     }
 
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        releasePlayer();
-    }
-
-/*
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-*/
 
     private void expandVideoView(SimpleExoPlayerView exoPlayer) {
         exoPlayer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -118,74 +160,16 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
-    // EXO PLAYER METHODS
-
-    private void initializeMediaSession() {
-
-        mediaSession = new MediaSessionCompat(getContext(), "RecipeStepSinglePageFragment");
-
-        mediaSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
-        mediaSession.setMediaButtonReceiver(null);
-        stateBuilder = new PlaybackStateCompat.Builder()
-                .setActions(
-                        PlaybackStateCompat.ACTION_PLAY |
-                                PlaybackStateCompat.ACTION_PAUSE |
-                                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
-                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
-
-        mediaSession.setPlaybackState(stateBuilder.build());
-        mediaSession.setCallback(new MediaSessionCompat.Callback() {
-            @Override
-            public void onPlay() {
-                exoPlayer.setPlayWhenReady(true);
-            }
-
-            @Override
-            public void onPause() {
-                exoPlayer.setPlayWhenReady(false);
-            }
-
-            @Override
-            public void onSkipToPrevious() {
-                exoPlayer.seekTo(0);
-            }
-        });
-        mediaSession.setActive(true);
-    }
-
-    private void initializePlayer(Uri mediaUri) {
-        if (exoPlayer == null) {
-
-            TrackSelector trackSelector = new DefaultTrackSelector();
-            exoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
-            exoPlayerView.setPlayer(exoPlayer);
-            exoPlayer.addListener(this);
-
-            String userAgent = Util.getUserAgent(getContext(), "StepVideo");
-            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
-                    getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
-            exoPlayer.prepare(mediaSource);
-            exoPlayer.setPlayWhenReady(false);
-        }
-    }
-
-    private void releasePlayer() {
-        if (exoPlayer != null) {
-            exoPlayer.stop();
-            exoPlayer.release();
-            exoPlayer = null;
-        }
-
-        if (mediaSession != null) {
-            mediaSession.setActive(false);
+    private void setViewVisibility(View view, boolean isShown){
+        if (isShown){
+            view.setVisibility(View.VISIBLE);
+        }else{
+            view.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
+    public void onTimelineChanged(Timeline timeline, Object manifest) {
 
     }
 
@@ -201,9 +185,9 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if ((playbackState == ExoPlayer.STATE_READY) && playWhenReady) {
+        if ((playbackState == Player.STATE_READY) && playWhenReady) {
             stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, exoPlayer.getCurrentPosition(), 1f);
-        } else if ((playbackState == ExoPlayer.STATE_READY)) {
+        } else if ((playbackState == Player.STATE_READY)) {
             stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, exoPlayer.getCurrentPosition(), 1f);
         }
         mediaSession.setPlaybackState(stateBuilder.build());
@@ -229,13 +213,61 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
 
     }
 
-
     @Override
     public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
     }
 
     @Override
     public void onSeekProcessed() {
 
+    }
+
+    private void releasePlayer() {
+        if (exoPlayer != null) {
+            exoPlayer.stop();
+            exoPlayer.release();
+            exoPlayer = null;
+        }
+
+        if (mediaSession != null) {
+            mediaSession.setActive(false);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        releasePlayer();
+        if (mediaSession != null) {
+            mediaSession.setActive(false);
+        }
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (exoPlayer != null) {
+            mPlayPosition = exoPlayer.getCurrentPosition();
+            mPlayReady = exoPlayer.getPlayWhenReady();
+            exoPlayer.stop();
+            exoPlayer.release();
+            exoPlayer = null;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (exoPlayer != null) {
+            exoPlayer.setPlayWhenReady(mPlayReady);
+            exoPlayer.seekTo(mPlayPosition);
+        } else if (videoUrl != null && !videoUrl.isEmpty()){
+            initializeMediaSession();
+            initializePlayer(Uri.parse(videoUrl));
+            exoPlayer.setPlayWhenReady(mPlayReady);
+            exoPlayer.seekTo(mPlayPosition);
+        }
     }
 }
