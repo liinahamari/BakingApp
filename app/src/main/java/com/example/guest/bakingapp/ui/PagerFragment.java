@@ -35,7 +35,7 @@ public class PagerFragment extends Fragment {
     @BindView(R.id.recipe_step_tablayout)
     TabLayout tabLayout;
 
-    private int position;
+    private int position;//todo what for?
     private List<StepRemote> stepRemoteList;
     Unbinder unbinder;
     private StepAdapter stepAdapter;
