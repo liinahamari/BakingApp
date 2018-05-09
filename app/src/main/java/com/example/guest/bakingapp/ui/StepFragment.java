@@ -7,13 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v4.view.NestedScrollingChild;
 import android.support.v4.widget.NestedScrollView;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
@@ -63,7 +60,8 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     private PlaybackStateCompat.Builder stateBuilder;
     private Unbinder unbinder;
 
-    public StepFragment() {}
+    public StepFragment() {
+    }
 
     public static Fragment newInstance(String videoUrl, String description) {
         Bundle args = new Bundle();
@@ -86,15 +84,20 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, v);
-//        tv.setText(description);
+        tv.setText(description);
         return v;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initializeMediaSession();
-        initializePlayer(Uri.parse(getArguments().getString(VIDEO_URL)));
+        String video = getArguments().getString(VIDEO_URL);
+        if (video != null && !video.isEmpty()) {
+            initializeMediaSession();
+            initializePlayer(Uri.parse(video));
+        } else {
+            exoPlayerView.setVisibility(View.GONE);
+        }
     }
 
     private void initializeMediaSession() {
@@ -147,7 +150,6 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     }
 
 
-
     private void expandVideoView(SimpleExoPlayerView exoPlayer) {
         exoPlayer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
         exoPlayer.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -163,10 +165,10 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
-    private void setViewVisibility(View view, boolean isShown){
-        if (isShown){
+    private void setViewVisibility(View view, boolean isShown) {
+        if (isShown) {
             view.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             view.setVisibility(View.INVISIBLE);
         }
     }
@@ -265,7 +267,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(false);
             exoPlayer.seekTo(mPlayPosition);
-        } else if (videoUrl != null && !videoUrl.isEmpty()){
+        } else if (videoUrl != null && !videoUrl.isEmpty()) {
             initializeMediaSession();
             initializePlayer(Uri.parse(videoUrl));
             exoPlayer.setPlayWhenReady(false);
