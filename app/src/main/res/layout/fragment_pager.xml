@@ -1,56 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="81dp">
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/recipe_step_desc_card"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        app:cardBackgroundColor="@color/colorPrimaryLight"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/video_view"
-        tools:targetApi="lollipop">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:ignore="UseCompoundDrawables">
-
-            <TextView
-                android:id="@+id/pager_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"                tools:text="Step description"/>
-
-            <!--android:paddingTop="@dimen/material_card_title_block_large_padding_top"-->
-                <!--android:paddingBottom="@dimen/material_card_title_block_large_padding_bottom"-->
-                <!--android:paddingStart="@dimen/material_card_title_block_padding_horizontal"-->
-                <!--android:paddingEnd="@dimen/material_card_title_block_padding_horizontal"-->
-                <!--android:textSize="@dimen/material_card_supporting_text_text_size"-->
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
+    android:paddingBottom="60dp"
+    tools:ignore="ContentDescription, RtlHardcoded">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/video_view"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_height="match_parent"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/black"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <android.support.constraint.Guideline
+        android:id="@+id/guide_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_pager_nested_scrollview"
+        android:paddingBottom="210dp"
+        app:layout_constraintTop_toBottomOf="@id/video_view"
+        >
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lightLight"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <TextView
+                android:id="@+id/pager_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/oregon_ldo"
+                android:padding="7dp"
+                android:scrollHorizontally="true"
+                android:text="@string/lorem"
+                android:textSize="22sp" />
+
+        </android.support.v7.widget.CardView>
+    </android.support.v4.widget.NestedScrollView>
 </android.support.constraint.ConstraintLayout>

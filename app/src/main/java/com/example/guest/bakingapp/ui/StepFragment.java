@@ -7,10 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v4.view.NestedScrollingChild;
+import android.support.v4.widget.NestedScrollView;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
@@ -46,12 +49,13 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
 
     private String description;
     private String videoUrl;
-    boolean mPlayReady;
     long mPlayPosition;
 
 
     @BindView(R.id.video_view)
     SimpleExoPlayerView exoPlayerView;
+    @BindView(R.id.fragment_pager_nested_scrollview)
+    NestedScrollView nestedScrollView;
     @BindView(R.id.pager_description)
     protected TextView tv;
     SimpleExoPlayer exoPlayer;
@@ -82,7 +86,6 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, v);
-        tv.setMovementMethod(new ScrollingMovementMethod());
 //        tv.setText(description);
         return v;
     }
@@ -111,7 +114,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
             @Override
             public void onPlay() {
                 super.onPlay();
-                exoPlayer.setPlayWhenReady(true);
+                exoPlayer.setPlayWhenReady(false);
             }
 
             @Override
@@ -139,7 +142,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             exoPlayer.prepare(mediaSource);
-            exoPlayer.setPlayWhenReady(true);
+            exoPlayer.setPlayWhenReady(false);
         }
     }
 
@@ -250,7 +253,6 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         super.onPause();
         if (exoPlayer != null) {
             mPlayPosition = exoPlayer.getCurrentPosition();
-            mPlayReady = exoPlayer.getPlayWhenReady();
             exoPlayer.stop();
             exoPlayer.release();
             exoPlayer = null;
@@ -261,12 +263,12 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     public void onResume() {
         super.onResume();
         if (exoPlayer != null) {
-            exoPlayer.setPlayWhenReady(mPlayReady);
+            exoPlayer.setPlayWhenReady(false);
             exoPlayer.seekTo(mPlayPosition);
         } else if (videoUrl != null && !videoUrl.isEmpty()){
             initializeMediaSession();
             initializePlayer(Uri.parse(videoUrl));
-            exoPlayer.setPlayWhenReady(mPlayReady);
+            exoPlayer.setPlayWhenReady(false);
             exoPlayer.seekTo(mPlayPosition);
         }
     }
