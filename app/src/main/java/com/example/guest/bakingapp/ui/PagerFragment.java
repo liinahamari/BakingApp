@@ -65,6 +65,7 @@ public class PagerFragment extends Fragment {
         viewPager.setAdapter(stepAdapter);
         setUpViewPagerListener();
         tabLayout.setupWithViewPager(viewPager);
+        viewPager.setCurrentItem(position);
         return v;
     }
 
