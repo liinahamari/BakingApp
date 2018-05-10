@@ -4,6 +4,7 @@ package com.example.guest.bakingapp.adapters;
  * Created by l1maginaire on 4/26/18.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -28,7 +29,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHolder> {
@@ -66,6 +66,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeRemote recipeRemote = recipeRemotes.get(position);
@@ -78,19 +79,27 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         holder.favIcon.setOnClickListener(v ->
         {
             holder.favIcon.setClickable(false);
-            if (recipeRemote.isFavorite() == 0) {
-                Single.fromCallable(() -> LocalDataSource.insert(recipeRemotes.get(position), context))
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(uri -> bookmarkCallback(recipeRemote, 1, holder, position));
-            } else {
-                Single.fromCallable(() -> LocalDataSource.delete(recipeRemotes.get(position).getId(), context))
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(rowsDeleted -> bookmarkCallback(recipeRemote, 0, holder, position));
-            }
+            Single.fromCallable(() -> LocalDataSource.isFavorite(context, recipeRemote.getId()))
+                    .observeOn(Schedulers.io())
+                    .flatMap(isFavorite -> {
+                        if (isFavorite) {
+                            return Single.fromCallable(() -> LocalDataSource.delete(recipeRemote.getId(), context));
+                        } else {
+                            return Single.fromCallable(() -> LocalDataSource.insert(recipeRemote, context));
+                        }
+                    })
+                    .compose(RxThreadManager.manageSingle())
+                    .subscribe(isFavorite -> {
+                        if (fab != null && this.position == position) {
+                            LikeButtonColorChanger.change(fab, context, isFavorite);
+                        }
+                        Picasso.with(context)
+                                .load(isFavorite != 0 ? R.drawable.t_star : R.drawable.f_star)
+                                .into(holder.favIcon);
+                        holder.favIcon.setClickable(true);
+                    });
         });
-
+//todo отписки везде
         Single.fromCallable(() -> {
             holder.favIcon.setClickable(false);
             return LocalDataSource.isFavorite(context, recipeRemote.getId());
@@ -98,28 +107,15 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
                 .compose(RxThreadManager.manageSingle())
                 .subscribe(isFavorite -> {
                     Picasso.with(context)
-                            .load(isFavorite ? R.drawable.t_star: R.drawable.f_star)
+                            .load(isFavorite ? R.drawable.t_star : R.drawable.f_star)
                             .into(holder.favIcon);
                     holder.favIcon.setClickable(true);
                 });
-//        Picasso.with(context)
-//                .load(recipeRemote.isFavorite() != 0 ? R.drawable.t_star : R.drawable.f_star).into(holder.favIcon);
     }
 
     @Override
     public int getItemCount() {
         return (recipeRemotes == null) ? 0 : recipeRemotes.size();
-    }
-
-    private void bookmarkCallback(RecipeRemote recipeRemote, int setFavorite, ViewHolder holder, int position) {
-        recipeRemote.setFavorite(setFavorite);
-        Picasso.with(context)
-                .load(setFavorite != 0 ? R.drawable.t_star : R.drawable.f_star)
-                .into(holder.favIcon);
-        if (fab != null && this.position == position) {
-            LikeButtonColorChanger.change(fab, context, setFavorite);
-        }
-        holder.favIcon.setClickable(true);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -73,7 +73,6 @@ public class LocalDataSource {
         values.put(COLUMN_IMAGE, recipeRemote.getImage());
         values.put(COLUMN_NAME, recipeRemote.getName());
         values.put(COLUMN_SERVINGS, recipeRemote.getServings());
-        values.put(COLUMN_FAVORITE, recipeRemote.isFavorite());
         return (context.getContentResolver().insert(URI_RECIPE, values) != null) ? 1 : 0;
     }
 
@@ -118,7 +117,6 @@ public class LocalDataSource {
                 recipeRemote.setName(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)));
                 recipeRemote.setServings(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SERVINGS)));
                 recipeRemote.setImage(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE)));
-                recipeRemote.setFavorite(cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_FAVORITE)));
                 recipeRemoteList.add(recipeRemote);
             }
         }

@@ -32,7 +32,6 @@ public class RecipeRemote implements Parcelable {
     @SerializedName("image")
     @Expose
     private String image;
-    private int isFavorite = 0;
 
     protected RecipeRemote(Parcel in) {
         id = in.readInt();
@@ -43,7 +42,6 @@ public class RecipeRemote implements Parcelable {
         in.readTypedList(stepRemotes, StepRemote.CREATOR);
         servings = in.readInt();
         image = in.readString();
-        isFavorite = in.readInt();
     }
 
     public RecipeRemote() {}
@@ -96,14 +94,6 @@ public class RecipeRemote implements Parcelable {
         this.image = image;
     }
 
-    public int isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(int favorite) {
-        isFavorite = favorite;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -117,7 +107,6 @@ public class RecipeRemote implements Parcelable {
         dest.writeTypedList(stepRemotes);
         dest.writeInt(servings);
         dest.writeString(image);
-        dest.writeInt(isFavorite);
     }
 
     public static final Creator<RecipeRemote> CREATOR = new Creator<RecipeRemote>() {

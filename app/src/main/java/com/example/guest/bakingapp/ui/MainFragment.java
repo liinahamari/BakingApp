@@ -60,11 +60,11 @@ public class MainFragment extends BaseFragment implements MainView {
             adapter.notifyDataSetChanged();
     }
 
-    public void setFab(FloatingActionButton fab, int position){
+    public void setFab(FloatingActionButton fab, int position) {
         adapter.setFab(fab, position);
     }
 
-    public void notifyItemSetChanged(int position){
+    public void notifyItemSetChanged(int position) {
         adapter.notifyItemChanged(position);
     }
 
@@ -85,7 +85,6 @@ public class MainFragment extends BaseFragment implements MainView {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         unbinder = ButterKnife.bind(this, v);
         setupAdapter();
-        presenter.getLocalData();
         loadNew();
         return v;
     }
@@ -102,15 +101,13 @@ public class MainFragment extends BaseFragment implements MainView {
             presenter.getRecieps();
             errorLayout.setVisibility(View.INVISIBLE);
         } else {
-            if (presenter.getLocalDataSize() == 0) {
-                errorLayout.setVisibility(VISIBLE);
-                repeatButton.setOnClickListener(v -> loadNew());
-            }
+            errorLayout.setVisibility(VISIBLE);
+            repeatButton.setOnClickListener(v -> loadNew());
         }
     }
 
     @Override
-    public void onReciepsLoaded(List<RecipeRemote> recipeRemotes) {
+    public void onRecipesLoaded(List<RecipeRemote> recipeRemotes) {
         onClearItems();
         adapter.addRecieps(recipeRemotes);
     }
