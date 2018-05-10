@@ -29,7 +29,6 @@ public class MainActivity extends LikeSyncActivity implements MainFragment.Callb
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
         if (savedInstanceState != null) {
             position = savedInstanceState.getInt(RETAIN_POSITION);
             recipeRemote = savedInstanceState.getParcelable(RETAIN_RECIPE);

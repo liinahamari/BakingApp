@@ -37,7 +37,6 @@ public class DetailActivity extends LikeSyncActivity implements StepsAdapter.Cal
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         recipeRemote = getIntent().getParcelableExtra(ID);
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle(recipeRemote.getName());
     }
 
     @Override
