@@ -129,6 +129,7 @@ public class MainFragment extends BaseFragment implements MainView {
     public void onDestroyView() {
         super.onDestroyView();
         presenter.unsibscibe();
+        adapter.unsubscibe();
         unbinder.unbind();
     }
 

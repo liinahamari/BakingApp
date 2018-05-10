@@ -45,26 +45,26 @@ public class LocalDataSource {
      * @return successful insert returns 3
      */
 
-    public static int delete(int id, Context context) {
+    public static boolean delete(int id, Context context) {
         int rowsDeleted = 0;
         rowsDeleted += (context.getContentResolver().delete(URI_STEP, null, new String[]{String.valueOf(id)})) > 0 ? 1 : 0;
         rowsDeleted += (context.getContentResolver().delete(URI_RECIPE, null, new String[]{String.valueOf(id)})) > 0 ? 1 : 0;
         rowsDeleted += (context.getContentResolver().delete(URI_INGREDIENTS, null, new String[]{String.valueOf(id)})) > 0 ? 1 : 0;
         Log.i(TAG, "Rows deleted: " + rowsDeleted);
-        return 0;
+        return false;
     }
 
     /**
      * @return successful insert returns 3
      */
 
-    public static int insert(RecipeRemote recipeRemote, Context context) {
+    public static boolean insert(RecipeRemote recipeRemote, Context context) {
         int i = 0;
         i += (insertRecipes(recipeRemote, context));
         i += insertIngredients(recipeRemote.getIngredientRemotes(), context, recipeRemote.getId());
         i += insertSteps(recipeRemote.getStepRemotes(), context, recipeRemote.getId());
         Log.d(TAG, "Inserted "+String.valueOf(i) + " of (3)");
-        return 1;
+        return true;
     }
 
     private static int insertRecipes(RecipeRemote recipeRemote, Context context) {

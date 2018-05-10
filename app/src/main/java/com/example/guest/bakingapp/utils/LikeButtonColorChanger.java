@@ -15,8 +15,8 @@ import static android.os.Build.VERSION_CODES.LOLLIPOP;
  */
 
 public class LikeButtonColorChanger {
-    public static void change(FloatingActionButton fab, Context context, int isFavorite) {
-        int color = (isFavorite == 0) ? R.color.lightLight : R.color.colorAccent;
+    public static void change(FloatingActionButton fab, Context context, boolean isFavorite) {
+        int color = (isFavorite) ? R.color.colorAccent : R.color.lightLight;
         if (Build.VERSION.SDK_INT >= LOLLIPOP) {
             fab.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(color)));
         } else {

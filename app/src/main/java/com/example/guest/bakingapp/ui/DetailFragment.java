@@ -1,5 +1,6 @@
 package com.example.guest.bakingapp.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -154,13 +155,14 @@ public class DetailFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+    @SuppressLint("CheckResult")
     private void setView() {
         fab.setOnClickListener(v -> callbacks.onLikeClicked(fab, recipeRemote.getId()));
         String s = MakeIngredietsString.make(recipeRemote.getIngredientRemotes());
         ingredientsTv.setText(s);
         Single.fromCallable(() -> LocalDataSource.isFavorite(getActivity(), recipeRemote.getId()))
                 .compose(RxThreadManager.manageSingle())
-                .subscribe(isFavorite -> LikeButtonColorChanger.change(fab, getActivity(), isFavorite ? 1 : 0));
+                .subscribe(isFavorite -> LikeButtonColorChanger.change(fab, getActivity(), isFavorite));
         //todo if host activity...
         ((MainActivity) getActivity()).setFab(fab);
     }

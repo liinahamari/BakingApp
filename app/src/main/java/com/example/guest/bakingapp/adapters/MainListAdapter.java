@@ -29,6 +29,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Single;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHolder> {
@@ -37,8 +38,10 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     private FloatingActionButton fab;
     private MainFragment.Callbacks callbacks;
     private int position = -1;
+    private CompositeDisposable compositeDisposable;
 
     public MainListAdapter(Context context, MainFragment.Callbacks callbacks) {
+        compositeDisposable = new CompositeDisposable();
         this.callbacks = callbacks;
         this.context = context;
         recipeRemotes = new ArrayList<>(0);
@@ -79,7 +82,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         holder.favIcon.setOnClickListener(v ->
         {
             holder.favIcon.setClickable(false);
-            Single.fromCallable(() -> LocalDataSource.isFavorite(context, recipeRemote.getId()))
+            compositeDisposable.add(Single.fromCallable(() -> LocalDataSource.isFavorite(context, recipeRemote.getId()))
                     .observeOn(Schedulers.io())
                     .flatMap(isFavorite -> {
                         if (isFavorite) {
@@ -94,13 +97,12 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
                             LikeButtonColorChanger.change(fab, context, isFavorite);
                         }
                         Picasso.with(context)
-                                .load(isFavorite != 0 ? R.drawable.t_star : R.drawable.f_star)
+                                .load(isFavorite ? R.drawable.t_star : R.drawable.f_star)
                                 .into(holder.favIcon);
                         holder.favIcon.setClickable(true);
-                    });
+                    }));
         });
-//todo отписки везде
-        Single.fromCallable(() -> {
+        compositeDisposable.add(Single.fromCallable(() -> {
             holder.favIcon.setClickable(false);
             return LocalDataSource.isFavorite(context, recipeRemote.getId());
         })
@@ -110,12 +112,16 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
                             .load(isFavorite ? R.drawable.t_star : R.drawable.f_star)
                             .into(holder.favIcon);
                     holder.favIcon.setClickable(true);
-                });
+                }));
     }
 
     @Override
     public int getItemCount() {
         return (recipeRemotes == null) ? 0 : recipeRemotes.size();
+    }
+
+    public void unsubscibe() {
+        compositeDisposable.dispose();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
