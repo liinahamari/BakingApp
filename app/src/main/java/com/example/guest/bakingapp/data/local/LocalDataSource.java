@@ -51,7 +51,7 @@ public class LocalDataSource {
         rowsDeleted += (context.getContentResolver().delete(URI_RECIPE, null, new String[]{String.valueOf(id)})) > 0 ? 1 : 0;
         rowsDeleted += (context.getContentResolver().delete(URI_INGREDIENTS, null, new String[]{String.valueOf(id)})) > 0 ? 1 : 0;
         Log.i(TAG, "Rows deleted: " + rowsDeleted);
-        return rowsDeleted;
+        return 0;
     }
 
     /**
@@ -64,7 +64,7 @@ public class LocalDataSource {
         i += insertIngredients(recipeRemote.getIngredientRemotes(), context, recipeRemote.getId());
         i += insertSteps(recipeRemote.getStepRemotes(), context, recipeRemote.getId());
         Log.d(TAG, "Inserted "+String.valueOf(i) + " of (3)");
-        return i;
+        return 1;
     }
 
     private static int insertRecipes(RecipeRemote recipeRemote, Context context) {

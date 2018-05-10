@@ -64,6 +64,10 @@ public class MainFragment extends BaseFragment implements MainView {
         adapter.setFab(fab, position);
     }
 
+    public void notifyItemSetChanged(int position){
+        adapter.notifyItemChanged(position);
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

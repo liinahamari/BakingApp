@@ -1,5 +1,6 @@
 package com.example.guest.bakingapp.ui;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -14,13 +15,13 @@ import com.example.guest.bakingapp.data.local.LocalDataSource;
 import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
-import com.example.guest.bakingapp.utils.NetworkChecker;
 import com.example.guest.bakingapp.utils.RxThreadManager;
 
 import java.util.ArrayList;
 
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.example.guest.bakingapp.utils.NetworkChecker.isNetAvailable;
 
@@ -28,6 +29,7 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String RETAIN_POSITION = "position";
     private static final String RETAIN_FRAGMENT = "fragment";
+    private static final String RETAIN_RECIPE = "recipe";
     private RecipeRemote recipeRemote;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private int position;
@@ -39,6 +41,7 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
         getSupportActionBar().hide();
         if (savedInstanceState != null) {
             position = savedInstanceState.getInt(RETAIN_POSITION);
+            recipeRemote = savedInstanceState.getParcelable(RETAIN_RECIPE);
             mainFragment = (MainFragment) getSupportFragmentManager().getFragment(savedInstanceState, RETAIN_FRAGMENT);
         }
     }
@@ -82,16 +85,30 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
                 .commit();
     }
 
+    @SuppressLint("CheckResult")
     @Override
-    public void onLikeClicked(RecipeRemote recipeRemote, FloatingActionButton fab) {
-        if (recipeRemote.isFavorite() == 0) {
+    public void onLikeClicked(FloatingActionButton fab, int id) {
+        Single.fromCallable(() -> LocalDataSource.isFavorite(this, id))
+                .observeOn(Schedulers.io())
+                .flatMap(isFavorite -> {
+                    if (isFavorite) {
+                        return Single.fromCallable(() -> LocalDataSource.delete(recipeRemote.getId(), this));
+                    } else {
+                        return Single.fromCallable(() -> LocalDataSource.insert(recipeRemote, this));
+                    }
+                })
+                .compose(RxThreadManager.manageSingle())
+                .subscribe(isFavorite -> {
+                    LikeButtonColorChanger.change(fab, this, isFavorite);
+                    mainFragment.notifyItemSetChanged(position);
+                    fab.setClickable(true);
+                });
+     /*   if (recipeRemote.isFavorite() == 0) {
             fab.setClickable(false);
             compositeDisposable.add(Single.fromCallable(() -> LocalDataSource.insert(recipeRemote, this))
                     .compose(RxThreadManager.manageSingle())
                     .subscribe(uri -> {
                         recipeRemote.setFavorite(1);
-                        LikeButtonColorChanger.change(fab, this, 1);
-                        fab.setClickable(true);
                     }));
         } else {
             fab.setClickable(false);
@@ -104,7 +121,7 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
                         }
                         fab.setClickable(true);
                     }));
-        }
+        }*/
     }
 
     public void setFab(FloatingActionButton fab) {
@@ -114,6 +131,8 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt(RETAIN_POSITION, position);
+        outState.putParcelable(RETAIN_RECIPE, recipeRemote);
         getSupportFragmentManager().putFragment(outState, RETAIN_FRAGMENT, mainFragment);
     }
 

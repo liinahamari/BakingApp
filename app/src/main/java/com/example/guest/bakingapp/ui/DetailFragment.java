@@ -4,10 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
+import com.example.guest.bakingapp.data.local.LocalDataSource;
 import com.example.guest.bakingapp.data.local.pojo.IngredientLocal;
 import com.example.guest.bakingapp.data.local.pojo.RecipeLocal;
 import com.example.guest.bakingapp.data.local.pojo.StepLocal;
@@ -128,15 +127,15 @@ public class DetailFragment extends Fragment {
                 .doOnError(throwable -> Log.e(TAG, "Something is wrong with App-class"))
                 .subscribe(cursor -> {
                     List<RecipeRemote> ingredientList = new ArrayList<>();
-                        cursor.moveToPosition(-1);
-                        while (cursor.moveToNext()) {
-                            RecipeRemote ingredient = new RecipeRemote();
-                            ingredient.setId(cursor.getInt(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_RECIPE_ID)));
-                            ingredient.setImage(cursor.getString(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_IMAGE)));
-                            ingredient.setName(cursor.getString(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_NAME)));
-                            ingredient.setServings(cursor.getInt(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_SERVINGS)));
-                            ingredientList.add(ingredient);
-                        }
+                    cursor.moveToPosition(-1);
+                    while (cursor.moveToNext()) {
+                        RecipeRemote ingredient = new RecipeRemote();
+                        ingredient.setId(cursor.getInt(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_RECIPE_ID)));
+                        ingredient.setImage(cursor.getString(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_IMAGE)));
+                        ingredient.setName(cursor.getString(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_NAME)));
+                        ingredient.setServings(cursor.getInt(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_SERVINGS)));
+                        ingredientList.add(ingredient);
+                    }
                 });
         return v;
     }
@@ -156,10 +155,12 @@ public class DetailFragment extends Fragment {
     }
 
     private void setView() {
-        fab.setOnClickListener(v -> callbacks.onLikeClicked(recipeRemote, fab));
+        fab.setOnClickListener(v -> callbacks.onLikeClicked(fab, recipeRemote.getId()));
         String s = MakeIngredietsString.make(recipeRemote.getIngredientRemotes());
         ingredientsTv.setText(s);
-        LikeButtonColorChanger.change(fab, getActivity(), recipeRemote.isFavorite());
+        Single.fromCallable(() -> LocalDataSource.isFavorite(getActivity(), recipeRemote.getId()))
+                .compose(RxThreadManager.manageSingle())
+                .subscribe(isFavorite -> LikeButtonColorChanger.change(fab, getActivity(), isFavorite ? 1 : 0));
         //todo if host activity...
         ((MainActivity) getActivity()).setFab(fab);
     }
@@ -171,6 +172,6 @@ public class DetailFragment extends Fragment {
     }
 
     public interface Callbacks {
-        void onLikeClicked(RecipeRemote recipeRemote, FloatingActionButton fab);
+        void onLikeClicked(FloatingActionButton fab, int id);
     }
 }
