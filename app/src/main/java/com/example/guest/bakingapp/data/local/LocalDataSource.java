@@ -6,8 +6,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.guest.bakingapp.data.local.pojo.IngredientLocal;
+import com.example.guest.bakingapp.data.local.pojo.RecipeLocal;
 import com.example.guest.bakingapp.data.local.pojo.StepLocal;
 import com.example.guest.bakingapp.data.remote.pojo.IngredientRemote;
 import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
@@ -123,14 +125,16 @@ public class LocalDataSource {
         return recipeRemoteList;
     }
 
-    public static List<Integer> isFavorite(Context context) {
-        List<Integer> list = new ArrayList<>();
+    public static boolean isFavorite(Context context, long id) {
         ContentResolver contentResolver = context.getContentResolver();
-        Cursor c = contentResolver.query(URI_RECIPE, null, null, null, null);
+        Cursor c = contentResolver.query(URI_RECIPE, null, null, new String[]{String.valueOf(id)}, null);
         c.moveToPosition(-1);
         while (c.moveToNext()) {
-            list.add(c.getInt(c.getColumnIndexOrThrow(COLUMN_RECIPE_ID)));
+            int i = (c.getInt(c.getColumnIndex(RecipeLocal.COLUMN_RECIPE_ID)));
+            if (i==id)
+                return true;
+            else return false;
         }
-        return list;
+        return false;
     }
 }

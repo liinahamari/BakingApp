@@ -67,7 +67,7 @@ public class Provider extends ContentProvider {
             RecipeDao reciepe = App.dbInstance.reciepe();//todo ask mentor's opinion
             Cursor cursor = null;
             if (code == RECIPE_DIR) {
-//                cursor = reciepe.getRecipes();
+                cursor = reciepe.getRecipe(Long.valueOf(selectionArgs[0]));
             } else if (code == INGREDIENT_DIR) {
                 cursor = reciepe.getIngredients(Long.valueOf(selectionArgs[0]));
             } else if (code == STEP_DIR) {

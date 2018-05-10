@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -57,6 +58,10 @@ public class MainFragment extends BaseFragment implements MainView {
         super.onResume();
         if (adapter != null)
             adapter.notifyDataSetChanged();
+    }
+
+    public void setFab(FloatingActionButton fab, int position){
+        adapter.setFab(fab, position);
     }
 
     @Override

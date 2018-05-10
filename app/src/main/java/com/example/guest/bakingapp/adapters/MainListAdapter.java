@@ -18,6 +18,8 @@ import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.data.local.LocalDataSource;
 import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 import com.example.guest.bakingapp.ui.MainFragment;
+import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
+import com.example.guest.bakingapp.utils.RxThreadManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -89,8 +91,19 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
             }
         });
 
-        Picasso.with(context)
-                .load(recipeRemote.isFavorite() != 0 ? R.drawable.t_star : R.drawable.f_star).into(holder.favIcon);
+        Single.fromCallable(() -> {
+            holder.favIcon.setClickable(false);
+            return LocalDataSource.isFavorite(context, recipeRemote.getId());
+        })
+                .compose(RxThreadManager.manageSingle())
+                .subscribe(isFavorite -> {
+                    Picasso.with(context)
+                            .load(isFavorite ? R.drawable.t_star: R.drawable.f_star)
+                            .into(holder.favIcon);
+                    holder.favIcon.setClickable(true);
+                });
+//        Picasso.with(context)
+//                .load(recipeRemote.isFavorite() != 0 ? R.drawable.t_star : R.drawable.f_star).into(holder.favIcon);
     }
 
     @Override
@@ -104,7 +117,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
                 .load(setFavorite != 0 ? R.drawable.t_star : R.drawable.f_star)
                 .into(holder.favIcon);
         if (fab != null && this.position == position) {
-//            LikeButtonColorChanger.change(fab, context, setFavorite);
+            LikeButtonColorChanger.change(fab, context, setFavorite);
         }
         holder.favIcon.setClickable(true);
     }
