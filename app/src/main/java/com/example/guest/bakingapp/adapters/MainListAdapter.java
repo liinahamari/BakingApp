@@ -102,6 +102,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
                         holder.favIcon.setClickable(true);
                     }));
         });
+
         compositeDisposable.add(Single.fromCallable(() -> {
             holder.favIcon.setClickable(false);
             return LocalDataSource.isFavorite(context, recipeRemote.getId());

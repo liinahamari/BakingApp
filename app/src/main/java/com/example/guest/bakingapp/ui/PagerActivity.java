@@ -7,12 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.base.BaseActivity;
+import com.example.guest.bakingapp.base.LikeSyncActivity;
+import com.example.guest.bakingapp.base.SingleFragmentActivity;
 import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 
 import java.util.ArrayList;
 
-public class PagerActivity extends BaseActivity {
+public class PagerActivity extends SingleFragmentActivity {
     public static final String ID = "steps_id";
     public static final String POSITION = "steps_pos";
 

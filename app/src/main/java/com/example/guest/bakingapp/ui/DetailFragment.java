@@ -57,7 +57,6 @@ public class DetailFragment extends Fragment {
 
     private Callbacks callbacks;
     private RecipeRemote recipeRemote;
-    private StepsAdapter adapter;
     Unbinder unbinder;
 
     public static DetailFragment newInstance(RecipeRemote recipeRemote) {
@@ -151,20 +150,20 @@ public class DetailFragment extends Fragment {
         ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
         recyclerView.setLayoutParams(params);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new StepsAdapter(recipeRemote, getActivity());
+        StepsAdapter adapter = new StepsAdapter(recipeRemote, getActivity());
         recyclerView.setAdapter(adapter);
     }
 
     @SuppressLint("CheckResult")
     private void setView() {
-        fab.setOnClickListener(v -> callbacks.onLikeClicked(fab, recipeRemote.getId()));
+        fab.setOnClickListener(v -> callbacks.onLikeClicked(fab, recipeRemote));
         String s = MakeIngredietsString.make(recipeRemote.getIngredientRemotes());
         ingredientsTv.setText(s);
         Single.fromCallable(() -> LocalDataSource.isFavorite(getActivity(), recipeRemote.getId()))
                 .compose(RxThreadManager.manageSingle())
                 .subscribe(isFavorite -> LikeButtonColorChanger.change(fab, getActivity(), isFavorite));
-        //todo if host activity...
-        ((MainActivity) getActivity()).setFab(fab);
+        if (getActivity() != null && getActivity().getLocalClassName().equals("com.example.guest.bakingapp.ui.MainActivity")) //twopane mode detector
+            ((MainActivity) getActivity()).setFab(fab);
     }
 
     @Override
@@ -174,6 +173,6 @@ public class DetailFragment extends Fragment {
     }
 
     public interface Callbacks {
-        void onLikeClicked(FloatingActionButton fab, int id);
+        void onLikeClicked(FloatingActionButton fab, RecipeRemote  recipe);
     }
 }
