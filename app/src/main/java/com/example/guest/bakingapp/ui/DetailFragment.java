@@ -160,6 +160,7 @@ public class DetailFragment extends Fragment {
         String s = MakeIngredietsString.make(recipeRemote.getIngredientRemotes());
         ingredientsTv.setText(s);
         LikeButtonColorChanger.change(fab, getActivity(), recipeRemote.isFavorite());
+        //todo if host activity...
         ((MainActivity) getActivity()).setFab(fab);
     }
 

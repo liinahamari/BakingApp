@@ -26,6 +26,8 @@ import static com.example.guest.bakingapp.utils.NetworkChecker.isNetAvailable;
 
 public class MainActivity extends BaseActivity implements MainFragment.Callbacks, StepsAdapter.Callbacks, DetailFragment.Callbacks {
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String RETAIN_POSITION = "position";
+    private static final String RETAIN_FRAGMENT = "fragment";
     private RecipeRemote recipeRemote;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private int position;
@@ -35,6 +37,10 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
+        if (savedInstanceState != null) {
+            position = savedInstanceState.getInt(RETAIN_POSITION);
+            mainFragment = (MainFragment) getSupportFragmentManager().getFragment(savedInstanceState, RETAIN_FRAGMENT);
+        }
     }
 
     @Override
@@ -70,10 +76,10 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
 
     @Override
     public void onStepClicked(int position) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.twopane_detail_container, PagerFragment.newInstance((ArrayList<StepRemote>) recipeRemote.getStepRemotes(), position))
-                    .commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.twopane_detail_container, PagerFragment.newInstance((ArrayList<StepRemote>) recipeRemote.getStepRemotes(), position))
+                .commit();
     }
 
     @Override
@@ -101,8 +107,14 @@ public class MainActivity extends BaseActivity implements MainFragment.Callbacks
         }
     }
 
-    public void setFab(FloatingActionButton fab){
+    public void setFab(FloatingActionButton fab) {
         mainFragment.setFab(fab, position);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getSupportFragmentManager().putFragment(outState, RETAIN_FRAGMENT, mainFragment);
     }
 
     @Override
