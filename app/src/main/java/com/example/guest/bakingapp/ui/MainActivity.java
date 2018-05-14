@@ -18,8 +18,6 @@ import com.example.guest.bakingapp.utils.SimpleIdlingResource;
 
 import java.util.ArrayList;
 
-import io.reactivex.disposables.CompositeDisposable;
-
 public class MainActivity extends LikeSyncActivity implements MainFragment.Callbacks, StepsAdapter.Callbacks {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String RETAIN_POSITION = "position";
@@ -49,6 +47,7 @@ public class MainActivity extends LikeSyncActivity implements MainFragment.Callb
     @Override
     protected Fragment getFragment() {
         mainFragment = new MainFragment();
+        mainFragment.setIdleResource(idlingResource);
         return mainFragment;
     }
 

@@ -21,6 +21,7 @@ import com.example.guest.bakingapp.di.components.DaggerBakingComponent;
 import com.example.guest.bakingapp.di.modules.BakingModule;
 import com.example.guest.bakingapp.mvp.presenters.MainPresenter;
 import com.example.guest.bakingapp.mvp.view.MainView;
+import com.example.guest.bakingapp.utils.SimpleIdlingResource;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ import static com.example.guest.bakingapp.utils.NetworkChecker.isNetAvailable;
 
 public class MainFragment extends BaseFragment implements MainView {
     private static final String TAG = MainFragment.class.getSimpleName();
+    private SimpleIdlingResource idlingResource;
 
     @Inject
     protected MainPresenter presenter;
@@ -58,6 +60,10 @@ public class MainFragment extends BaseFragment implements MainView {
         super.onResume();
         if (adapter != null)
             adapter.notifyDataSetChanged();
+    }
+
+    public void setIdleResource(SimpleIdlingResource idleResource){
+        this.idlingResource = idleResource;
     }
 
     public void setFab(FloatingActionButton fab, int position) {
@@ -98,7 +104,7 @@ public class MainFragment extends BaseFragment implements MainView {
 
     private void loadNew() {
         if (isNetAvailable(getActivity())) {
-            presenter.getRecieps();
+            presenter.getRecieps(idlingResource);
             errorLayout.setVisibility(View.INVISIBLE);
         } else {
             errorLayout.setVisibility(VISIBLE);

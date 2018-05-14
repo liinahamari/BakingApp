@@ -7,6 +7,7 @@ import com.example.guest.bakingapp.BakingApi;
 import com.example.guest.bakingapp.base.BasePresenter;
 import com.example.guest.bakingapp.mvp.view.MainView;
 import com.example.guest.bakingapp.utils.RxThreadManager;
+import com.example.guest.bakingapp.utils.SimpleIdlingResource;
 
 import javax.inject.Inject;
 
@@ -30,10 +31,14 @@ public class MainPresenter extends BasePresenter<MainView> {
         compositeDisposable = new CompositeDisposable();
     }
 
-    public void getRecieps() {
+    public void getRecieps(SimpleIdlingResource resource) {
+        if (resource != null) resource.setIdleState(false);
         compositeDisposable.add(apiService.getRecieps()
                 .compose(RxThreadManager.manageObservable())
-                .subscribe(recipes -> getView().onRecipesLoaded(recipes),
+                .subscribe(recipes -> {
+                            getView().onRecipesLoaded(recipes);
+                            if (resource != null) resource.setIdleState(true);
+                        },
                         throwable -> Log.e(TAG, throwable.getMessage())));
     }
 

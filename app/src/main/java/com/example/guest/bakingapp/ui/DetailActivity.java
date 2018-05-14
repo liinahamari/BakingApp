@@ -20,11 +20,13 @@ import java.util.ArrayList;
 
 public class DetailActivity extends LikeSyncActivity implements StepsAdapter.Callbacks {
     public static final String ID = "id";
+    public static final String ID2 = "id2";
     private RecipeRemote recipeRemote;
 
     public static Intent newIntent(Context context, RecipeRemote recipeRemote) {
         Intent intent = new Intent(context, DetailActivity.class);
         intent.putExtra(ID, recipeRemote);
+        intent.putExtra(ID2, recipeRemote.getId());
         return intent;
     }
 
