@@ -2,7 +2,7 @@
 <div align="center">
 <img src="/art/phone.png" width="831" height="524" border="10"/></a>
 <br><br>
-<img src="/meta/tablet.png" width="588" height="366" border="10"/></div>
+<img src="/art/tablet.png" width="588" height="366" border="10"/></div>
 <hr>
 <br>
 Third-party resources in use:
