@@ -31,11 +31,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ExampleTest {
+public class MainActivityUiTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
             MainActivity.class);
-    private IdlingResource idlingResource;
+/*    private IdlingResource idlingResource;
 
     @Before
     public void registerIdlingResource() {
@@ -56,5 +56,22 @@ public class ExampleTest {
         if (idlingResource != null) {
             Espresso.unregisterIdlingResources(idlingResource);
         }
+    }
+*/
+    /**
+     * Mentor's suggestion
+     * */
+
+    @Test
+    public void clickOnRecyclerViewItem_opensRecipeDetailsActivity() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.main_recycler))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.ingredients_tv))
+                .check(matches(isDisplayed()));
     }
 }
