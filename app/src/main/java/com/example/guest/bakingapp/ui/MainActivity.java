@@ -76,7 +76,8 @@ public class MainActivity extends LikeSyncActivity implements MainFragment.Callb
     public void onStepClicked(int position) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.twopane_detail_container, PagerFragment.newInstance((ArrayList<StepRemote>) recipeRemote.getStepRemotes(), position))
+                .replace(R.id.twopane_detail_container,
+                        PagerFragment.newInstance((ArrayList<StepRemote>) recipeRemote.getStepRemotes(), position))
                 .commit();
     }
 
