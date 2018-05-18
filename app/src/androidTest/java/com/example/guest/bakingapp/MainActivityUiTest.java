@@ -19,6 +19,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by l1maginaire on 5/14/18.
@@ -30,10 +31,27 @@ public class MainActivityUiTest {
     @Rule
     public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(
             MainActivity.class);
+    private static final String NUTELLA_PIE = "Nutella Pie";
 
     @Before
     public void registerIdlingResource() {
         IdlingRegistry.getInstance().register(activityTestRule.getActivity().getIdlingResource());
+    }
+
+
+    @Test
+    public void recipeListIsDisplayedAfterDataFetching(){
+        onView(withId(R.id.main_recycler))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void recipeListAfterDataFetchingHasNutellaPie() {
+        onView(withId(R.id.main_recycler))
+                .perform(RecyclerViewActions.scrollToPosition(0));
+
+        onView(withText(NUTELLA_PIE))
+                .check(matches(isDisplayed()));
     }
 
     @Test

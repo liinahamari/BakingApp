@@ -12,7 +12,6 @@ import android.util.Log;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.base.LikeSyncActivity;
-import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 import com.example.guest.bakingapp.utils.SimpleIdlingResource;
 
@@ -20,21 +19,25 @@ import java.util.ArrayList;
 
 public class MainActivity extends LikeSyncActivity implements MainFragment.Callbacks, StepsAdapter.Callbacks {
     private static final String TAG = MainActivity.class.getSimpleName();
+
     private static final String RETAIN_POSITION = "position";
     private static final String RETAIN_FRAGMENT = "fragment";
-    private static final String RETAIN_RECIPE = "recipe";
-    private RecipeRemote recipeRemote;
+    private static final String RETAIN_RECIPE_ID = "recipe";
+
+    private int recipeId;
     private int position;
     private MainFragment mainFragment;
+
     @Nullable
     private SimpleIdlingResource idlingResource;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        getIdlingResource();
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             position = savedInstanceState.getInt(RETAIN_POSITION);
-            recipeRemote = savedInstanceState.getParcelable(RETAIN_RECIPE);
+            recipeId = savedInstanceState.getInt(RETAIN_RECIPE_ID);
             mainFragment = (MainFragment) getSupportFragmentManager().getFragment(savedInstanceState, RETAIN_FRAGMENT);
         }
     }
@@ -57,14 +60,14 @@ public class MainActivity extends LikeSyncActivity implements MainFragment.Callb
     }
 
     @Override
-    public void onItemClicked(RecipeRemote recipeRemote, int position) {
+    public void onItemClicked(int recipeId, int position) {
         this.position = position;
-        this.recipeRemote = recipeRemote;
-        Log.d(TAG, recipeRemote.getName() + " chosen.");
+        this.recipeId = recipeId;
+        Log.d(TAG, "Element №" + recipeId + " chosen.");
         if (findViewById(R.id.twopane_detail_container) == null) {
-            startActivity(DetailActivity.newIntent(this, recipeRemote));
+            startActivity(DetailActivity.newIntent(this, recipeId));
         } else {
-            Fragment detailFragment = DetailFragment.newInstance(recipeRemote);
+            Fragment detailFragment = DetailFragment.newInstance(recipeId);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.twopane_detail_container, detailFragment)
@@ -76,8 +79,7 @@ public class MainActivity extends LikeSyncActivity implements MainFragment.Callb
     public void onStepClicked(int position) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.twopane_detail_container,
-                        PagerFragment.newInstance((ArrayList<StepRemote>) recipeRemote.getStepRemotes(), position))
+                .replace(R.id.twopane_detail_container, PagerFragment.newInstance(recipeId, position))
                 .commit();
     }
 
@@ -89,7 +91,7 @@ public class MainActivity extends LikeSyncActivity implements MainFragment.Callb
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(RETAIN_POSITION, position);
-        outState.putParcelable(RETAIN_RECIPE, recipeRemote);
+        outState.putInt(RETAIN_RECIPE_ID, recipeId);
         getSupportFragmentManager().putFragment(outState, RETAIN_FRAGMENT, mainFragment);
     }
 

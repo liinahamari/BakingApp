@@ -10,8 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
-import com.squareup.picasso.Picasso;
+import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 
 import java.util.List;
 
@@ -23,12 +22,12 @@ import butterknife.ButterKnife;
  */
 
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> {
-    private RecipeRemote recipe;
+    private List<StepRemote> steps;
     private Context context;
     private Callbacks callbacks;
 
-    public StepsAdapter(RecipeRemote recipe, Context context) {
-        this.recipe = recipe;
+    public StepsAdapter(List<StepRemote> steps, Context context) {
+        this.steps = steps;
         this.context = context;
         try {
             callbacks = (Callbacks) context;
@@ -46,17 +45,16 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull StepsAdapter.ViewHolder holder, int position) {
-        String shortDescription = " " + recipe.getStepRemotes().get(position).getShortDescription();
+        String shortDescription = " " + steps.get(position).getShortDescription();
         holder.label.setText(shortDescription);
         holder.view.setOnClickListener(v -> callbacks.onStepClicked(position));
-        if (recipe.getStepRemotes().get(position).getVideoURL().equals("")
-                || recipe.getStepRemotes().get(position).getVideoURL().isEmpty())
+        if (steps.get(position).getVideoURL().equals("") || steps.get(position).getVideoURL().isEmpty())
             holder.playButton.setVisibility(View.GONE);
     }
 
     @Override
     public int getItemCount() {
-        return (recipe.getStepRemotes() == null) ? 0 : recipe.getStepRemotes().size();
+        return (steps == null) ? 0 : steps.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

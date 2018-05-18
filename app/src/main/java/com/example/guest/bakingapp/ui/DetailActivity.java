@@ -9,10 +9,6 @@ import android.support.v4.app.Fragment;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.base.LikeSyncActivity;
-import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
-import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
-
-import java.util.ArrayList;
 
 /**
  * Created by l1maginaire on 4/27/18.
@@ -20,13 +16,11 @@ import java.util.ArrayList;
 
 public class DetailActivity extends LikeSyncActivity implements StepsAdapter.Callbacks {
     public static final String ID = "id";
-    public static final String ID2 = "id2";
-    private RecipeRemote recipeRemote;
+    private int recipeId;
 
-    public static Intent newIntent(Context context, RecipeRemote recipeRemote) {
+    public static Intent newIntent(Context context, int recipeId) {
         Intent intent = new Intent(context, DetailActivity.class);
-        intent.putExtra(ID, recipeRemote);
-        intent.putExtra(ID2, recipeRemote.getId());
+        intent.putExtra(ID, recipeId);
         return intent;
     }
 
@@ -37,13 +31,13 @@ public class DetailActivity extends LikeSyncActivity implements StepsAdapter.Cal
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        recipeRemote = getIntent().getParcelableExtra(ID);
+        recipeId = getIntent().getIntExtra(ID, 0);
         super.onCreate(savedInstanceState);
     }
 
     @Override
     protected Fragment getFragment() {
-        return DetailFragment.newInstance(recipeRemote);
+        return DetailFragment.newInstance(recipeId);
     }
 
     @Override
@@ -53,6 +47,6 @@ public class DetailActivity extends LikeSyncActivity implements StepsAdapter.Cal
 
     @Override
     public void onStepClicked(int position) {
-        startActivity(PagerActivity.newIntent(this, (ArrayList<StepRemote>) recipeRemote.getStepRemotes(), position));
+        startActivity(PagerActivity.newIntent(this, recipeId, position));
     }
 }

@@ -9,7 +9,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,27 +17,16 @@ import android.widget.TextView;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.StepsAdapter;
 import com.example.guest.bakingapp.data.local.LocalDataSource;
-import com.example.guest.bakingapp.data.local.pojo.IngredientLocal;
-import com.example.guest.bakingapp.data.local.pojo.RecipeLocal;
-import com.example.guest.bakingapp.data.local.pojo.StepLocal;
-import com.example.guest.bakingapp.data.remote.pojo.IngredientRemote;
 import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
-import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 import com.example.guest.bakingapp.utils.LikeButtonColorChanger;
 import com.example.guest.bakingapp.utils.MakeIngredietsString;
 import com.example.guest.bakingapp.utils.RxThreadManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Single;
 
-import static com.example.guest.bakingapp.data.local.Provider.URI_INGREDIENTS;
-import static com.example.guest.bakingapp.data.local.Provider.URI_RECIPE;
-import static com.example.guest.bakingapp.data.local.Provider.URI_STEP;
 import static com.example.guest.bakingapp.ui.DetailActivity.ID;
 
 /**
@@ -59,9 +47,9 @@ public class DetailFragment extends Fragment {
     private RecipeRemote recipeRemote;
     Unbinder unbinder;
 
-    public static DetailFragment newInstance(RecipeRemote recipeRemote) {
+    public static DetailFragment newInstance(int recipeId) {
         Bundle args = new Bundle();
-        args.putParcelable(ID, recipeRemote);
+        args.putInt(ID, recipeId);
         DetailFragment fragment = new DetailFragment();
         fragment.setArguments(args);
         return fragment;
@@ -84,8 +72,8 @@ public class DetailFragment extends Fragment {
         unbinder = ButterKnife.bind(this, v);
         setView();
         setupAdapter();
-        Single.fromCallable(() -> getActivity().getContentResolver().query(URI_INGREDIENTS, null, null,
-                new String[]{String.valueOf(recipeRemote.getId())}, null))
+        /*Single.fromCallable(() -> getActivity().getContentResolver().query(URI_INGREDIENTS, null, null,
+                new String[]{String.valueOf(recipeId.getId())}, null))
                 .compose(RxThreadManager.manageSingle())
                 .doOnError(throwable -> Log.e(TAG, "Something is wrong with App-class"))
                 .subscribe(cursor -> {
@@ -102,7 +90,7 @@ public class DetailFragment extends Fragment {
                     }
                 });
         Single.fromCallable(() -> getActivity().getContentResolver().query(URI_STEP, null, null,
-                new String[]{String.valueOf(recipeRemote.getId())}, null))
+                new String[]{String.valueOf(recipeId.getId())}, null))
                 .compose(RxThreadManager.manageSingle())
                 .doOnError(throwable -> Log.e(TAG, "Something is wrong with App-class"))
                 .subscribe(cursor -> {
@@ -122,7 +110,7 @@ public class DetailFragment extends Fragment {
                 });
 
         Single.fromCallable(() -> getActivity().getContentResolver().query(URI_RECIPE, null, null,
-                new String[]{String.valueOf(recipeRemote.getId())}, null))
+                new String[]{String.valueOf(recipeId.getId())}, null))
                 .compose(RxThreadManager.manageSingle())
                 .doOnError(throwable -> Log.e(TAG, "Something is wrong with App-class"))
                 .subscribe(cursor -> {
@@ -136,7 +124,7 @@ public class DetailFragment extends Fragment {
                         ingredient.setServings(cursor.getInt(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_SERVINGS)));
                         ingredientList.add(ingredient);
                     }
-                });
+                });*/
         return v;
     }
 
@@ -150,15 +138,14 @@ public class DetailFragment extends Fragment {
         ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
         recyclerView.setLayoutParams(params);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        StepsAdapter adapter = new StepsAdapter(recipeRemote, getActivity());
+        StepsAdapter adapter = new StepsAdapter(recipeRemote.getStepRemotes(), getActivity());
         recyclerView.setAdapter(adapter);
     }
 
     @SuppressLint("CheckResult")
     private void setView() {
         fab.setOnClickListener(v -> callbacks.onLikeClicked(fab, recipeRemote));
-        String s = MakeIngredietsString.make(recipeRemote.getIngredientRemotes());
-        ingredientsTv.setText(s);
+        ingredientsTv.setText(MakeIngredietsString.make(recipeRemote.getIngredientRemotes()));
         Single.fromCallable(() -> LocalDataSource.isFavorite(getActivity(), recipeRemote.getId()))
                 .compose(RxThreadManager.manageSingle())
                 .subscribe(isFavorite -> LikeButtonColorChanger.change(fab, getActivity(), isFavorite));
@@ -169,7 +156,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        recipeRemote = getArguments().getParcelable(ID);
+        recipeRemote = Repository.get().getRecipe(getArguments().getInt(ID));
     }
 
     public interface Callbacks {
