@@ -5,12 +5,12 @@ package com.example.guest.bakingapp.di.components;
  */
 
 import com.example.guest.bakingapp.di.modules.BakingModule;
-import com.example.guest.bakingapp.di.scope.PerActivity;
+import com.example.guest.bakingapp.di.scope.PerFragment;
 import com.example.guest.bakingapp.ui.MainFragment;
 
 import dagger.Component;
 
-@PerActivity
+@PerFragment
 @Component(modules = BakingModule.class, dependencies = ApplicationComponent.class)
 public interface BakingComponent {
     void inject(MainFragment fragment);

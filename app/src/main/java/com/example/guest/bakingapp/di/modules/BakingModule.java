@@ -5,16 +5,12 @@ package com.example.guest.bakingapp.di.modules;
  */
 
 import com.example.guest.bakingapp.BakingApi;
-import com.example.guest.bakingapp.di.scope.PerActivity;
+import com.example.guest.bakingapp.di.scope.PerFragment;
 import com.example.guest.bakingapp.mvp.view.MainView;
 
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
-
-/**
- * Created by l1maginaire on 3/1/18.
- */
 
 @Module
 public class BakingModule {
@@ -25,13 +21,13 @@ public class BakingModule {
         this.view = view;
     }
 
-    @PerActivity
+    @PerFragment
     @Provides
     BakingApi provideApiService(Retrofit retrofit) {
         return retrofit.create(BakingApi.class);
     }
 
-    @PerActivity
+    @PerFragment
     @Provides
     MainView provideView() {
         return view;

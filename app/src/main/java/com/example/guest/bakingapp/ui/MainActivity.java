@@ -33,6 +33,7 @@ public class MainActivity extends LikeSyncActivity implements MainFragment.Callb
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        getIdlingResource();
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             position = savedInstanceState.getInt(RETAIN_POSITION);
