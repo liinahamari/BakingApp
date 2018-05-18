@@ -78,7 +78,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         holder.steps.setText(steps);
         String servings = "Servings: " + String.valueOf(recipeRemote.getServings());
         holder.servings.setText(servings);
-        holder.title.setOnClickListener(v -> callbacks.onItemClicked(recipeRemote, position));
+        holder.title.setOnClickListener(v -> callbacks.onItemClicked(recipeRemote.getId(), position));
         holder.favIcon.setOnClickListener(v ->
         {
             holder.favIcon.setClickable(false);

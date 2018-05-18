@@ -24,7 +24,7 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExt
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class MainActivityIntentTest {
-    private static final String ID = "id2";
+    private static final String ID = "id";
     private static final int EXTRA_RECIPE_ID_VALUE = 1;
 
     @Rule

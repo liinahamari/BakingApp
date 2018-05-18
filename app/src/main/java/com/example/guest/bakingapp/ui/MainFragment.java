@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,7 +107,7 @@ public class MainFragment extends BaseFragment implements MainView {
         if (isNetAvailable(getActivity())) {
             presenter.getRecieps(idlingResource);
             errorLayout.setVisibility(View.INVISIBLE);
-        } else {
+        } else { //todo from singleton
             errorLayout.setVisibility(VISIBLE);
             repeatButton.setOnClickListener(v -> loadNew());
         }
@@ -114,6 +115,8 @@ public class MainFragment extends BaseFragment implements MainView {
 
     @Override
     public void onRecipesLoaded(List<RecipeRemote> recipeRemotes) {
+        Log.d(TAG, "Loaded " + recipeRemotes.size() + " elements.");
+        Repository.get().setRecipes(recipeRemotes);
         onClearItems();
         adapter.addRecieps(recipeRemotes);
     }
@@ -140,6 +143,6 @@ public class MainFragment extends BaseFragment implements MainView {
     }
 
     public interface Callbacks {
-        void onItemClicked(RecipeRemote recipeRemote, int position);
+        void onItemClicked(int recipeId, int position);
     }
 }

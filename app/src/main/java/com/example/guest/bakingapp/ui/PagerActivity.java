@@ -29,12 +29,12 @@ public class PagerActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment getFragment() {
-        return PagerFragment.newInstance(getIntent().getParcelableArrayListExtra(ID), getIntent().getIntExtra(POSITION, 0));
+        return PagerFragment.newInstance(getIntent().getIntExtra(ID, 0), getIntent().getIntExtra(POSITION, 0));
     }
 
-    public static Intent newIntent(Context context, ArrayList<StepRemote> stepRemotes, int position) {
+    public static Intent newIntent(Context context, int recipeId, int position) {
         Intent intent = new Intent(context, PagerActivity.class);
-        intent.putParcelableArrayListExtra(ID, stepRemotes);
+        intent.putExtra(ID, recipeId);
         intent.putExtra(POSITION, position);
         return intent;
     }

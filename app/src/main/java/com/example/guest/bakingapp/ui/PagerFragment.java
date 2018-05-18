@@ -40,9 +40,9 @@ public class PagerFragment extends Fragment {
     Unbinder unbinder;
     private StepAdapter stepAdapter;
 
-    public static Fragment newInstance(ArrayList<StepRemote> stepRemotes, int position) {
+    public static Fragment newInstance(int recipeId, int position) {
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ID, stepRemotes);
+        args.putInt(ID, recipeId);
         args.putInt(POSITION, position);
         PagerFragment fragment = new PagerFragment();
         fragment.setArguments(args);
@@ -52,7 +52,7 @@ public class PagerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        stepRemoteList = getArguments().getParcelableArrayList(ID);
+        stepRemoteList = Repository.get().getSteps(getArguments().getInt(ID));
         position = getArguments().getInt(POSITION);
     }
 

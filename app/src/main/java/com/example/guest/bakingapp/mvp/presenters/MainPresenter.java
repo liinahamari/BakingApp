@@ -39,7 +39,7 @@ public class MainPresenter extends BasePresenter<MainView> {
                             getView().onRecipesLoaded(recipes);
                             if (resource != null) resource.setIdleState(true);
                         },
-                        throwable -> Log.e(TAG, throwable.getMessage())));
+                            throwable -> Log.e(TAG, throwable.getMessage())));
     }
 
     public void unsibscibe() {
