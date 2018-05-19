@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.guest.bakingapp.App;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.data.local.pojo.IngredientLocal;
 import com.example.guest.bakingapp.data.local.pojo.RecipeLocal;
@@ -36,6 +37,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 import static com.example.guest.bakingapp.data.local.Provider.URI_INGREDIENTS;
+import static com.example.guest.bakingapp.data.local.Provider.URI_RECIPE;
 
 /**
  * Created by l1maginaire on 5/19/18.
@@ -76,34 +78,17 @@ public class WidgetConfigActivity extends AppCompatActivity {
                 finish();
             }
         }
-        List<RecipeRemote> recipes = new ArrayList<>();
-        Single.fromCallable(() -> getApplicationContext().getContentResolver().query(URI_INGREDIENTS, null, null,
-                new String[]{String.valueOf(1)}, null))
+        Single.fromCallable(() -> ((App)getApplication()).dbInstance.reciepe().getRecipes())
                 .compose(RxThreadManager.manageSingle())
                 .doOnError(throwable -> Log.e("TAG", "Something is wrong with App-class"))
-                .subscribe(cursor -> {
-                    if (cursor.getCount() > 0) {
-                        cursor.moveToPosition(-1);
-                        while (cursor.moveToNext()) {
-                            RecipeRemote ingredient = new RecipeRemote();
-                            ingredient.setId(cursor.getInt(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_RECIPE_ID)));
-                            ingredient.setImage(cursor.getString(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_IMAGE)));
-                            ingredient.setName(cursor.getString(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_NAME)));
-                            ingredient.setServings(cursor.getInt(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_SERVINGS)));
-                            recipes.add(ingredient);
-                        }
-                    }
-
+                .subscribe(recipeList -> {
                     int currentIndex = 0;
-
-                    for (RecipeRemote recipe : recipes) {
+                    for (RecipeLocal recipe : recipeList) {
                         AppCompatRadioButton button = new AppCompatRadioButton(this);
-                        button.setText(recipe.getName());
+                        button.setText(recipe.name);
                         button.setId(currentIndex++);
                         namesRadioGroup.addView(button);
                     }
-
-                    // Check the first item when loaded
                     if (namesRadioGroup.getChildCount() > 0) {
                         ((AppCompatRadioButton) namesRadioGroup.getChildAt(0)).setChecked(true);
                     }
