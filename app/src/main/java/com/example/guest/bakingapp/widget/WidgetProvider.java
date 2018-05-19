@@ -28,11 +28,6 @@ public class WidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
 
-//        DaggerWidgetDataHelperComponent.builder()
-//                .recipeRepositoryComponent(
-//                        ((BakingApp) context.getApplicationContext()).getRecipeRepositoryComponent())
-//                .build()
-//                .inject(this);
         List<IngredientRemote> ingredients = new ArrayList<>();
         Single.fromCallable(() -> context.getContentResolver().query(URI_INGREDIENTS, null, null,
                 new String[]{String.valueOf(1)}, null))
