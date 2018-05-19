@@ -2,7 +2,6 @@ package com.example.guest.bakingapp.widget;
 
 import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +18,6 @@ import com.example.guest.bakingapp.data.remote.pojo.IngredientRemote;
 import com.example.guest.bakingapp.utils.RxThreadManager;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -79,16 +77,14 @@ public class WidgetConfigActivity extends AppCompatActivity {
     @OnClick(R.id.button)
     public void onOkButtonClick() {
         int checkedItemId = namesRadioGroup.getCheckedRadioButtonId();
-        String s = String.valueOf(idList.get(checkedItemId));
-        String recipeName = ((AppCompatRadioButton) namesRadioGroup
-                .getChildAt(checkedItemId)).getText().toString();
+        String recipeName = ((AppCompatRadioButton) namesRadioGroup.getChildAt(checkedItemId)).getText().toString();
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
-        List<IngredientRemote> ingredients = new ArrayList<>();
         Single.fromCallable(() -> getApplicationContext().getContentResolver().query(URI_INGREDIENTS, null, null,
-                new String[]{s}, null))
+                new String[]{String.valueOf(idList.get(checkedItemId))}, null))
                 .compose(RxThreadManager.manageSingle())
                 .doOnError(throwable -> Log.e("TAG", "Something is wrong with App-class"))
                 .subscribe(cursor -> {
+                    List<IngredientRemote> ingredients = new ArrayList<>();
                     if (cursor.getCount() > 0) {
                         cursor.moveToPosition(-1);
                         while (cursor.moveToNext()) {

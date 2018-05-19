@@ -2,7 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:background="@color/colorPrimary">
 
     <TextView
         android:id="@+id/widget_ingredient_name"
@@ -10,5 +12,4 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorAccent"
         tools:text="Ingredient name"/>
-
 </FrameLayout>

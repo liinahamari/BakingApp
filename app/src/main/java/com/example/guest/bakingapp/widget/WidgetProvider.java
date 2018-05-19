@@ -50,11 +50,6 @@ public class WidgetProvider extends AppWidgetProvider {
                 });
     }
 
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        super.onDeleted(context, appWidgetIds);
-    }
-
     public static void updateAppWidgetContent(Context context, AppWidgetManager appWidgetManager,
                                               int appWidgetId, String recipeName, List<IngredientRemote> ingredients) {
 
@@ -66,7 +61,7 @@ public class WidgetProvider extends AppWidgetProvider {
             RemoteViews ingredientView = new RemoteViews(context.getPackageName(),
                     R.layout.widget_ingredients_list_item);
 
-            String line = ingredient.getIngredient() + " " + ingredient.getQuantity() + " " + ingredient.getMeasure() + "\n";
+            String line = ingredient.getIngredient() + " " + ingredient.getQuantity() + " " + ingredient.getMeasure();
             ingredientView.setTextViewText(R.id.widget_ingredient_name, line);
             views.addView(R.id.widget_ingredients_container, ingredientView);
         }
