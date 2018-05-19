@@ -19,6 +19,7 @@ import com.example.guest.bakingapp.data.remote.pojo.IngredientRemote;
 import com.example.guest.bakingapp.utils.RxThreadManager;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -36,6 +37,7 @@ import static com.example.guest.bakingapp.data.local.Provider.URI_INGREDIENTS;
 public class WidgetConfigActivity extends AppCompatActivity {
     private CompositeDisposable disposableList = new CompositeDisposable();
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    private List<Integer> idList = new ArrayList<>();
 
     @BindView(R.id.radioGroup)
     RadioGroup namesRadioGroup;
@@ -50,10 +52,7 @@ public class WidgetConfigActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            appWidgetId = extras.getInt(
-                    AppWidgetManager.EXTRA_APPWIDGET_ID,
-                    AppWidgetManager.INVALID_APPWIDGET_ID);
-
+            appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
             if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
                 finish();
             }
@@ -64,6 +63,7 @@ public class WidgetConfigActivity extends AppCompatActivity {
                 .subscribe(recipeList -> {
                     int currentIndex = 0;
                     for (RecipeLocal recipe : recipeList) {
+                        idList.add(recipe.recipeId);
                         AppCompatRadioButton button = new AppCompatRadioButton(this);
                         button.setText(recipe.name);
                         button.setId(currentIndex++);
@@ -75,16 +75,17 @@ public class WidgetConfigActivity extends AppCompatActivity {
                 });
     }
 
+    @SuppressLint("CheckResult")
     @OnClick(R.id.button)
     public void onOkButtonClick() {
         int checkedItemId = namesRadioGroup.getCheckedRadioButtonId();
+        String s = String.valueOf(idList.get(checkedItemId));
         String recipeName = ((AppCompatRadioButton) namesRadioGroup
                 .getChildAt(checkedItemId)).getText().toString();
-        Context context = getApplicationContext();
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
         List<IngredientRemote> ingredients = new ArrayList<>();
-        Single.fromCallable(() -> context.getContentResolver().query(URI_INGREDIENTS, null, null,
-                new String[]{String.valueOf(checkedItemId+1/*todo*/)}, null))
+        Single.fromCallable(() -> getApplicationContext().getContentResolver().query(URI_INGREDIENTS, null, null,
+                new String[]{s}, null))
                 .compose(RxThreadManager.manageSingle())
                 .doOnError(throwable -> Log.e("TAG", "Something is wrong with App-class"))
                 .subscribe(cursor -> {
@@ -98,7 +99,7 @@ public class WidgetConfigActivity extends AppCompatActivity {
                             ingredients.add(ingredientRemote);
                         }
                     }
-                    WidgetProvider.updateAppWidgetContent(context, appWidgetManager, appWidgetId, recipeName, ingredients);
+                    WidgetProvider.updateAppWidgetContent(getApplicationContext(), appWidgetManager, appWidgetId, recipeName, ingredients);
                     Intent resultValue = new Intent();
                     resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
                     setResult(RESULT_OK, resultValue);
