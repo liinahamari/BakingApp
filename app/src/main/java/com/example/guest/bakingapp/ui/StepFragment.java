@@ -160,30 +160,6 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         }
     }
 
-
-    private void expandVideoView(SimpleExoPlayerView exoPlayer) {
-        exoPlayer.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-        exoPlayer.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-    }
-
-    private void hideSystemUI() {
-        getActivity().getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
-    }
-
-    private void setViewVisibility(View view, boolean isShown) {
-        if (isShown) {
-            view.setVisibility(View.VISIBLE);
-        } else {
-            view.setVisibility(View.INVISIBLE);
-        }
-    }
-
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {
 

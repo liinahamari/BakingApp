@@ -10,14 +10,11 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.adapters.StepsAdapter;
+import com.example.guest.bakingapp.adapters.DetailFragmentStepAdapter;
 import com.example.guest.bakingapp.base.LikeSyncActivity;
-import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
 import com.example.guest.bakingapp.utils.SimpleIdlingResource;
 
-import java.util.ArrayList;
-
-public class MainActivity extends LikeSyncActivity implements MainFragment.Callbacks, StepsAdapter.Callbacks {
+public class MainActivity extends LikeSyncActivity implements MainFragment.Callbacks, DetailFragmentStepAdapter.Callbacks {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String RETAIN_POSITION = "position";

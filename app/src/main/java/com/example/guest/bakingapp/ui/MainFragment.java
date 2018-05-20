@@ -108,7 +108,7 @@ public class MainFragment extends BaseFragment implements MainView {
         if (isNetAvailable(getActivity())) {
             presenter.getRecieps(idlingResource);
             errorLayout.setVisibility(View.INVISIBLE);
-        } else { //todo from singleton
+        } else {
             errorLayout.setVisibility(VISIBLE);
             repeatButton.setOnClickListener(v -> loadNew());
         }

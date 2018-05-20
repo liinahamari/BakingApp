@@ -21,12 +21,12 @@ import butterknife.ButterKnife;
  * Created by l1maginaire on 4/29/18.
  */
 
-public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> {
+public class DetailFragmentStepAdapter extends RecyclerView.Adapter<DetailFragmentStepAdapter.ViewHolder> {
     private List<StepRemote> steps;
     private Context context;
     private Callbacks callbacks;
 
-    public StepsAdapter(List<StepRemote> steps, Context context) {
+    public DetailFragmentStepAdapter(List<StepRemote> steps, Context context) {
         this.steps = steps;
         this.context = context;
         try {
@@ -38,13 +38,13 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.ViewHolder> 
 
     @NonNull
     @Override
-    public StepsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.single_step, parent, false);
-        return new StepsAdapter.ViewHolder(v);
+    public DetailFragmentStepAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.detail_fragments_single_step, parent, false);
+        return new DetailFragmentStepAdapter.ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull StepsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DetailFragmentStepAdapter.ViewHolder holder, int position) {
         String shortDescription = " " + steps.get(position).getShortDescription();
         holder.label.setText(shortDescription);
         holder.view.setOnClickListener(v -> callbacks.onStepClicked(position));

@@ -33,71 +33,71 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHolder> {
-    private List<RecipeRemote> recipeRemotes;
+    private List<RecipeRemote> recipes;
     private Context context;
     private FloatingActionButton fab;
     private MainFragment.Callbacks callbacks;
-    private int position = -1;
+    private int bindedDetailContainerPosition = -1;
     private CompositeDisposable compositeDisposable;
 
     public MainListAdapter(Context context, MainFragment.Callbacks callbacks) {
         compositeDisposable = new CompositeDisposable();
+        recipes = new ArrayList<>(0);
         this.callbacks = callbacks;
         this.context = context;
-        recipeRemotes = new ArrayList<>(0);
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.single_item, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.main_lists_single_item, parent, false);
         return new ViewHolder(v);
     }
 
-    public void addRecieps(List<RecipeRemote> recipeRemotes) {
-        this.recipeRemotes.addAll(recipeRemotes);
+    public void addRecieps(List<RecipeRemote> recipes) {
+        this.recipes.addAll(recipes);
         notifyDataSetChanged();
     }
 
     public void setFab(FloatingActionButton fab, int position) {
+        this.bindedDetailContainerPosition = position;
         this.fab = fab;
-        this.position = position;
     }
 
     public void clearItems() {
-        recipeRemotes.clear();
+        recipes.clear();
         notifyDataSetChanged();
     }
 
     @SuppressLint("CheckResult")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RecipeRemote recipeRemote = recipeRemotes.get(position);
-        holder.title.setText(recipeRemote.getName());
-        String steps = "Steps: " + String.valueOf(recipeRemote.getStepRemotes().size());
+        RecipeRemote recipe = recipes.get(position);
+        holder.title.setText(recipe.getName());
+        String steps = "Steps: " + String.valueOf(recipe.getStepRemotes().size());
         holder.steps.setText(steps);
-        String servings = "Servings: " + String.valueOf(recipeRemote.getServings());
+        String servings = "Servings: " + String.valueOf(recipe.getServings());
         holder.servings.setText(servings);
-        if(recipeRemote.getImage()!=null && !recipeRemote.getImage().isEmpty()){
+        if(recipe.getImage()!=null && !recipe.getImage().isEmpty()){
             holder.recipeImage.setVisibility(View.VISIBLE);
-            Picasso.with(context).load(recipeRemote.getImage()).into(holder.recipeImage);
+            Picasso.with(context).load(recipe.getImage()).into(holder.recipeImage);
         }
-        holder.title.setOnClickListener(v -> callbacks.onItemClicked(recipeRemote.getId(), position));
+        holder.title.setOnClickListener(v -> callbacks.onItemClicked(recipe.getId(), position));
         holder.favIcon.setOnClickListener(v ->
         {
             holder.favIcon.setClickable(false);
-            compositeDisposable.add(Single.fromCallable(() -> LocalDataSource.isFavorite(context, recipeRemote.getId()))
+            compositeDisposable.add(Single.fromCallable(() -> LocalDataSource.isFavorite(context, recipe.getId()))
                     .observeOn(Schedulers.io())
                     .flatMap(isFavorite -> {
                         if (isFavorite) {
-                            return Single.fromCallable(() -> LocalDataSource.delete(recipeRemote.getId(), context));
+                            return Single.fromCallable(() -> LocalDataSource.delete(recipe.getId(), context));
                         } else {
-                            return Single.fromCallable(() -> LocalDataSource.insert(recipeRemote, context));
+                            return Single.fromCallable(() -> LocalDataSource.insert(recipe, context));
                         }
                     })
                     .compose(RxThreadManager.manageSingle())
                     .subscribe(isFavorite -> {
-                        if (fab != null && this.position == position) {
+                        if (fab != null && this.bindedDetailContainerPosition == position) {
                             LikeButtonColorChanger.change(fab, context, isFavorite);
                         }
                         Picasso.with(context)
@@ -109,7 +109,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
 
         compositeDisposable.add(Single.fromCallable(() -> {
             holder.favIcon.setClickable(false);
-            return LocalDataSource.isFavorite(context, recipeRemote.getId());
+            return LocalDataSource.isFavorite(context, recipe.getId());
         })
                 .compose(RxThreadManager.manageSingle())
                 .subscribe(isFavorite -> {
@@ -122,7 +122,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return (recipeRemotes == null) ? 0 : recipeRemotes.size();
+        return (recipes == null) ? 0 : recipes.size();
     }
 
     public void unsubscibe() {

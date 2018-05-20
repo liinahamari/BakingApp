@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -18,11 +17,9 @@ import com.example.guest.bakingapp.utils.RxThreadManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import io.reactivex.Single;
 
-import static com.example.guest.bakingapp.data.local.Provider.URI_INGREDIENTS;
+import static com.example.guest.bakingapp.data.local.BakingContentProvider.URI_INGREDIENTS;
 
 
 public class WidgetProvider extends AppWidgetProvider {
@@ -33,6 +30,7 @@ public class WidgetProvider extends AppWidgetProvider {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String recipeId = preferences.getString(WidgetConfigActivity.WIDGET_RECIPE_ID, null);
+        String recipeName = preferences.getString(WidgetConfigActivity.WIDGET_RECIPE_NAME, null);
         List<IngredientRemote> ingredients = new ArrayList<>();
         if (recipeId != null)
             Single.fromCallable(() -> context.getContentResolver().query(URI_INGREDIENTS, null, null,
@@ -51,7 +49,7 @@ public class WidgetProvider extends AppWidgetProvider {
                             }
                         }
                         for (int appWidgetId : appWidgetIds) {
-                            updateAppWidgetContent(context, appWidgetManager, appWidgetId, "LOL", ingredients);
+                            updateAppWidgetContent(context, appWidgetManager, appWidgetId, recipeName, ingredients);
                         }
                     });
     }

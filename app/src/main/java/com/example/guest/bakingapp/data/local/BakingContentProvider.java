@@ -20,7 +20,7 @@ import com.example.guest.bakingapp.data.local.pojo.IngredientLocal;
 import com.example.guest.bakingapp.data.local.pojo.RecipeLocal;
 import com.example.guest.bakingapp.data.local.pojo.StepLocal;
 
-public class Provider extends ContentProvider {
+public class BakingContentProvider extends ContentProvider {
     public static final String AUTHORITY = "com.example.guest.bakingapp.db";
 
     public static final Uri URI_RECIPE = Uri.parse("content://" + AUTHORITY + "/" + RecipeLocal.RECIPE_TABLE_NAME);

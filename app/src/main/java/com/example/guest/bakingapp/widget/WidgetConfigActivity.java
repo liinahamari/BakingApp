@@ -28,7 +28,7 @@ import butterknife.OnClick;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
 
-import static com.example.guest.bakingapp.data.local.Provider.URI_INGREDIENTS;
+import static com.example.guest.bakingapp.data.local.BakingContentProvider.URI_INGREDIENTS;
 
 /**
  * Created by l1maginaire on 5/19/18.
@@ -36,6 +36,8 @@ import static com.example.guest.bakingapp.data.local.Provider.URI_INGREDIENTS;
 
 public class WidgetConfigActivity extends AppCompatActivity {
     public static final String WIDGET_RECIPE_ID = "widget_recipe_id";
+    public static final String WIDGET_RECIPE_NAME = "widget_recipe_name";
+
     private CompositeDisposable disposableList = new CompositeDisposable();
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     private List<Integer> idList = new ArrayList<>();
@@ -105,8 +107,8 @@ public class WidgetConfigActivity extends AppCompatActivity {
                     resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
                     setResult(RESULT_OK, resultValue);
                     SharedPreferences.Editor editor = prefs.edit();
-                    int i = idList.get(checkedItemId);
-                    editor.putString(WIDGET_RECIPE_ID, String.valueOf(i));
+                    editor.putString(WIDGET_RECIPE_ID, String.valueOf(idList.get(checkedItemId)));
+                    editor.putString(WIDGET_RECIPE_NAME, recipeName);
                     editor.apply();
                     finish();
                 });

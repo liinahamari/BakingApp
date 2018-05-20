@@ -7,14 +7,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.adapters.StepsAdapter;
+import com.example.guest.bakingapp.adapters.DetailFragmentStepAdapter;
 import com.example.guest.bakingapp.base.LikeSyncActivity;
 
 /**
  * Created by l1maginaire on 4/27/18.
  */
 
-public class DetailActivity extends LikeSyncActivity implements StepsAdapter.Callbacks {
+public class DetailActivity extends LikeSyncActivity implements DetailFragmentStepAdapter.Callbacks {
     public static final String ID = "id";
     private int recipeId;
 

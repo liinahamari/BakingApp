@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
-import com.example.guest.bakingapp.adapters.StepsAdapter;
+import com.example.guest.bakingapp.adapters.DetailFragmentStepAdapter;
 import com.example.guest.bakingapp.data.Repository;
 import com.example.guest.bakingapp.data.local.LocalDataSource;
 import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
@@ -86,7 +86,7 @@ public class DetailFragment extends Fragment {
         ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
         recyclerView.setLayoutParams(params);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        StepsAdapter adapter = new StepsAdapter(recipeRemote.getStepRemotes(), getActivity());
+        DetailFragmentStepAdapter adapter = new DetailFragmentStepAdapter(recipeRemote.getStepRemotes(), getActivity());
         recyclerView.setAdapter(adapter);
     }
 

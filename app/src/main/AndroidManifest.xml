@@ -22,7 +22,7 @@
         </activity>
 
         <provider
-            android:name=".data.local.Provider"
+            android:name=".data.local.BakingContentProvider"
             android:authorities="com.example.guest.bakingapp.db"
             android:exported="false" />
 
