@@ -1,9 +1,12 @@
 package com.example.guest.bakingapp.widget;
 
+import android.annotation.SuppressLint;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -24,30 +27,33 @@ import static com.example.guest.bakingapp.data.local.Provider.URI_INGREDIENTS;
 
 public class WidgetProvider extends AppWidgetProvider {
 
+    @SuppressLint("CheckResult")
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String recipeId = preferences.getString(WidgetConfigActivity.WIDGET_RECIPE_ID, null);
         List<IngredientRemote> ingredients = new ArrayList<>();
-        Single.fromCallable(() -> context.getContentResolver().query(URI_INGREDIENTS, null, null,
-                new String[]{String.valueOf(1)}, null))
-                .compose(RxThreadManager.manageSingle())
-                .doOnError(throwable -> Log.e("TAG", "Something is wrong with App-class"))
-                .subscribe(cursor -> {
-                    if (cursor.getCount() > 0) {
-                        cursor.moveToPosition(-1);
-                        while (cursor.moveToNext()) {
-                            IngredientRemote ingredientRemote = new IngredientRemote();
-                            ingredientRemote.setIngredient(cursor.getString(cursor.getColumnIndexOrThrow(IngredientLocal.COLUMN_INGREDIENT)));
-                            ingredientRemote.setMeasure(cursor.getString(cursor.getColumnIndexOrThrow(IngredientLocal.COLUMN_MEASURE)));
-                            ingredientRemote.setQuantity(cursor.getDouble(cursor.getColumnIndexOrThrow(IngredientLocal.COLUMN_QUANTITITY)));
-                            ingredients.add(ingredientRemote);
+        if (recipeId != null)
+            Single.fromCallable(() -> context.getContentResolver().query(URI_INGREDIENTS, null, null,
+                    new String[]{recipeId}, null))
+                    .compose(RxThreadManager.manageSingle())
+                    .doOnError(throwable -> Log.e("TAG", "Something is wrong with App-class"))
+                    .subscribe(cursor -> {
+                        if (cursor.getCount() > 0) {
+                            cursor.moveToPosition(-1);
+                            while (cursor.moveToNext()) {
+                                IngredientRemote ingredientRemote = new IngredientRemote();
+                                ingredientRemote.setIngredient(cursor.getString(cursor.getColumnIndexOrThrow(IngredientLocal.COLUMN_INGREDIENT)));
+                                ingredientRemote.setMeasure(cursor.getString(cursor.getColumnIndexOrThrow(IngredientLocal.COLUMN_MEASURE)));
+                                ingredientRemote.setQuantity(cursor.getDouble(cursor.getColumnIndexOrThrow(IngredientLocal.COLUMN_QUANTITITY)));
+                                ingredients.add(ingredientRemote);
+                            }
                         }
-                    }
-                    for (int appWidgetId : appWidgetIds) {
-                        updateAppWidgetContent(context, appWidgetManager, appWidgetId, "LOL", ingredients);
-                    }
-                });
+                        for (int appWidgetId : appWidgetIds) {
+                            updateAppWidgetContent(context, appWidgetManager, appWidgetId, "LOL", ingredients);
+                        }
+                    });
     }
 
     public static void updateAppWidgetContent(Context context, AppWidgetManager appWidgetManager,
