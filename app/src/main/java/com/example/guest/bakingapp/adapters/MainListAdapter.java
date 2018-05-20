@@ -78,6 +78,10 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         holder.steps.setText(steps);
         String servings = "Servings: " + String.valueOf(recipeRemote.getServings());
         holder.servings.setText(servings);
+        if(recipeRemote.getImage()!=null && !recipeRemote.getImage().isEmpty()){
+            holder.recipeImage.setVisibility(View.VISIBLE);
+            Picasso.with(context).load(recipeRemote.getImage()).into(holder.recipeImage);
+        }
         holder.title.setOnClickListener(v -> callbacks.onItemClicked(recipeRemote.getId(), position));
         holder.favIcon.setOnClickListener(v ->
         {
@@ -134,6 +138,8 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         protected TextView servings;
         @BindView(R.id.fav)
         protected ImageView favIcon;
+        @BindView(R.id.recipe_image)
+        protected ImageView recipeImage;
         private final View view;
 
         ViewHolder(View itemView) {

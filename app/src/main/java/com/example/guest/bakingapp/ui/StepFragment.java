@@ -93,7 +93,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         View v = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, v);
         tv.setText(description);
-        if(thumbnail!=null && thumbnail.isEmpty() && !thumbnail.equals("")){
+        if(thumbnail!=null && !thumbnail.isEmpty()){
             stepThumbnailImageView.setVisibility(View.VISIBLE);
             Picasso.with(getActivity()).load(thumbnail).into(stepThumbnailImageView);
         }

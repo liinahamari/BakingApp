@@ -14,6 +14,17 @@
         android:padding="10dp">
 
         <ImageView
+            android:id="@+id/recipe_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <ImageView
             android:id="@+id/fav"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -22,14 +33,14 @@
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="@+id/guideline_third"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/recipe_image" />
 
         <TextView
             android:id="@+id/title"
             style="@style/Labels"
             app:layout_constraintLeft_toLeftOf="@+id/guideline_third"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/recipe_image" />
 
         <TextView
             android:id="@+id/steps_label_in_list"
