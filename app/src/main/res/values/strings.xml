@@ -6,6 +6,6 @@
     <string name="step_label">Step #</string>
     <string name="ingredients_label">Ingredients</string>
     <string name="step_tab_id">\u0020Step:\u0020<xliff:g id="count">%d</xliff:g></string>
-    <string name="widget_config_text">Choose smth:</string>
+    <string name="widget_config_text">Choose recipe to be displayed: </string>
     <string name="ok_button">OK</string>
 </resources>

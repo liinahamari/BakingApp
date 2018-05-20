@@ -40,7 +40,7 @@ public class LocalDataSource {
         tablesDeleted += (context.getContentResolver().delete(URI_RECIPE, null, new String[]{String.valueOf(id)})) > 0 ? 1 : 0;
         tablesDeleted += (context.getContentResolver().delete(URI_INGREDIENTS, null, new String[]{String.valueOf(id)})) > 0 ? 1 : 0;
         Log.i(TAG, "Rows deleted: " + tablesDeleted);
-        return tablesDeleted == 3;
+        return tablesDeleted != 3;
     }
 
     /**
