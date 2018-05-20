@@ -8,4 +8,5 @@
     <string name="step_tab_id">\u0020Step:\u0020<xliff:g id="count">%d</xliff:g></string>
     <string name="widget_config_text">Choose recipe to be displayed: </string>
     <string name="ok_button">OK</string>
+    <string name="error_empty_favorites">There is no data in favorites. Please, add some.</string>
 </resources>

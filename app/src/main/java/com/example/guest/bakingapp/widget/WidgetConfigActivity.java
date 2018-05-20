@@ -10,7 +10,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.example.guest.bakingapp.App;
 import com.example.guest.bakingapp.R;
@@ -43,8 +46,14 @@ public class WidgetConfigActivity extends AppCompatActivity {
     private List<Integer> idList = new ArrayList<>();
     private SharedPreferences prefs;
 
-    @BindView(R.id.radioGroup)
+    @BindView(R.id.button)
+    Button okButton;
+    @BindView(R.id.widget_config_choice_label)
+    TextView choiceLabel;
+    @BindView(R.id.radio_group)
     RadioGroup namesRadioGroup;
+    @BindView(R.id.widget_config_error)
+    TextView errorMessage;
 
     @SuppressLint("CheckResult")
     @Override
@@ -66,16 +75,21 @@ public class WidgetConfigActivity extends AppCompatActivity {
                 .compose(RxThreadManager.manageSingle())
                 .doOnError(throwable -> Log.e("TAG", "Something is wrong with App-class"))
                 .subscribe(recipeList -> {
-                    int currentIndex = 0;
-                    for (RecipeLocal recipe : recipeList) {
-                        idList.add(recipe.recipeId);
-                        AppCompatRadioButton button = new AppCompatRadioButton(this);
-                        button.setText(recipe.name);
-                        button.setId(currentIndex++);
-                        namesRadioGroup.addView(button);
-                    }
-                    if (namesRadioGroup.getChildCount() > 0) {
-                        ((AppCompatRadioButton) namesRadioGroup.getChildAt(0)).setChecked(true);
+                    if (recipeList.isEmpty()) {
+                        errorMessage.setVisibility(View.VISIBLE);
+                        okButton.setVisibility(View.GONE);
+                        choiceLabel.setVisibility(View.GONE);
+                        okButton.setVisibility(View.GONE);
+                    } else {
+                        int currentIndex = 0;
+                        for (RecipeLocal recipe : recipeList) {
+                            idList.add(recipe.recipeId);
+                            AppCompatRadioButton button = new AppCompatRadioButton(this);
+                            button.setText(recipe.name);
+                            button.setId(currentIndex++);
+                            namesRadioGroup.addView(button);
+                        }
+                            ((AppCompatRadioButton) namesRadioGroup.getChildAt(0)).setChecked(true);
                     }
                 });
     }
