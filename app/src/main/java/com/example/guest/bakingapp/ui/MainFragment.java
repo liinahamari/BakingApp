@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import com.example.guest.bakingapp.R;
 import com.example.guest.bakingapp.adapters.MainListAdapter;
 import com.example.guest.bakingapp.base.BaseFragment;
+import com.example.guest.bakingapp.data.Repository;
 import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 import com.example.guest.bakingapp.di.components.DaggerBakingComponent;
 import com.example.guest.bakingapp.di.modules.BakingModule;

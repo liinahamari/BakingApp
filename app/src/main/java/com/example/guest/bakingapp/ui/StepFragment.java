@@ -11,6 +11,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
@@ -31,6 +32,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,14 +45,18 @@ import butterknife.Unbinder;
 public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     public static final String DESCRIPTION = "single_step_description";
     public static final String VIDEO_URL = "single_step_url";
+    private static final String THUMBNAIL = "single_step_thumbnail";
 
     private String description;
     private String videoUrl;
+    private String thumbnail;
     long mPlayPosition;
 
 
     @BindView(R.id.video_view)
     SimpleExoPlayerView exoPlayerView;
+    @BindView(R.id.step_thumbnail)
+    ImageView stepThumbnailImageView;
     @BindView(R.id.fragment_pager_nested_scrollview)
     NestedScrollView nestedScrollView;
     @BindView(R.id.pager_description)
@@ -63,10 +69,11 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     public StepFragment() {
     }
 
-    public static Fragment newInstance(String videoUrl, String description) {
+    public static Fragment newInstance(String videoUrl, String description, String thumbnail) {
         Bundle args = new Bundle();
         args.putString(DESCRIPTION, description);
         args.putString(VIDEO_URL, videoUrl);
+        args.putString(THUMBNAIL, thumbnail);
         StepFragment fragment = new StepFragment();
         fragment.setArguments(args);
         return fragment;
@@ -77,6 +84,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         super.onCreate(savedInstanceState);
         description = getArguments().getString(DESCRIPTION);
         videoUrl = getArguments().getString(VIDEO_URL);
+        thumbnail = getArguments().getString(THUMBNAIL);
     }
 
     @Nullable
@@ -85,16 +93,19 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         View v = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, v);
         tv.setText(description);
+        if(thumbnail!=null && thumbnail.isEmpty() && !thumbnail.equals("")){
+            stepThumbnailImageView.setVisibility(View.VISIBLE);
+            Picasso.with(getActivity()).load(thumbnail).into(stepThumbnailImageView);
+        }
         return v;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        String video = getArguments().getString(VIDEO_URL);
-        if (video != null && !video.isEmpty()) {
+        if (videoUrl != null && !videoUrl.isEmpty()) {
             initializeMediaSession();
-            initializePlayer(Uri.parse(video));
+            initializePlayer(Uri.parse(videoUrl));
         } else {
             exoPlayerView.setVisibility(View.GONE);
         }

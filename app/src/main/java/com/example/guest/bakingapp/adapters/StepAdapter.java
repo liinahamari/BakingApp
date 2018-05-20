@@ -30,7 +30,7 @@ public class StepAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         return StepFragment.newInstance(stepList.get(position).getVideoURL(),
-                stepList.get(position).getDescription());
+                stepList.get(position).getDescription(), stepList.get(position).getThumbnailURL());
     }
 
     @Override

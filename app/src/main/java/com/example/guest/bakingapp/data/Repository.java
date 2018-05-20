@@ -1,4 +1,4 @@
-package com.example.guest.bakingapp.ui;
+package com.example.guest.bakingapp.data;
 
 import com.example.guest.bakingapp.data.remote.pojo.RecipeRemote;
 import com.example.guest.bakingapp.data.remote.pojo.StepRemote;
