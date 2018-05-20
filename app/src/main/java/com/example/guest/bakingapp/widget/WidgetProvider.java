@@ -58,20 +58,16 @@ public class WidgetProvider extends AppWidgetProvider {
 
     public static void updateAppWidgetContent(Context context, AppWidgetManager appWidgetManager,
                                               int appWidgetId, String recipeName, List<IngredientRemote> ingredients) {
-
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_ingredients_list);
         views.setTextViewText(R.id.widget_recipe_name, recipeName);
         views.removeAllViews(R.id.widget_ingredients_container);
-
         for (IngredientRemote ingredient : ingredients) {
             RemoteViews ingredientView = new RemoteViews(context.getPackageName(),
                     R.layout.widget_ingredients_list_item);
-
             String line = ingredient.getIngredient() + " " + ingredient.getQuantity() + " " + ingredient.getMeasure();
             ingredientView.setTextViewText(R.id.widget_ingredient_name, line);
             views.addView(R.id.widget_ingredients_container, ingredientView);
         }
-
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 }

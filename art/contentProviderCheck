@@ -1,0 +1,53 @@
+/*Single.fromCallable(() -> getActivity().getContentResolver().query(URI_INGREDIENTS, null, null,
+                new String[]{String.valueOf(recipeId.getId())}, null))
+                .compose(RxThreadManager.manageSingle())
+                .doOnError(throwable -> Log.e(TAG, "Something is wrong with App-class"))
+                .subscribe(cursor -> {
+                    List<IngredientRemote> ingredientRemoteList = new ArrayList<>();
+                    if (cursor.getCount() > 0) {
+                        cursor.moveToPosition(-1);
+                        while (cursor.moveToNext()) {
+                            IngredientRemote ingredientRemote = new IngredientRemote();
+                            ingredientRemote.setIngredient(cursor.getString(cursor.getColumnIndexOrThrow(IngredientLocal.COLUMN_QUANTITITY)));
+                            ingredientRemote.setMeasure(cursor.getString(cursor.getColumnIndexOrThrow(IngredientLocal.COLUMN_MEASURE)));
+                            ingredientRemote.setQuantity(cursor.getDouble(cursor.getColumnIndexOrThrow(IngredientLocal.COLUMN_QUANTITITY)));
+                            ingredientRemoteList.add(ingredientRemote);
+                        }
+                    }
+                });
+        Single.fromCallable(() -> getActivity().getContentResolver().query(URI_STEP, null, null,
+                new String[]{String.valueOf(recipeId.getId())}, null))
+                .compose(RxThreadManager.manageSingle())
+                .doOnError(throwable -> Log.e(TAG, "Something is wrong with App-class"))
+                .subscribe(cursor -> {
+                    List<StepRemote> ingredientList = new ArrayList<>();
+                    if (cursor.getCount() > 0) {
+                        cursor.moveToPosition(-1);
+                        while (cursor.moveToNext()) {
+                            StepRemote ingredient = new StepRemote();
+                            ingredient.setId(cursor.getInt(cursor.getColumnIndexOrThrow(StepLocal.COLUMN_ID)));
+                            ingredient.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(StepLocal.COLUMN_DESCRIPTION)));
+                            ingredient.setShortDescription(cursor.getString(cursor.getColumnIndexOrThrow(StepLocal.COLUMN_S_DESCRIPTION)));
+                            ingredient.setThumbnailURL(cursor.getString(cursor.getColumnIndexOrThrow(StepLocal.COLUMN_VIDEO_URL)));
+                            ingredient.setVideoURL(cursor.getString(cursor.getColumnIndexOrThrow(StepLocal.COLUMN_THUMB_URL)));
+                            ingredientList.add(ingredient);
+                        }
+                    }
+                });
+
+        Single.fromCallable(() -> getActivity().getContentResolver().query(URI_RECIPE, null, null,
+                new String[]{String.valueOf(recipeId.getId())}, null))
+                .compose(RxThreadManager.manageSingle())
+                .doOnError(throwable -> Log.e(TAG, "Something is wrong with App-class"))
+                .subscribe(cursor -> {
+                    List<RecipeRemote> ingredientList = new ArrayList<>();
+                    cursor.moveToPosition(-1);
+                    while (cursor.moveToNext()) {
+                        RecipeRemote ingredient = new RecipeRemote();
+                        ingredient.setId(cursor.getInt(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_RECIPE_ID)));
+                        ingredient.setImage(cursor.getString(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_IMAGE)));
+                        ingredient.setName(cursor.getString(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_NAME)));
+                        ingredient.setServings(cursor.getInt(cursor.getColumnIndexOrThrow(RecipeLocal.COLUMN_SERVINGS)));
+                        ingredientList.add(ingredient);
+                    }
+                });*/
