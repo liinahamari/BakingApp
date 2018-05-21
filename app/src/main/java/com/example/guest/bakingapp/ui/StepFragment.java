@@ -92,10 +92,10 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_pager, container, false);
+        View v = inflater.inflate(R.layout.fragment_steps, container, false);
         unbinder = ButterKnife.bind(this, v);
         tv.setText(description);
-        if (true) {
+        if (getActivity() != null && !(getActivity().getLocalClassName().equals("com.example.guest.bakingapp.ui.MainActivity"))) { //twopane mode detector
             backArrow.setVisibility(View.VISIBLE);
             backArrow.setOnClickListener(viev -> getActivity().onBackPressed());
         }
