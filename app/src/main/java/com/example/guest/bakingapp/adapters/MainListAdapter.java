@@ -9,6 +9,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +79,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
         holder.steps.setText(steps);
         String servings = "Servings: " + String.valueOf(recipe.getServings());
         holder.servings.setText(servings);
-        if(recipe.getImage()!=null && !recipe.getImage().isEmpty()){
+        if(!(TextUtils.isEmpty(recipe.getImage()))){
             holder.recipeImage.setVisibility(View.VISIBLE);
             Picasso.with(context).load(recipe.getImage()).into(holder.recipeImage);
         }

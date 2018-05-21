@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.widget.NestedScrollView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,8 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,7 +105,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
             backArrow.setVisibility(View.VISIBLE);
             backArrow.setOnClickListener(viev -> getActivity().onBackPressed());
         }
-        if (thumbnail != null && !thumbnail.isEmpty()) {
+        if (!(TextUtils.isEmpty(thumbnail))) {
             stepThumbnailImageView.setVisibility(View.VISIBLE);
             Picasso.with(getActivity()).load(thumbnail).into(stepThumbnailImageView);
         }
@@ -112,7 +115,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (videoUrl != null && !videoUrl.isEmpty()) {
+        if (!(TextUtils.isEmpty(videoUrl))) {
             initializeMediaSession();
             initializePlayer(Uri.parse(videoUrl));
         } else {
@@ -268,7 +271,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         super.onResume();
         if (exoPlayer != null) {
             exoPlayer.seekTo(playPosition);
-        } else if (videoUrl != null && !videoUrl.isEmpty()) {
+        } else if (!(TextUtils.isEmpty(videoUrl))) {
             initializeMediaSession();
             initializePlayer(Uri.parse(videoUrl));
             exoPlayer.setPlayWhenReady(true);
