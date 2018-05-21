@@ -9,9 +9,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.guest.bakingapp.R;
@@ -43,6 +45,8 @@ public class DetailFragment extends Fragment {
     protected RecyclerView recyclerView;
     @BindView(R.id.fab)
     protected FloatingActionButton fab;
+    @BindView(R.id.detail_fragment_back_arrow)
+    protected ImageView backArrow;
 
     private Callbacks callbacks;
     private RecipeRemote recipeRemote;
@@ -92,13 +96,21 @@ public class DetailFragment extends Fragment {
 
     @SuppressLint("CheckResult")
     private void setView() {
-        fab.setOnClickListener(v -> callbacks.onLikeClicked(fab, recipeRemote));
         ingredientsTv.setText(MakeIngredietsString.make(recipeRemote.getIngredientRemotes()));
         Single.fromCallable(() -> LocalDataSource.isFavorite(getActivity(), recipeRemote.getId()))
                 .compose(RxThreadManager.manageSingle())
                 .subscribe(isFavorite -> LikeButtonColorChanger.change(fab, getActivity(), isFavorite));
-        if (getActivity() != null && getActivity().getLocalClassName().equals("com.example.guest.bakingapp.ui.MainActivity")) //twopane mode detector
+        setupListeners();
+    }
+
+    private void setupListeners() {
+        fab.setOnClickListener(v -> callbacks.onLikeClicked(fab, recipeRemote));
+        if (getActivity() != null && getActivity().getLocalClassName().equals("com.example.guest.bakingapp.ui.MainActivity")) { //twopane mode detector
             ((MainActivity) getActivity()).setFab(fab);
+        } else {
+            backArrow.setVisibility(View.VISIBLE);
+            backArrow.setOnClickListener(v -> getActivity().onBackPressed());
+        }
     }
 
     @Override
@@ -108,6 +120,6 @@ public class DetailFragment extends Fragment {
     }
 
     public interface Callbacks {
-        void onLikeClicked(FloatingActionButton fab, RecipeRemote  recipe);
+        void onLikeClicked(FloatingActionButton fab, RecipeRemote recipe);
     }
 }

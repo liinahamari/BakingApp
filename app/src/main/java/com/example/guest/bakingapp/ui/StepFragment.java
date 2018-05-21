@@ -61,6 +61,8 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     NestedScrollView nestedScrollView;
     @BindView(R.id.pager_description)
     protected TextView tv;
+    @BindView(R.id.pager_fragment_back_arrow)
+    protected ImageView backArrow;
     SimpleExoPlayer exoPlayer;
     private MediaSessionCompat mediaSession;
     private PlaybackStateCompat.Builder stateBuilder;
@@ -93,7 +95,11 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         View v = inflater.inflate(R.layout.fragment_pager, container, false);
         unbinder = ButterKnife.bind(this, v);
         tv.setText(description);
-        if(thumbnail!=null && !thumbnail.isEmpty()){
+        if (true) {
+            backArrow.setVisibility(View.VISIBLE);
+            backArrow.setOnClickListener(viev -> getActivity().onBackPressed());
+        }
+        if (thumbnail != null && !thumbnail.isEmpty()) {
             stepThumbnailImageView.setVisibility(View.VISIBLE);
             Picasso.with(getActivity()).load(thumbnail).into(stepThumbnailImageView);
         }
