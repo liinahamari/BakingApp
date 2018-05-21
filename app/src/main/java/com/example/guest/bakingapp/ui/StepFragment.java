@@ -46,11 +46,12 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     public static final String DESCRIPTION = "single_step_description";
     public static final String VIDEO_URL = "single_step_url";
     private static final String THUMBNAIL = "single_step_thumbnail";
+    private static final String PLAY_POSITION = "play_position";
 
     private String description;
     private String videoUrl;
     private String thumbnail;
-    long mPlayPosition;
+    private long playPosition;
 
 
     @BindView(R.id.video_view)
@@ -87,6 +88,8 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         description = getArguments().getString(DESCRIPTION);
         videoUrl = getArguments().getString(VIDEO_URL);
         thumbnail = getArguments().getString(THUMBNAIL);
+        if (savedInstanceState != null)
+            playPosition = savedInstanceState.getLong(PLAY_POSITION);
     }
 
     @Nullable
@@ -162,7 +165,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             exoPlayer.prepare(mediaSource);
-            exoPlayer.setPlayWhenReady(false);
+            exoPlayer.setPlayWhenReady(true);
         }
     }
 
@@ -247,7 +250,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     public void onPause() {
         super.onPause();
         if (exoPlayer != null) {
-            mPlayPosition = exoPlayer.getCurrentPosition();
+            playPosition = exoPlayer.getCurrentPosition();
             exoPlayer.stop();
             exoPlayer.release();
             exoPlayer = null;
@@ -255,16 +258,21 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(PLAY_POSITION, playPosition);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (exoPlayer != null) {
-            exoPlayer.setPlayWhenReady(false);
-            exoPlayer.seekTo(mPlayPosition);
+            exoPlayer.seekTo(playPosition);
         } else if (videoUrl != null && !videoUrl.isEmpty()) {
             initializeMediaSession();
             initializePlayer(Uri.parse(videoUrl));
-            exoPlayer.setPlayWhenReady(false);
-            exoPlayer.seekTo(mPlayPosition);
+            exoPlayer.setPlayWhenReady(true);
+            exoPlayer.seekTo(playPosition);
         }
     }
 }
